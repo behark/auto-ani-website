@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=1024' next dev",
-    "build": "NODE_OPTIONS='--expose-gc --max-old-space-size=1024' next build",
+    "build": "NODE_OPTIONS='--expose-gc --max-old-space-size=2048' next build",
     "start": "NODE_OPTIONS='--expose-gc --max-old-space-size=1024' next start -H 0.0.0.0 -p ${PORT:-3000}",
     "lint": "next lint",
-    "build:production": "NODE_OPTIONS='--expose-gc --max-old-space-size=1024' npx prisma generate && npm run build",
+    "build:production": "NODE_OPTIONS='--expose-gc --max-old-space-size=2048' npx prisma generate && npm run build",
     "build:staging": "npx prisma generate && npm run build",
     "build:preview": "npx prisma generate && npm run build",
     "db:generate": "prisma generate",
