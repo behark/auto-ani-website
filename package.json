@@ -34,7 +34,12 @@
     "type-check": "tsc --noEmit",
     "lint:strict": "next lint --max-warnings 0",
     "build:full": "npm run type-check && npm run lint:strict && npm run build",
-    "test:build": "npm run db:generate && npm run type-check && npm run build"
+    "test:build": "npm run db:generate && npm run type-check && npm run build",
+    "build:optimized": "bash scripts/optimized-build.sh",
+    "build:extreme": "bash scripts/extreme-build.sh",
+    "prisma:upgrade": "bash scripts/upgrade-prisma.sh",
+    "prisma:fix-openssl": "bash scripts/fix-prisma-openssl.sh",
+    "apply:memory-fixes": "bash scripts/apply-memory-fixes.sh"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.19",
@@ -44,7 +49,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@prisma/client": "^6.16.3",
+    "@prisma/client": "^6.17.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -121,7 +126,7 @@
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.4",
     "eslint-plugin-unused-imports": "^4.2.0",
-    "prisma": "^6.16.3",
+    "prisma": "^6.17.1",
     "tsx": "^4.20.6",
     "typescript": "^5"
   },

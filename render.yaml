@@ -6,7 +6,7 @@ services:
     region: frankfurt  # Closest to Kosovo
     branch: main
     repo: https://github.com/behark/auto-ani-website
-    buildCommand: npm ci && npm run build:production
+    buildCommand: bash scripts/render-deploy.sh
     startCommand: npm start
     healthCheckPath: /api/health
 
@@ -22,8 +22,3 @@ services:
     # Render-specific optimizations
     autoDeploy: true
     numInstances: 1
-
-    # Custom domains will be added later
-    # domains:
-    #   - autosalonani.com
-    #   - www.autosalonani.com

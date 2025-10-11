@@ -306,28 +306,12 @@ const parsed = refinedSchema.safeParse(process.env)
 
 if (!parsed.success) {
   console.error('❌ Invalid environment variables:')
-  console.error('Error details:', JSON.stringify(parsed.error.format(), null, 2))
-  console.error('Environment context:', {
-    NODE_ENV: process.env.NODE_ENV,
-    hasDatabase: !!process.env.DATABASE_URL,
-    hasAuth: !!process.env.NEXTAUTH_SECRET
-  })
-
-  // During build or startup, log but don't throw to avoid blocking
-  const isBuildTime = process.env.npm_lifecycle_event === 'build'
-  const isStartTime = process.env.npm_lifecycle_event === 'start'
-  const isProduction = process.env.NODE_ENV === 'production'
-
-  if (isBuildTime || (isStartTime && isProduction)) {
-    console.warn('⚠️ Continuing despite environment validation errors...')
-    console.warn('Note: Some features may not work correctly with invalid environment variables')
-  } else {
-    throw new Error('Invalid environment variables')
-  }
+  console.error(JSON.stringify(parsed.error.format(), null, 2))
+  throw new Error('Invalid environment variables')
 }
 
-// Export validated environment variables or fallback to process.env
-export const env = parsed.success ? parsed.data : (process.env as any)
+// Export validated environment variables
+export const env = parsed.data
 
 // Type-safe environment access
 export type Env = z.infer<typeof envSchema>
