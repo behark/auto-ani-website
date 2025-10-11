@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=1024' next dev",
     "build": "NODE_OPTIONS='--expose-gc --max-old-space-size=768' next build --no-lint",
-    "start": "NODE_OPTIONS='--max-old-space-size=1024' next start -H 0.0.0.0 -p ${PORT:-3000}",
+    "start": "next start -H 0.0.0.0 -p $PORT",
     "lint": "next lint",
     "build:production": "NODE_OPTIONS='--max-old-space-size=3072' npx prisma generate && NODE_OPTIONS='--max-old-space-size=3072' next build --no-lint",
     "build:staging": "npx prisma generate && npm run build",
