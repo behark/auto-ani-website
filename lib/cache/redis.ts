@@ -85,7 +85,9 @@ export async function getCached<T>(key: string): Promise<T | null> {
     const data = await client.get(key);
     if (!data) return null;
 
-    return JSON.parse(data) as T;
+    // Convert Buffer to string if necessary
+    const dataStr = typeof data === 'string' ? data : data.toString();
+    return JSON.parse(dataStr) as T;
   } catch (error) {
     console.error(`Redis: Error getting cache for key ${key}:`, error);
     return null;
