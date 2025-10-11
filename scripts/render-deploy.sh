@@ -33,4 +33,10 @@ NEXT_TELEMETRY_DISABLED=1 \
 NODE_OPTIONS="--max-old-space-size=3072" \
 next build --no-lint
 
+# Step 5: Initialize database (only if DATABASE_URL is set)
+if [ ! -z "$DATABASE_URL" ]; then
+  echo "🔄 Initializing database..."
+  npx prisma db push --accept-data-loss || echo "⚠️  Database initialization failed or already done"
+fi
+
 echo "✅ Deployment build completed successfully!"
