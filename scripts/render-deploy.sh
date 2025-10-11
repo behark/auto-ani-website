@@ -10,10 +10,8 @@ echo "🚀 Starting Auto ANI Website deployment on Render..."
 
 # Step 0: Setup production environment
 echo "⚙️ Setting up production environment..."
-if [ -f .env.production ]; then
-  cp .env.production .env
-  echo "✅ Production environment file loaded"
-fi
+# Environment variables are set via Render dashboard
+echo "✅ Using Render environment variables"
 
 # Step 1: Install dependencies
 echo "📦 Installing dependencies..."
