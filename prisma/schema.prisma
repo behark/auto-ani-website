@@ -1,0 +1,1129 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Appointment {
+  id               String    @id @default(cuid())
+  vehicleId        String?   @map("vehicleId")
+  customerName     String    @map("customerName")
+  customerEmail    String    @map("customerEmail")
+  customerPhone    String    @map("customerPhone")
+  type             String
+  scheduledDate    DateTime  @map("scheduledDate") 
+  scheduledTime    String    @map("scheduledTime")
+  duration         Int?      @default(60)
+  status           String?   @default("SCHEDULED")
+  notes            String?
+  reminderMethod   String?   @map("reminderMethod")
+  reminderSent     Boolean?  @default(false) @map("reminderSent")
+  confirmationSent Boolean?  @default(false) @map("confirmationSent")
+  location         String?
+  createdAt        DateTime? @default(now()) @map("createdAt") 
+  updatedAt        DateTime? @default(now()) @map("updatedAt") 
+
+  @@map("appointments")
+  @@index([customerEmail])
+  @@index([scheduledDate, scheduledTime])
+  @@index([scheduledDate, status])
+  @@index([vehicleId, status])
+  @@index([vehicleId], map: "idx_appointments_vehicleid")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Contact {
+  id          String   @id
+  name        String
+  email       String
+  phone       String?
+  message     String
+  subject     String?
+  status      String   @default("NEW")
+  clientIP    String?  @map("clientIP")
+  fingerprint String?
+  userAgent   String?  @map("userAgent")
+  createdAt   DateTime @default(now()) @map("createdAt") 
+  updatedAt   DateTime @default(now()) @map("updatedAt") 
+
+  @@map("contacts")
+  @@index([status, createdAt])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Favorite {
+  id        String   @id
+  userId    String?  @map("userId")
+  vehicleId String   @map("vehicleId")
+  sessionId String?  @map("sessionId")
+  createdAt DateTime @default(now()) @map("createdAt") 
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@map("favorites")
+  @@index([userId, vehicleId])
+  @@index([userId], map: "idx_favorites_userid")
+  @@index([vehicleId], map: "idx_favorites_vehicleid")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model User {
+  id            String    @id
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String    @map("passwordHash")
+  firstName     String?   @map("firstName")
+  lastName      String?   @map("lastName")
+  role          String    @default("ADMIN")
+  isActive      Boolean   @default(true) @map("isActive")
+  emailVerified DateTime? @map("emailVerified") 
+  lastLogin     DateTime? @map("lastLogin") 
+  createdAt     DateTime  @default(now()) @map("createdAt") 
+  updatedAt     DateTime  @default(now()) @map("updatedAt") 
+
+  @@map("users")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model VehicleInquiry {
+  id          String   @id
+  vehicleId   String   @map("vehicleId")
+  name        String
+  email       String
+  phone       String
+  message     String?
+  inquiryType String   @default("GENERAL") @map("inquiryType")
+  status      String   @default("NEW")
+  clientIP    String?  @map("clientIP")
+  fingerprint String?
+  createdAt   DateTime @default(now()) @map("createdAt") 
+  updatedAt   DateTime @default(now()) @map("updatedAt") 
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@map("vehicle_inquiries")
+  @@index([vehicleId], map: "idx_vehicle_inquiries_vehicleid")
+  @@index([vehicleId, status])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Vehicle {
+  id                String              @id
+  slug              String?             @unique
+  make              String
+  model             String
+  year              Int
+  price             Int
+  mileage           Int
+  fuelType          String              @map("fuelType")
+  transmission      String
+  bodyType          String              @map("bodyType")
+  color             String
+  engineSize        String              @map("engineSize")
+  drivetrain        String
+  features          String
+  images            String
+  description       String
+  featured          Boolean             @default(false)
+  status            String              @default("AVAILABLE")
+  vin               String?             @unique
+  doors             Int?
+  seats             Int?
+  createdBy         String?             @map("createdBy")
+  createdAt         DateTime            @default(now()) @map("createdAt") 
+  updatedAt         DateTime            @default(now()) @map("updatedAt") 
+  favorites         Favorite[]
+  vehicleInquiries  VehicleInquiry[]
+
+  @@map("vehicles")
+  @@index([createdBy], map: "idx_vehicles_createdby")
+  @@index([featured, status])
+  @@index([make, model, year, status])
+  @@index([price, status])
+
+  // Relations for new features
+  testimonials             testimonials[]
+  service_appointments     service_appointments[]
+  service_history         service_history[]
+  virtual_tours           virtual_tours[]
+  video_walkarounds       video_walkarounds[]
+  recently_viewed         recently_viewed[]
+  alert_notifications     alert_notifications[]
+  price_notifications     price_notifications[]
+  live_chat_sessions      live_chat_sessions[]
+  inspection_services     inspection_services[]
+  import_export_services  import_export_services[]
+  customization_services  customization_services[]
+  detailing_services      detailing_services[]
+  rental_leasing          rental_leasing[]
+  insurance_quotes        insurance_quotes[]
+  warranty_options        warranty_options[]
+  leads_tracking          leads_tracking[]
+  sales_pipeline          sales_pipeline[]
+  service_photos          service_photos[]
+  customer_stories        customer_stories[]
+  finance_applications    finance_applications[]
+}
+
+// 1. CUSTOMER TRUST & SOCIAL PROOF
+
+model testimonials {
+  id          String   @id @default(cuid())
+  vehicleId   String?
+  customerName String
+  customerEmail String?
+  rating      Int      // 1-5 stars
+  title       String?
+  content     String
+  photos      String?  // JSON array of photo URLs
+  isVerified  Boolean  @default(false)
+  isApproved  Boolean  @default(false)
+  isPublic    Boolean  @default(true)
+  location    String?
+  purchaseDate DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([isApproved, isPublic, rating])
+  @@index([vehicleId, isApproved])
+}
+
+model service_photos {
+  id          String   @id @default(cuid())
+  vehicleId   String?
+  serviceType String   // 'detailing', 'repair', 'maintenance', 'inspection'
+  category    String   // 'before', 'after', 'during', 'damage'
+  imageUrl    String
+  description String?
+  uploadedBy  String?
+  tags        String?  // JSON array
+  createdAt   DateTime @default(now())
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([vehicleId, serviceType])
+  @@index([category, serviceType])
+}
+
+model customer_stories {
+  id           String   @id @default(cuid())
+  vehicleId    String?
+  customerName String
+  title        String
+  story        String
+  images       String?  // JSON array of image URLs
+  videoUrl     String?
+  isPublished  Boolean  @default(false)
+  tags         String?  // JSON array
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([isPublished, createdAt])
+}
+
+model google_reviews {
+  id           String   @id @default(cuid())
+  reviewId     String   @unique // Google review ID
+  customerName String
+  rating       Int
+  content      String
+  reviewDate   DateTime
+  response     String?  // Business response
+  responseDate DateTime?
+  isVisible    Boolean  @default(true)
+  syncedAt     DateTime @default(now())
+
+  @@index([rating, isVisible])
+  @@index([reviewDate])
+}
+
+// 2. SERVICE & MAINTENANCE
+
+model service_appointments {
+  id            String   @id @default(cuid())
+  vehicleId     String?
+  customerName  String
+  customerEmail String
+  customerPhone String
+  serviceType   String   // 'maintenance', 'repair', 'inspection', 'detailing'
+  description   String?
+  scheduledDate DateTime
+  scheduledTime String
+  duration      Int      @default(60) // minutes
+  status        String   @default("SCHEDULED") // 'SCHEDULED', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'
+  technicianId  String?
+  estimatedCost Int?
+  actualCost    Int?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  vehicle     Vehicle?           @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  technician  service_technicians? @relation(fields: [technicianId], references: [id], onDelete: SetNull)
+  history     service_history[]
+
+  @@index([scheduledDate, status])
+  @@index([vehicleId, status])
+  @@index([technicianId, scheduledDate])
+}
+
+model service_technicians {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  phone         String?
+  specializations String // JSON array of specializations
+  isActive      Boolean  @default(true)
+  hourlyRate    Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  appointments service_appointments[]
+  service_history service_history[]
+
+  @@index([isActive])
+}
+
+model service_history {
+  id              String   @id @default(cuid())
+  vehicleId       String?
+  appointmentId   String?
+  technicianId    String?
+  serviceType     String
+  description     String
+  partsUsed       String?  // JSON array of parts
+  laborHours      Float?
+  partsTotal      Int?
+  laborTotal      Int?
+  totalCost       Int
+  warranty        String?  // warranty terms
+  nextServiceDue  DateTime?
+  completedAt     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  vehicle     Vehicle?             @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  appointment service_appointments? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  technician  service_technicians?  @relation(fields: [technicianId], references: [id], onDelete: SetNull)
+
+  @@index([vehicleId, completedAt])
+  @@index([serviceType, completedAt])
+}
+
+model parts_catalog {
+  id           String   @id @default(cuid())
+  partNumber   String   @unique
+  name         String
+  description  String?
+  category     String   // 'engine', 'brake', 'electrical', etc.
+  brand        String?
+  price        Int
+  cost         Int?     // dealer cost
+  stockLevel   Int      @default(0)
+  minStock     Int      @default(1)
+  supplier     String?
+  isActive     Boolean  @default(true)
+  images       String?  // JSON array of image URLs
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category, isActive])
+  @@index([stockLevel])
+}
+
+// 3. SALES ENHANCEMENT
+
+model trade_in_valuations {
+  id              String   @id @default(cuid())
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  vehicleMake     String
+  vehicleModel    String
+  vehicleYear     Int
+  vehicleMileage  Int
+  vehicleCondition String
+  vehiclePhotos   String?  // JSON array of photo URLs
+  hasAccidents    Boolean  @default(false)
+  hasServiceHistory Boolean @default(false)
+  marketValue     Int?
+  offerValue      Int?
+  status          String   @default("SUBMITTED") // 'SUBMITTED', 'REVIEWING', 'APPRAISED', 'OFFERED', 'ACCEPTED', 'DECLINED'
+  appraisedBy     String?
+  notes           String?
+  expiresAt       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([customerEmail])
+}
+
+model finance_applications {
+  id               String   @id @default(cuid())
+  vehicleId        String?
+  customerName     String
+  customerEmail    String
+  customerPhone    String
+  annualIncome     Int
+  employment       String
+  creditScore      String?  // 'excellent', 'good', 'fair', 'poor'
+  loanAmount       Int
+  downPayment      Int
+  loanTerm         Int      // months
+  interestRate     Float?
+  monthlyPayment   Int?
+  lenderName       String?
+  status           String   @default("SUBMITTED") // 'SUBMITTED', 'PROCESSING', 'APPROVED', 'DECLINED'
+  approvedAmount   Int?
+  documents        String?  // JSON array of document URLs
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([vehicleId, status])
+  @@index([status, createdAt])
+}
+
+model insurance_partnerships {
+  id               String   @id @default(cuid())
+  companyName      String
+  contactPerson    String?
+  contactEmail     String?
+  contactPhone     String?
+  coverageTypes    String   // JSON array
+  averagePremium   Int?
+  isActive         Boolean  @default(true)
+  commissionRate   Float?
+  apiEndpoint      String?
+  apiKey           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  quotes insurance_quotes[]
+
+  @@index([isActive])
+}
+
+model insurance_quotes {
+  id               String   @id @default(cuid())
+  vehicleId        String?
+  customerId       String?
+  partnerId        String
+  customerName     String
+  customerEmail    String
+  coverageType     String
+  premium          Int
+  deductible       Int
+  validUntil       DateTime
+  status           String   @default("QUOTED")
+  createdAt        DateTime @default(now())
+
+  vehicle Vehicle?             @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  partner insurance_partnerships @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, status])
+  @@index([customerId])
+}
+
+model warranty_options {
+  id           String   @id @default(cuid())
+  vehicleId    String?
+  name         String
+  description  String
+  duration     Int      // months
+  mileageLimit Int?
+  price        Int
+  coverage     String   // JSON array of covered items
+  terms        String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([vehicleId, isActive])
+}
+
+// 4. ENGAGEMENT FEATURES
+
+model inventory_alerts {
+  id              String   @id @default(cuid())
+  customerEmail   String
+  customerName    String?
+  vehicleMake     String?
+  vehicleModel    String?
+  maxPrice        Int?
+  minYear         Int?
+  maxMileage      Int?
+  bodyType        String?
+  fuelType        String?
+  isActive        Boolean  @default(true)
+  lastNotified    DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  notifications alert_notifications[]
+
+  @@index([isActive, customerEmail])
+  @@index([vehicleMake, vehicleModel])
+}
+
+model alert_notifications {
+  id        String   @id @default(cuid())
+  alertId   String
+  vehicleId String
+  method    String   // 'email', 'sms', 'push'
+  sentAt    DateTime @default(now())
+  opened    Boolean  @default(false)
+  clicked   Boolean  @default(false)
+
+  alert   inventory_alerts @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  vehicle Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([alertId, sentAt])
+  @@index([vehicleId])
+}
+
+model price_notifications {
+  id            String   @id @default(cuid())
+  vehicleId     String
+  customerEmail String
+  originalPrice Int
+  targetPrice   Int
+  isActive      Boolean  @default(true)
+  notifiedAt    DateTime?
+  createdAt     DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, isActive])
+  @@index([customerEmail])
+}
+
+model virtual_tours {
+  id          String   @id @default(cuid())
+  vehicleId   String
+  name        String
+  images      String   // JSON array of 360° image URLs
+  hotspots    String?  // JSON array of interactive hotspots
+  isActive    Boolean  @default(true)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, isActive])
+}
+
+model video_walkarounds {
+  id          String   @id @default(cuid())
+  vehicleId   String
+  title       String
+  videoUrl    String
+  thumbnailUrl String?
+  duration    Int?     // seconds
+  views       Int      @default(0)
+  isActive    Boolean  @default(true)
+  category    String?  // 'exterior', 'interior', 'engine', 'features'
+  createdAt   DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, isActive])
+  @@index([category])
+}
+
+model live_chat_sessions {
+  id            String   @id @default(cuid())
+  sessionId     String   @unique
+  customerName  String?
+  customerEmail String?
+  vehicleId     String?
+  agentId       String?
+  status        String   @default("ACTIVE") // 'ACTIVE', 'WAITING', 'CLOSED'
+  startedAt     DateTime @default(now())
+  endedAt       DateTime?
+  rating        Int?     // 1-5 stars
+  transcript    String?  // JSON of messages
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([status, startedAt])
+  @@index([vehicleId])
+}
+
+// 5. ADDITIONAL SERVICES
+
+model inspection_services {
+  id               String   @id @default(cuid())
+  vehicleId        String?
+  customerName     String
+  customerEmail    String
+  customerPhone    String
+  inspectionType   String   // 'pre-purchase', 'annual', 'damage', 'export'
+  scheduledDate    DateTime
+  completedDate    DateTime?
+  inspectorId      String?
+  reportUrl        String?
+  status           String   @default("SCHEDULED")
+  findings         String?  // JSON of inspection findings
+  passed           Boolean?
+  certificateUrl   String?
+  cost             Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([scheduledDate, status])
+  @@index([vehicleId])
+}
+
+model import_export_services {
+  id               String   @id @default(cuid())
+  vehicleId        String?
+  customerName     String
+  customerEmail    String
+  serviceType      String   // 'import', 'export'
+  originCountry    String?
+  destinationCountry String?
+  customsDocuments String?  // JSON array of document URLs
+  status           String   @default("INITIATED")
+  estimatedCost    Int?
+  actualCost       Int?
+  completionDate   DateTime?
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([status, serviceType])
+  @@index([vehicleId])
+}
+
+model customization_services {
+  id               String   @id @default(cuid())
+  vehicleId        String?
+  customerName     String
+  customerEmail    String
+  modificationType String   // 'performance', 'aesthetic', 'comfort', 'technology'
+  description      String
+  estimatedCost    Int
+  actualCost       Int?
+  timeline         String?  // 'days', 'weeks'
+  status           String   @default("QUOTED")
+  beforePhotos     String?  // JSON array
+  afterPhotos      String?  // JSON array
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([vehicleId, status])
+  @@index([modificationType])
+}
+
+model detailing_services {
+  id            String   @id @default(cuid())
+  vehicleId     String?
+  customerName  String
+  customerEmail String
+  packageType   String   // 'basic', 'premium', 'deluxe', 'ceramic'
+  services      String   // JSON array of included services
+  price         Int
+  scheduledDate DateTime?
+  completedDate DateTime?
+  beforePhotos  String?  // JSON array
+  afterPhotos   String?  // JSON array
+  status        String   @default("BOOKED")
+  rating        Int?     // Customer satisfaction
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([vehicleId, status])
+  @@index([packageType])
+}
+
+model rental_leasing {
+  id               String   @id @default(cuid())
+  vehicleId        String
+  customerName     String
+  customerEmail    String
+  customerPhone    String
+  contractType     String   // 'rental', 'lease'
+  startDate        DateTime
+  endDate          DateTime
+  dailyRate        Int?
+  monthlyRate      Int?
+  totalCost        Int
+  deposit          Int
+  mileageLimit     Int?
+  status           String   @default("ACTIVE")
+  contractUrl      String?
+  insuranceCovered Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, status])
+  @@index([startDate, endDate])
+}
+
+// 6. CONTENT MARKETING
+
+model blog_posts {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  excerpt      String?
+  content      String
+  featuredImage String?
+  images       String?  // JSON array
+  author       String
+  category     String
+  tags         String?  // JSON array
+  isPublished  Boolean  @default(false)
+  publishedAt  DateTime?
+  seoTitle     String?
+  seoDescription String?
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+  @@index([category, isPublished])
+  @@index([slug])
+}
+
+model buying_guides {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  description   String
+  content       String
+  featuredImage String?
+  category      String   // 'first-time-buyer', 'luxury', 'family', 'business'
+  difficulty    String   @default("beginner") // 'beginner', 'intermediate', 'advanced'
+  estimatedReadTime Int?
+  isPublished   Boolean  @default(false)
+  views         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isPublished, category])
+  @@index([slug])
+}
+
+model market_insights {
+  id            String   @id @default(cuid())
+  title         String
+  reportType    String   // 'monthly', 'quarterly', 'annual', 'trend'
+  data          String   // JSON data with charts/graphs
+  summary       String
+  insights      String   // Key takeaways
+  chartImages   String?  // JSON array of chart image URLs
+  isPublished   Boolean  @default(false)
+  publishedAt   DateTime?
+  views         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([reportType, isPublished])
+  @@index([publishedAt])
+}
+
+// 7. USER EXPERIENCE ENHANCEMENTS
+
+model saved_searches {
+  id            String   @id @default(cuid())
+  userId        String?
+  sessionId     String?
+  name          String?
+  searchParams  String   // JSON of search criteria
+  alertsEnabled Boolean  @default(false)
+  lastAlert     DateTime?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId, isActive])
+  @@index([sessionId, isActive])
+}
+
+model recently_viewed {
+  id        String   @id @default(cuid())
+  vehicleId String
+  userId    String?
+  sessionId String?
+  viewedAt  DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([userId, viewedAt])
+  @@index([sessionId, viewedAt])
+  @@index([vehicleId])
+}
+
+model vehicle_comparisons {
+  id          String   @id @default(cuid())
+  userId      String?
+  sessionId   String?
+  vehicleIds  String   // JSON array of vehicle IDs - simplified approach
+  name        String?
+  isShared    Boolean  @default(false)
+  shareToken  String?  @unique
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([sessionId])
+  @@index([shareToken])
+}
+
+// 8. BUSINESS OPERATIONS
+
+model leads_tracking {
+  id            String   @id @default(cuid())
+  customerName  String
+  customerEmail String
+  customerPhone String?
+  source        String   // 'website', 'phone', 'walk-in', 'referral', 'facebook', 'google'
+  vehicleId     String?
+  leadType      String   // 'purchase', 'service', 'trade-in', 'financing'
+  stage         String   @default("NEW") // 'NEW', 'CONTACTED', 'QUALIFIED', 'PROPOSAL', 'NEGOTIATION', 'CLOSED_WON', 'CLOSED_LOST'
+  priority      String   @default("MEDIUM") // 'LOW', 'MEDIUM', 'HIGH', 'URGENT'
+  assignedTo    String?
+  lastContact   DateTime?
+  nextFollowUp  DateTime?
+  notes         String?
+  value         Int?     // Estimated deal value
+  probability   Int?     // Closure probability %
+  closedAt      DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([stage, assignedTo])
+  @@index([source, createdAt])
+  @@index([customerEmail])
+}
+
+model sales_pipeline {
+  id             String   @id @default(cuid())
+  leadId         String?
+  vehicleId      String?
+  customerName   String
+  customerEmail  String
+  dealValue      Int
+  stage          String   @default("PROSPECT") // 'PROSPECT', 'QUALIFIED', 'PROPOSAL', 'NEGOTIATION', 'CLOSED_WON', 'CLOSED_LOST'
+  probability    Int      @default(25) // 0-100%
+  expectedClose  DateTime?
+  actualClose    DateTime?
+  salesperson    String?
+  commission     Int?
+  lossReason     String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([stage, salesperson])
+  @@index([expectedClose])
+}
+
+model customer_analytics {
+  id              String   @id @default(cuid())
+  customerId      String?
+  sessionId       String?
+  pageViews       Int      @default(1)
+  timeOnSite      Int?     // seconds
+  vehiclesViewed  String?  // JSON array of vehicle IDs
+  searchQueries   String?  // JSON array of search terms
+  leadSource      String?
+  conversionEvent String?  // 'contact', 'appointment', 'inquiry'
+  lastActivity    DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([customerId, lastActivity])
+  @@index([sessionId])
+  @@index([conversionEvent])
+}
+
+// MISSING MODELS - Added for TypeScript compatibility
+
+model ABTest {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  hypothesis  String?
+  testType    String   @map("test_type") // 'landing_page', 'email_campaign', 'sms_campaign', 'social_post', 'workflow'
+  entityId    String   @map("entity_id") // ID of the entity being tested
+  status      String   @default("DRAFT") // 'DRAFT', 'RUNNING', 'PAUSED', 'COMPLETED'
+  variants    Json?    // Variant configurations
+  metrics     Json?    // Test metrics and results
+  trafficSplit Float   @default(0.5) @map("traffic_split") // 0.5 = 50/50 split
+  conversionGoal String? @map("conversion_goal")
+  confidenceLevel Float @default(0.95) @map("confidence_level")
+  minSampleSize Int    @default(100) @map("min_sample_size")
+  targetMetric String  @map("target_metric") // 'conversion_rate', 'click_rate', 'open_rate', etc.
+  startDate   DateTime? @map("start_date") 
+  endDate     DateTime? @map("end_date") 
+  winnerVariant String? @map("winner_variant") // 'A' or 'B'
+  isSignificant Boolean @default(false) @map("is_significant")
+  pValue      Float?   @map("p_value")
+  improvement Float?   // percentage improvement
+  createdAt   DateTime @default(now()) @map("created_at") 
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("ab_tests")
+  @@index([status])
+  @@index([testType, status])
+  @@index([startDate, endDate])
+}
+
+model EmailCampaign {
+  id              String   @id @default(uuid())
+  name            String
+  subject         String
+  content         String   
+  htmlContent     String?  @map("html_content") 
+  fromEmail       String   @map("from_email")
+  fromName        String   @map("from_name")
+  replyTo         String?  @map("reply_to")
+  recipientCount  Int      @default(0) @map("recipient_count")
+  status          String   @default("DRAFT") // 'DRAFT', 'SCHEDULED', 'SENDING', 'SENT', 'FAILED'
+  scheduledFor    DateTime? @map("scheduled_for") 
+  sentAt          DateTime? @map("sent_at") 
+  openRate        Float?   @map("open_rate")
+  clickRate       Float?   @map("click_rate")
+  unsubscribeRate Float?   @map("unsubscribe_rate")
+  bounceRate      Float?   @map("bounce_rate")
+  segmentCriteria Json?    @map("segment_criteria") // Target audience criteria
+  abTestId        String?  @map("ab_test_id")
+  tags            String?  // JSON array
+  createdAt       DateTime @default(now()) @map("created_at") 
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("email_campaigns")
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([sentAt])
+}
+
+model SMSCampaign {
+  id             String   @id @default(uuid())
+  name           String
+  message        String   
+  phoneNumbers   String   @map("phone_numbers")  // JSON array
+  recipientCount Int      @default(0) @map("recipient_count")
+  status         String   @default("DRAFT") // 'DRAFT', 'SCHEDULED', 'SENDING', 'SENT', 'FAILED'
+  scheduledFor   DateTime? @map("scheduled_for") 
+  sentAt         DateTime? @map("sent_at") 
+  deliveryRate   Float?   @map("delivery_rate")
+  clickRate      Float?   @map("click_rate")
+  cost           Float?   // Total cost
+  segmentCriteria Json?   @map("segment_criteria")
+  tags           String?  // JSON array
+  createdAt      DateTime @default(now()) @map("created_at") 
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("sms_campaigns")
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([sentAt])
+}
+
+model SocialMediaPost {
+  id              String   @id @default(uuid())
+  platform        String   // 'facebook', 'instagram', 'twitter', 'linkedin'
+  content         String   
+  mediaUrls       String?  @map("media_urls")  // JSON array of image/video URLs
+  status          String   @default("DRAFT") // 'DRAFT', 'SCHEDULED', 'PUBLISHED', 'FAILED'
+  scheduledFor    DateTime? @map("scheduled_for") 
+  publishedAt     DateTime? @map("published_at") 
+  platformPostId  String?  @map("platform_post_id") // ID from the social platform
+  impressions     Int      @default(0)
+  engagements     Int      @default(0)
+  clicks          Int      @default(0)
+  shares          Int      @default(0)
+  comments        Int      @default(0)
+  likes           Int      @default(0)
+  engagementRate  Float?   @map("engagement_rate")
+  targetAudience  Json?    @map("target_audience")
+  hashtags        String?  // JSON array
+  tags            String?  // JSON array
+  createdAt       DateTime @default(now()) @map("created_at") 
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("social_media_posts")
+  @@index([platform, status])
+  @@index([scheduledFor])
+  @@index([publishedAt])
+}
+
+model Lead {
+  id              String   @id @default(uuid())
+  customerName    String   @map("customer_name")
+  customerEmail   String   @map("customer_email")
+  customerPhone   String?  @map("customer_phone")
+  source          String   // 'website', 'phone', 'walk-in', 'referral', 'facebook', 'google', 'email_campaign', 'sms_campaign'
+  vehicleId       String?  @map("vehicle_id")
+  leadType        String   @map("lead_type") // 'purchase', 'service', 'trade-in', 'financing', 'general'
+  stage           String   @default("NEW") // 'NEW', 'CONTACTED', 'QUALIFIED', 'PROPOSAL', 'NEGOTIATION', 'CLOSED_WON', 'CLOSED_LOST'
+  priority        String   @default("MEDIUM") // 'LOW', 'MEDIUM', 'HIGH', 'URGENT'
+  score           Int?     @default(0) // Lead score from scoring engine
+  scoreBreakdown  Json?    @map("score_breakdown")
+  assignedTo      String?  @map("assigned_to")
+  lastContact     DateTime? @map("last_contact") 
+  nextFollowUp    DateTime? @map("next_follow_up") 
+  notes           String?  
+  value           Int?     // Estimated deal value
+  probability     Int?     // Closure probability %
+  metadata        Json?    // Additional data
+  closedAt        DateTime? @map("closed_at") 
+  lossReason      String?  @map("loss_reason")
+  createdAt       DateTime @default(now()) @map("created_at") 
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("leads")
+  @@index([stage, assignedTo])
+  @@index([source, createdAt])
+  @@index([customerEmail])
+  @@index([score])
+  @@index([nextFollowUp])
+}
+
+model Customer {
+  id                      String   @id @default(uuid())
+  email                   String   @unique
+  firstName               String?  @map("first_name")
+  lastName                String?  @map("last_name")
+  phone                   String?
+  status                  String   @default("ACTIVE") // 'ACTIVE', 'INACTIVE', 'BLOCKED'
+  customerType            String   @default("INDIVIDUAL") @map("customer_type") // 'INDIVIDUAL', 'BUSINESS'
+  preferredLanguage       String?  @default("en") @map("preferred_language")
+  communicationPreferences Json?   @map("communication_preferences") // Email, SMS, phone preferences
+  totalPurchases          Int      @default(0) @map("total_purchases")
+  totalSpent              Int      @default(0) @map("total_spent")
+  averageOrderValue       Int      @default(0) @map("average_order_value")
+  lifetimeValue           Int      @default(0) @map("lifetime_value")
+  lastPurchaseAt          DateTime? @map("last_purchase_at") 
+  tags                    String?  // JSON array
+  notes                   String?  
+  metadata                Json?
+  createdAt               DateTime @default(now()) @map("created_at") 
+  updatedAt               DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("customers")
+  @@index([email])
+  @@index([status])
+  @@index([customerType])
+  @@index([lastPurchaseAt])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String?  @map("user_id")
+  type        String   // 'INFO', 'WARNING', 'ERROR', 'SUCCESS'
+  category    String   // 'LEAD', 'APPOINTMENT', 'SALE', 'SYSTEM', 'MARKETING'
+  title       String
+  message     String   
+  actionUrl   String?  @map("action_url")
+  actionLabel String?  @map("action_label")
+  isRead      Boolean  @default(false) @map("is_read")
+  readAt      DateTime? @map("read_at") 
+  priority    String   @default("NORMAL") // 'LOW', 'NORMAL', 'HIGH', 'URGENT'
+  metadata    Json?
+  expiresAt   DateTime? @map("expires_at") 
+  createdAt   DateTime @default(now()) @map("created_at") 
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("notifications")
+  @@index([userId, isRead])
+  @@index([type, category])
+  @@index([createdAt])
+}
+
+model PricingRule {
+  id          String   @id @default(uuid())
+  name        String
+  description String?  
+  ruleType    String   @map("rule_type") // 'MARKUP', 'MARKDOWN', 'DYNAMIC', 'SEASONAL', 'COMPETITOR'
+  conditions  Json     // Conditions that trigger this rule
+  adjustment  Json     // Pricing adjustment configuration
+  priority    Int      @default(0) // Higher priority rules are applied first
+  isActive    Boolean  @default(true) @map("is_active")
+  validFrom   DateTime? @map("valid_from") 
+  validUntil  DateTime? @map("valid_until") 
+  appliedCount Int     @default(0) @map("applied_count")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at") 
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("pricing_rules")
+  @@index([isActive, priority])
+  @@index([ruleType])
+  @@index([validFrom, validUntil])
+}
+
+model Promotion {
+  id              String   @id @default(uuid())
+  code            String   @unique
+  name            String
+  description     String?  
+  type            String   // 'PERCENTAGE', 'FIXED_AMOUNT', 'FREE_SHIPPING', 'BUNDLE'
+  discountValue   Int      @map("discount_value") // Percentage (0-100) or fixed amount in cents
+  conditions      Json?    // Conditions for promotion (min purchase, specific vehicles, etc.)
+  maxUses         Int?     @map("max_uses")
+  usedCount       Int      @default(0) @map("used_count")
+  maxUsesPerCustomer Int?  @map("max_uses_per_customer")
+  isActive        Boolean  @default(true) @map("is_active")
+  startDate       DateTime @map("start_date") 
+  endDate         DateTime @map("end_date") 
+  applicableVehicles String? @map("applicable_vehicles")  // JSON array of vehicle IDs
+  metadata        Json?
+  createdAt       DateTime @default(now()) @map("created_at") 
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@map("promotions")
+  @@index([code])
+  @@index([isActive, startDate, endDate])
+  @@index([type])
+}
+
+model Translation {
+  id          String   @id @default(uuid())
+  locale      String   // 'en', 'fr', 'es', 'de', etc.
+  namespace   String   // 'common', 'vehicles', 'appointments', etc.
+  key         String   // Translation key
+  value       String    // Translated text
+  description String?   // Context for translators
+  isApproved  Boolean  @default(false) @map("is_approved")
+  approvedBy  String?  @map("approved_by")
+  approvedAt  DateTime? @map("approved_at") 
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at") 
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") 
+
+  @@unique([locale, namespace, key])
+  @@map("translations")
+  @@index([locale, namespace])
+  @@index([isApproved])
+}

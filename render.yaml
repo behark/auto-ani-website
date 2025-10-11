@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: auto-ani-website
+    env: node
+    plan: starter  # $25/month for reliable performance
+    region: frankfurt  # Closest to Kosovo
+    branch: main
+    repo: https://github.com/behark/auto-ani-website
+    buildCommand: npm ci && npm run build:production
+    startCommand: npm start
+    healthCheckPath: /api/health
+
+    # Environment variables (to be set via CLI/dashboard)
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PROVIDER
+        value: postgresql
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+
+    # Render-specific optimizations
+    autoDeploy: true
+    numInstances: 1
+
+    # Custom domains will be added later
+    # domains:
+    #   - autosalonani.com
+    #   - www.autosalonani.com
