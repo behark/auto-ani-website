@@ -33,7 +33,7 @@
     "postinstall": "prisma generate",
     "type-check": "tsc --noEmit",
     "lint:strict": "next lint --max-warnings 0",
-    "build:production": "npm run type-check && npm run lint:strict && npm run build",
+    "build:full": "npm run type-check && npm run lint:strict && npm run build",
     "test:build": "npm run db:generate && npm run type-check && npm run build"
   },
   "dependencies": {
