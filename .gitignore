@@ -61,4 +61,4 @@ temp/
 
 # BACKUP FILES
 *.backup
-*.bak
+*.bak.env.production

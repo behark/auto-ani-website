@@ -8,6 +8,13 @@ set -e # Exit immediately if a command fails
 
 echo "🚀 Starting Auto ANI Website deployment on Render..."
 
+# Step 0: Setup production environment
+echo "⚙️ Setting up production environment..."
+if [ -f .env.production ]; then
+  cp .env.production .env
+  echo "✅ Production environment file loaded"
+fi
+
 # Step 1: Install dependencies
 echo "📦 Installing dependencies..."
 NODE_OPTIONS="--max-old-space-size=3072" npm ci --no-audit --no-fund
