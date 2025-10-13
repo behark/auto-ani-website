@@ -2,7 +2,7 @@ import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
 export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'dummy-project-id',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'j2t31xge',
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   useCdn: true, // Enable for faster, cached responses
   apiVersion: '2024-01-01',
@@ -14,15 +14,160 @@ export function urlFor(source: any) {
   return builder.image(source)
 }
 
-// GROQ queries for vehicles
+// Comprehensive GROQ queries for all automotive data
+export const queries = {
+  // Business Info
+  businessInfo: `*[_type == "businessInfo"][0]{
+    _id,
+    name,
+    description,
+    yearEstablished,
+    address,
+    phone,
+    email,
+    hours,
+    certifications,
+    languages,
+    social
+  }`,
+
+  // Team Members
+  teamMembers: `*[_type == "teamMember"] | order(order asc){
+    _id,
+    name,
+    role,
+    email,
+    phone,
+    experience,
+    languages,
+    specialties,
+    image,
+    bio
+  }`,
+
+  // Services
+  services: `*[_type == "service"] | order(order asc){
+    _id,
+    name,
+    description,
+    price,
+    duration,
+    features,
+    category,
+    image,
+    businessTypes,
+    bookingRequired
+  }`,
+
+  // Vehicles (existing)
+  allVehicles: `*[_type == "vehicle"] | order(_createdAt desc){
+    _id,
+    brand,
+    model,
+    year,
+    price,
+    mileage,
+    fuelType,
+    transmission,
+    category,
+    color,
+    engine,
+    drivetrain,
+    features,
+    gallery,
+    mainImage,
+    description,
+    featured,
+    slug
+  }`,
+
+  featuredVehicles: `*[_type == "vehicle" && featured == true] | order(_createdAt desc)[0...6]{
+    _id,
+    brand,
+    model,
+    year,
+    price,
+    mileage,
+    fuelType,
+    transmission,
+    mainImage,
+    description,
+    slug
+  }`,
+
+  // Testimonials
+  testimonials: `*[_type == "testimonial"] | order(_createdAt desc){
+    _id,
+    customerName,
+    rating,
+    review,
+    vehiclePurchased,
+    _createdAt
+  }`
+}
+
+// Legacy vehicle queries for backward compatibility
 export const VEHICLE_QUERIES = {
-  all: `*[_type == "vehicle"] | order(_createdAt desc)`,
+  all: queries.allVehicles,
   bySlug: `*[_type == "vehicle" && slug.current == $slug][0]`,
-  featured: `*[_type == "vehicle" && featured == true] | order(_createdAt desc)`,
+  featured: queries.featuredVehicles,
   byCategory: `*[_type == "vehicle" && category == $category] | order(_createdAt desc)`,
 }
 
-// TypeScript types
+// Comprehensive TypeScript interfaces
+export interface BusinessInfo {
+  _id: string
+  name: string
+  description: string
+  yearEstablished: number
+  address: {
+    street: string
+    city: string
+    country: string
+    zipCode: string
+    website?: string
+  }
+  phone: string
+  email: string
+  hours: {
+    [key: string]: { open: string; close: string } | { closed: boolean }
+  }
+  certifications: string[]
+  languages: string[]
+  social: {
+    facebook?: string
+    instagram?: string
+    twitter?: string
+    linkedin?: string
+  }
+}
+
+export interface TeamMember {
+  _id: string
+  name: string
+  role: string
+  email?: string
+  phone?: string
+  experience?: number
+  languages: string[]
+  specialties: string[]
+  image?: any
+  bio?: string
+}
+
+export interface Service {
+  _id: string
+  name: string
+  description: string
+  price: number
+  duration?: number
+  features: string[]
+  category: string
+  image?: any
+  businessTypes: string[]
+  bookingRequired?: boolean
+}
+
 export interface Vehicle {
   _id: string
   _type: 'vehicle'
@@ -52,4 +197,13 @@ export interface Vehicle {
   }>
   _createdAt: string
   _updatedAt: string
+}
+
+export interface Testimonial {
+  _id: string
+  customerName: string
+  rating: number
+  review: string
+  vehiclePurchased?: string
+  _createdAt: string
 }
