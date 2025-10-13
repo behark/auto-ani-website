@@ -39,69 +39,99 @@ export default function FeaturedVehicles() {
   const mockVehicles: Vehicle[] = [
     {
       _id: '1',
+      _type: 'vehicle',
+      title: 'BMW X5 xDrive30d',
       brand: 'BMW',
       model: 'X5',
       year: 2021,
       price: 42500,
       mileage: 35000,
+      category: 'used',
       specifications: { fuelType: 'Benzinë' },
       slug: { current: 'bmw-x5-2021' },
-      featured: true
+      featured: true,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z'
     },
     {
       _id: '2',
+      _type: 'vehicle',
+      title: 'Mercedes-Benz C-Class AMG',
       brand: 'Mercedes-Benz',
       model: 'C-Class',
       year: 2020,
       price: 38900,
       mileage: 28000,
+      category: 'used',
       specifications: { fuelType: 'Dizell' },
       slug: { current: 'mercedes-c-class-2020' },
-      featured: true
+      featured: true,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z'
     },
     {
       _id: '3',
+      _type: 'vehicle',
+      title: 'Audi A4 S Line',
       brand: 'Audi',
       model: 'A4',
       year: 2022,
       price: 35700,
       mileage: 18000,
+      category: 'used',
       specifications: { fuelType: 'Benzinë' },
       slug: { current: 'audi-a4-2022' },
-      featured: true
+      featured: true,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z'
     },
     {
       _id: '4',
+      _type: 'vehicle',
+      title: 'Volkswagen Golf GTI',
       brand: 'Volkswagen',
       model: 'Golf',
       year: 2021,
       price: 23500,
       mileage: 25000,
+      category: 'used',
       specifications: { fuelType: 'Benzinë' },
       slug: { current: 'vw-golf-2021' },
-      featured: true
+      featured: true,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z'
     },
     {
       _id: '5',
+      _type: 'vehicle',
+      title: 'Toyota RAV4 Hybrid',
       brand: 'Toyota',
       model: 'RAV4',
       year: 2022,
       price: 31200,
       mileage: 15000,
+      category: 'used',
       specifications: { fuelType: 'Hibrid' },
       slug: { current: 'toyota-rav4-2022' },
-      featured: true
+      featured: true,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z'
     },
     {
       _id: '6',
+      _type: 'vehicle',
+      title: 'BMW 320d xDrive',
       brand: 'BMW',
       model: '320d',
       year: 2020,
       price: 29800,
       mileage: 42000,
+      category: 'used',
       specifications: { fuelType: 'Dizell' },
       slug: { current: 'bmw-320d-2020' },
-      featured: true
+      featured: true,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z'
     }
   ];
 
