@@ -7,10 +7,14 @@ const nextConfig = {
   generateEtags: true,
   reactStrictMode: true,
 
+
   // Skip type checking during build for memory optimization
   typescript: {
     ignoreBuildErrors: true,
   },
+
+  // Disable static optimization for error pages to prevent export issues
+  skipTrailingSlashRedirect: true,
 
   // Experimental features for better performance
   experimental: {
