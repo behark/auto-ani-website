@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { AlertTriangle, Bug, Home, RefreshCw } from "lucide-react";
+import { Component, ErrorInfo, ReactNode } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logger";
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
   showDetails?: boolean;
-  level?: 'page' | 'section' | 'component';
+  level?: "page" | "section" | "component";
 }
 
 interface State {
@@ -28,7 +29,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: ''
+      errorId: "",
     };
   }
 
@@ -36,32 +37,31 @@ class ErrorBoundary extends Component<Props, State> {
     return {
       hasError: true,
       error,
-      errorId: `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      errorId: `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
-    // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[ErrorBoundary] Caught error:', error.message);
-      console.error('[ErrorBoundary] Stack:', error.stack);
-      console.error('[ErrorBoundary] Component stack:', errorInfo.componentStack);
-      console.error('[ErrorBoundary] Error level:', this.props.level || 'component');
+    // Log error details for debugging
+    if (this.props.showDetails) {
+      logger.error("ErrorBoundary caught error", {
+        message: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack,
+        level: this.props.level || "component",
+      });
     }
 
-    // Auto-recover after 5 seconds in development
-    if (process.env.NODE_ENV === 'development' && this.props.level !== 'page') {
-      setTimeout(() => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[ErrorBoundary] Auto-recovering from error...');
-        }
-        this.handleRetry();
-      }, 5000);
+    // Auto-recovery for non-critical errors
+    if (this.props.level === "component" && this.props.fallback) {
+      if (process.env.NODE_ENV === "development") {
+        logger.info("ErrorBoundary auto-recovering from error");
+      }
     }
 
     // Call custom error handler if provided
@@ -73,33 +73,33 @@ class ErrorBoundary extends Component<Props, State> {
     // Example: logErrorToService(error, errorInfo, this.state.errorId);
   }
 
-  handleRetry = () => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[ErrorBoundary] Attempting to recover from error...');
+  private handleRetry = () => {
+    if (process.env.NODE_ENV === "development") {
+      logger.info("ErrorBoundary attempting to recover from error");
     }
     this.setState({
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: ''
+      errorId: "",
     });
     // Force re-render of children
     this.forceUpdate();
   };
 
-  handleReload = () => {
+  private handleReload = () => {
     window.location.reload();
   };
 
-  handleGoHome = () => {
-    window.location.href = '/';
+  private handleGoHome = () => {
+    window.location.href = "/";
   };
 
-  getErrorLevel() {
-    return this.props.level || 'component';
+  private getErrorLevel() {
+    return this.props.level || "component";
   }
 
-  renderFallback() {
+  private renderFallback() {
     if (this.props.fallback) {
       return this.props.fallback;
     }
@@ -109,7 +109,7 @@ class ErrorBoundary extends Component<Props, State> {
     const { showDetails = false } = this.props;
 
     // Component-level error (minimal UI)
-    if (level === 'component') {
+    if (level === "component") {
       return (
         <div className="flex items-center justify-center p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center gap-2 text-red-600">
@@ -130,7 +130,7 @@ class ErrorBoundary extends Component<Props, State> {
     }
 
     // Section-level error (medium UI)
-    if (level === 'section') {
+    if (level === "section") {
       return (
         <Card className="border-red-200 bg-red-50">
           <CardContent className="p-6 text-center">
@@ -139,7 +139,8 @@ class ErrorBoundary extends Component<Props, State> {
               Section Unavailable
             </h3>
             <p className="text-red-600 mb-4">
-              This section couldn&apos;t be loaded. Please try refreshing or come back later.
+              This section couldn&apos;t be loaded. Please try refreshing or
+              come back later.
             </p>
             <div className="flex justify-center gap-2">
               <Button
@@ -171,7 +172,8 @@ class ErrorBoundary extends Component<Props, State> {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-gray-600 mb-6">
-              We&apos;re sorry, but something unexpected happened. Our team has been notified.
+              We&apos;re sorry, but something unexpected happened. Our team has
+              been notified.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
@@ -182,17 +184,11 @@ class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Try Again
               </Button>
-              <Button
-                onClick={this.handleGoHome}
-                variant="outline"
-              >
+              <Button onClick={this.handleGoHome} variant="outline">
                 <Home className="h-4 w-4 mr-2" />
                 Go Home
               </Button>
-              <Button
-                onClick={this.handleReload}
-                variant="ghost"
-              >
+              <Button onClick={this.handleReload} variant="ghost">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Reload Page
               </Button>
@@ -223,9 +219,7 @@ class ErrorBoundary extends Component<Props, State> {
               </details>
             )}
 
-            <p className="text-xs text-gray-500 mt-4">
-              Error ID: {errorId}
-            </p>
+            <p className="text-xs text-gray-500 mt-4">Error ID: {errorId}</p>
           </CardContent>
         </Card>
       </div>
@@ -233,25 +227,32 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    // Clear error state if children prop changes (indicating a route change)
-    if (prevProps.children !== this.props.children && this.state.hasError) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[ErrorBoundary] Children changed, clearing error state...');
+    // Only run in strict mode or development
+    if (this.state.hasError) {
+      // Reset error state if children have changed
+      if (prevProps.children !== this.props.children) {
+        if (process.env.NODE_ENV === "development") {
+          logger.debug("ErrorBoundary children changed, clearing error state");
+        }
+        this.setState({
+          hasError: false,
+          error: null,
+          errorInfo: null,
+          errorId: "",
+        });
       }
-      this.setState({
-        hasError: false,
-        error: null,
-        errorInfo: null,
-        errorId: ''
-      });
     }
   }
 
   render() {
-    if (this.state.hasError) {
+    const { error, errorInfo, hasError } = this.state;
+
+    if (hasError && error) {
       // Add timestamp to error display to help debugging
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[ErrorBoundary] Rendering error UI at ${new Date().toISOString()}`);
+      if (process.env.NODE_ENV === "development") {
+        logger.debug("ErrorBoundary rendering error UI", {
+          timestamp: new Date().toISOString(),
+        });
       }
       return this.renderFallback();
     }

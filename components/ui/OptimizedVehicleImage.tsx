@@ -1,7 +1,9 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useState } from 'react';
+import Image from "next/image";
+import { useState } from "react";
+
+import { logger } from "@/lib/logger";
 
 interface OptimizedVehicleImageProps {
   src: string;
@@ -25,11 +27,11 @@ export default function OptimizedVehicleImage({
   alt,
   width = 800,
   height = 600,
-  className = '',
+  className = "",
   priority = false,
   fill = false,
-  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-  quality = 85
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  quality = 85,
 }: OptimizedVehicleImageProps) {
   const [imgSrc, setImgSrc] = useState(src);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +39,7 @@ export default function OptimizedVehicleImage({
   // Generate optimized image path
   const getOptimizedSrc = (originalSrc: string): string => {
     // Check if it's a vehicle image
-    if (!originalSrc.includes('/vehicles/')) {
+    if (!originalSrc.includes("/vehicles/")) {
       return originalSrc;
     }
 
@@ -46,7 +48,7 @@ export default function OptimizedVehicleImage({
     if (!match) return originalSrc;
 
     const [, vehicleFolder, filename] = match;
-    const nameWithoutExt = filename.replace(/\.[^.]+$/, '');
+    const nameWithoutExt = filename.replace(/\.[^.]+$/, "");
 
     // For optimized folder, use WebP format
     // Available sizes: 640w, 1280w, original
@@ -60,19 +62,17 @@ export default function OptimizedVehicleImage({
   const handleError = () => {
     // If optimized image fails, fallback to original
     if (optimizedSrc !== src && imgSrc !== src) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`Falling back to original image: ${src}`);
+      if (process.env.NODE_ENV === "development") {
+        logger.debug("Falling back to original image", { src });
       }
       setImgSrc(src);
     }
   };
 
-  const imageProps = fill
-    ? { fill: true, sizes }
-    : { width, height };
+  const imageProps = fill ? { fill: true, sizes } : { width, height };
 
   return (
-    <div className={`relative ${fill ? 'w-full h-full' : ''} ${className}`}>
+    <div className={`relative ${fill ? "w-full h-full" : ""} ${className}`}>
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
       )}
@@ -82,7 +82,7 @@ export default function OptimizedVehicleImage({
         {...imageProps}
         quality={quality}
         priority={priority}
-        className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+        className={`${className} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
         onLoad={() => setIsLoading(false)}
         onError={handleError}
         placeholder="blur"

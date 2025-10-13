@@ -1,25 +1,24 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Sun, Moon, Monitor, Palette } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { AnimatedButton } from '@/components/ui/AnimatedButton';
-import { Button } from '@/components/ui/button';
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { useTheme } from '@/contexts/ThemeContext';
-import { MOTION_VARIANTS } from '@/lib/animations';
-import { cn } from '@/lib/utils';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/contexts/ThemeContext";
+import { cn } from "@/lib/utils";
 
 interface ThemeToggleProps {
-  variant?: 'icon' | 'button' | 'dropdown';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "icon" | "button" | "dropdown";
+  size?: "sm" | "md" | "lg";
   showLabel?: boolean;
   className?: string;
 }
@@ -31,20 +30,20 @@ const themeIcons = {
 };
 
 const themeLabels = {
-  light: 'Light mode',
-  dark: 'Dark mode',
-  system: 'System theme',
+  light: "Light mode",
+  dark: "Dark mode",
+  system: "System theme",
 };
 
 const themeDescriptions = {
-  light: 'Switch to light theme',
-  dark: 'Switch to dark theme',
-  system: 'Use system theme preference',
+  light: "Switch to light theme",
+  dark: "Switch to dark theme",
+  system: "Use system theme preference",
 };
 
 export function ThemeToggle({
-  variant = 'icon',
-  size = 'md',
+  variant = "icon",
+  size = "md",
   showLabel = false,
   className,
 }: ThemeToggleProps) {
@@ -61,7 +60,7 @@ export function ThemeToggle({
       <Button
         variant="ghost"
         size="icon"
-        className={cn('opacity-50', className)}
+        className={cn("opacity-50", className)}
         disabled
       >
         <Sun className="h-5 w-5" />
@@ -70,7 +69,7 @@ export function ThemeToggle({
   }
 
   // Simple toggle variant (switches between light/dark only)
-  if (variant === 'icon') {
+  if (variant === "icon") {
     const CurrentIcon = themeIcons[effectiveTheme];
 
     return (
@@ -83,11 +82,11 @@ export function ThemeToggle({
           size="icon"
           onClick={toggleTheme}
           className={cn(
-            'relative overflow-hidden transition-colors duration-300',
-            'hover:bg-orange-100 dark:hover:bg-orange-900/20',
+            "relative overflow-hidden transition-colors duration-300",
+            "hover:bg-orange-100 dark:hover:bg-orange-900/20",
             className
           )}
-          aria-label={`Switch to ${effectiveTheme === 'light' ? 'dark' : 'light'} mode`}
+          aria-label={`Switch to ${effectiveTheme === "light" ? "dark" : "light"} mode`}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -111,7 +110,7 @@ export function ThemeToggle({
               transition={{ duration: 0.2 }}
               style={{
                 background: `radial-gradient(circle, ${
-                  effectiveTheme === 'light' ? '#f97316' : '#fbbf24'
+                  effectiveTheme === "light" ? "#f97316" : "#fbbf24"
                 } 0%, transparent 70%)`,
               }}
             />
@@ -122,7 +121,7 @@ export function ThemeToggle({
   }
 
   // Button with label variant
-  if (variant === 'button') {
+  if (variant === "button") {
     const CurrentIcon = themeIcons[effectiveTheme];
 
     return (
@@ -131,8 +130,8 @@ export function ThemeToggle({
         animation="glow"
         onClick={toggleTheme}
         className={cn(
-          'gap-2 transition-colors duration-300',
-          'border-orange-200 hover:border-orange-300 dark:border-orange-800 dark:hover:border-orange-700',
+          "gap-2 transition-colors duration-300",
+          "border-orange-200 hover:border-orange-300 dark:border-orange-800 dark:hover:border-orange-700",
           className
         )}
         icon={<CurrentIcon className="h-4 w-4" />}
@@ -147,7 +146,7 @@ export function ThemeToggle({
   }
 
   // Dropdown variant (shows all theme options)
-  if (variant === 'dropdown') {
+  if (variant === "dropdown") {
     const CurrentIcon = themeIcons[theme]; // Use selected theme, not effective
 
     return (
@@ -161,8 +160,8 @@ export function ThemeToggle({
               variant="ghost"
               size="sm"
               className={cn(
-                'gap-2 transition-colors duration-300',
-                'hover:bg-orange-100 dark:hover:bg-orange-900/20',
+                "gap-2 transition-colors duration-300",
+                "hover:bg-orange-100 dark:hover:bg-orange-900/20",
                 className
               )}
             >
@@ -182,39 +181,41 @@ export function ThemeToggle({
           </div>
           <DropdownMenuSeparator />
 
-          {(Object.entries(themeIcons) as Array<[keyof typeof themeIcons, any]>).map(
-            ([themeOption, Icon]) => (
-              <DropdownMenuItem
-                key={themeOption}
-                onClick={() => setTheme(themeOption as any)}
-                className={cn(
-                  'gap-3 cursor-pointer transition-colors duration-200',
-                  theme === themeOption && 'bg-orange-100 dark:bg-orange-900/30'
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                <div className="flex-1">
-                  <div className="font-medium">{themeLabels[themeOption]}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {themeDescriptions[themeOption]}
-                  </div>
+          {(
+            Object.entries(themeIcons) as Array<[keyof typeof themeIcons, any]>
+          ).map(([themeOption, Icon]) => (
+            <DropdownMenuItem
+              key={themeOption}
+              onClick={() =>
+                setTheme(themeOption as "light" | "dark" | "system")
+              }
+              className={cn(
+                "gap-3 cursor-pointer transition-colors duration-200",
+                theme === themeOption && "bg-orange-100 dark:bg-orange-900/30"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              <div className="flex-1">
+                <div className="font-medium">{themeLabels[themeOption]}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {themeDescriptions[themeOption]}
                 </div>
-                {theme === themeOption && (
-                  <motion.div
-                    initial={shouldReduceMotion ? {} : { scale: 0 }}
-                    animate={shouldReduceMotion ? {} : { scale: 1 }}
-                    className="w-2 h-2 bg-orange-500 rounded-full"
-                  />
-                )}
-              </DropdownMenuItem>
-            )
-          )}
+              </div>
+              {theme === themeOption && (
+                <motion.div
+                  initial={shouldReduceMotion ? {} : { scale: 0 }}
+                  animate={shouldReduceMotion ? {} : { scale: 1 }}
+                  className="w-2 h-2 bg-orange-500 rounded-full"
+                />
+              )}
+            </DropdownMenuItem>
+          ))}
 
           <DropdownMenuSeparator />
 
           <div className="px-2 py-1.5 text-xs text-gray-500 dark:text-gray-400">
-            Current: {effectiveTheme === 'light' ? 'Light' : 'Dark'} mode
-            {theme === 'system' && ' (Auto)'}
+            Current: {effectiveTheme === "light" ? "Light" : "Dark"} mode
+            {theme === "system" && " (Auto)"}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -229,10 +230,10 @@ export function FloatingThemeToggle({ className }: { className?: string }) {
   return (
     <motion.div
       className={cn(
-        'fixed bottom-6 right-6 z-50',
-        'bg-white dark:bg-gray-800',
-        'rounded-full shadow-lg border border-gray-200 dark:border-gray-700',
-        'p-2',
+        "fixed bottom-6 right-6 z-50",
+        "bg-white dark:bg-gray-800",
+        "rounded-full shadow-lg border border-gray-200 dark:border-gray-700",
+        "p-2",
         className
       )}
       initial={{ scale: 0, opacity: 0 }}
@@ -255,9 +256,9 @@ export function MiniThemeToggle({ className }: { className?: string }) {
     <motion.button
       onClick={toggleTheme}
       className={cn(
-        'w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600',
-        'transition-all duration-300 overflow-hidden relative',
-        'hover:border-orange-400 dark:hover:border-orange-500',
+        "w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600",
+        "transition-all duration-300 overflow-hidden relative",
+        "hover:border-orange-400 dark:hover:border-orange-500",
         className
       )}
       whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
@@ -267,15 +268,15 @@ export function MiniThemeToggle({ className }: { className?: string }) {
       <motion.div
         className="absolute inset-0 flex items-center justify-center"
         animate={{
-          backgroundColor: effectiveTheme === 'light' ? '#ffffff' : '#1f2937',
+          backgroundColor: effectiveTheme === "light" ? "#ffffff" : "#1f2937",
         }}
         transition={{ duration: 0.3 }}
       >
         <motion.div
           className="w-3 h-3 rounded-full"
           animate={{
-            backgroundColor: effectiveTheme === 'light' ? '#f59e0b' : '#fbbf24',
-            x: effectiveTheme === 'light' ? -6 : 6,
+            backgroundColor: effectiveTheme === "light" ? "#f59e0b" : "#fbbf24",
+            x: effectiveTheme === "light" ? -6 : 6,
           }}
           transition={{ duration: 0.3 }}
         />
@@ -291,19 +292,19 @@ export function ThemeIndicator({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400',
+        "flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400",
         className
       )}
     >
       <div
         className={cn(
-          'w-2 h-2 rounded-full',
-          effectiveTheme === 'light' ? 'bg-yellow-400' : 'bg-blue-400'
+          "w-2 h-2 rounded-full",
+          effectiveTheme === "light" ? "bg-yellow-400" : "bg-blue-400"
         )}
       />
       <span>
-        {effectiveTheme === 'light' ? 'Light' : 'Dark'} mode
-        {theme === 'system' && ' (Auto)'}
+        {effectiveTheme === "light" ? "Light" : "Dark"} mode
+        {theme === "system" && " (Auto)"}
       </span>
     </div>
   );

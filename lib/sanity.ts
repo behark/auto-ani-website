@@ -1,17 +1,29 @@
-import { createClient } from '@sanity/client'
-import imageUrlBuilder from '@sanity/image-url'
+import { createClient, type SanityClient } from "@sanity/client";
+import imageUrlBuilder from "@sanity/image-url";
+import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'j2t31xge',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  useCdn: true, // Enable for faster, cached responses
-  apiVersion: '2024-01-01',
-})
+// Lazy-load client to avoid build-time issues with Next.js 15
+let cachedClient: SanityClient | null = null;
 
-const builder = imageUrlBuilder(client)
+function getClient(): SanityClient {
+  if (!cachedClient) {
+    cachedClient = createClient({
+      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "j2t31xge",
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+      useCdn: true, // Enable for faster, cached responses
+      apiVersion: "2024-01-01",
+    });
+  }
+  return cachedClient;
+}
 
-export function urlFor(source: any) {
-  return builder.image(source)
+// Export client getter for compatibility
+export const client = getClient();
+
+const builder = imageUrlBuilder(getClient());
+
+export function urlFor(source: SanityImageSource) {
+  return builder.image(source);
 }
 
 // Comprehensive GROQ queries for all automotive data
@@ -103,8 +115,8 @@ export const queries = {
     review,
     vehiclePurchased,
     _createdAt
-  }`
-}
+  }`,
+};
 
 // Legacy vehicle queries for backward compatibility
 export const VEHICLE_QUERIES = {
@@ -112,98 +124,98 @@ export const VEHICLE_QUERIES = {
   bySlug: `*[_type == "vehicle" && slug.current == $slug][0]`,
   featured: queries.featuredVehicles,
   byCategory: `*[_type == "vehicle" && category == $category] | order(_createdAt desc)`,
-}
+};
 
 // Comprehensive TypeScript interfaces
 export interface BusinessInfo {
-  _id: string
-  name: string
-  description: string
-  yearEstablished: number
+  _id: string;
+  name: string;
+  description: string;
+  yearEstablished: number;
   address: {
-    street: string
-    city: string
-    country: string
-    zipCode: string
-    website?: string
-  }
-  phone: string
-  email: string
+    street: string;
+    city: string;
+    country: string;
+    zipCode: string;
+    website?: string;
+  };
+  phone: string;
+  email: string;
   hours: {
-    [key: string]: { open: string; close: string } | { closed: boolean }
-  }
-  certifications: string[]
-  languages: string[]
+    [key: string]: { open: string; close: string } | { closed: boolean };
+  };
+  certifications: string[];
+  languages: string[];
   social: {
-    facebook?: string
-    instagram?: string
-    twitter?: string
-    linkedin?: string
-  }
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    linkedin?: string;
+  };
 }
 
 export interface TeamMember {
-  _id: string
-  name: string
-  role: string
-  email?: string
-  phone?: string
-  experience?: number
-  languages: string[]
-  specialties: string[]
-  image?: any
-  bio?: string
+  _id: string;
+  name: string;
+  role: string;
+  email?: string;
+  phone?: string;
+  experience?: number;
+  languages: string[];
+  specialties: string[];
+  image?: any;
+  bio?: string;
 }
 
 export interface Service {
-  _id: string
-  name: string
-  description: string
-  price: number
-  duration?: number
-  features: string[]
-  category: string
-  image?: any
-  businessTypes: string[]
-  bookingRequired?: boolean
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration?: number;
+  features: string[];
+  category: string;
+  image?: any;
+  businessTypes: string[];
+  bookingRequired?: boolean;
 }
 
 export interface Vehicle {
-  _id: string
-  _type: 'vehicle'
-  title: string
-  slug: { current: string }
-  brand: string
-  model: string
-  year: number
-  price: number
-  mileage?: number
-  category: 'new' | 'used' | 'certified'
-  featured?: boolean
-  description?: string
+  _id: string;
+  _type: "vehicle";
+  title: string;
+  slug: { current: string };
+  brand: string;
+  model: string;
+  year: number;
+  price: number;
+  mileage?: number;
+  category: "new" | "used" | "certified";
+  featured?: boolean;
+  description?: string;
   specifications?: {
-    engine?: string
-    transmission?: string
-    fuelType?: string
-    drivetrain?: string
-    color?: string
-  }
+    engine?: string;
+    transmission?: string;
+    fuelType?: string;
+    drivetrain?: string;
+    color?: string;
+  };
   images?: Array<{
     asset: {
-      _ref: string
-      _type: 'reference'
-    }
-    alt?: string
-  }>
-  _createdAt: string
-  _updatedAt: string
+      _ref: string;
+      _type: "reference";
+    };
+    alt?: string;
+  }>;
+  _createdAt: string;
+  _updatedAt: string;
 }
 
 export interface Testimonial {
-  _id: string
-  customerName: string
-  rating: number
-  review: string
-  vehiclePurchased?: string
-  _createdAt: string
+  _id: string;
+  customerName: string;
+  rating: number;
+  review: string;
+  vehiclePurchased?: string;
+  _createdAt: string;
 }

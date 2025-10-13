@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface ProgressiveImageProps {
   src: string;
@@ -34,14 +34,14 @@ export default function ProgressiveImage({
   alt,
   width = 800,
   height = 600,
-  className = '',
+  className = "",
   priority = false,
   fill = false,
-  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   quality = 85,
   placeholderSrc,
   onLoad,
-  onError
+  onError,
 }: ProgressiveImageProps) {
   const [imgSrc, setImgSrc] = useState(src);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -49,7 +49,7 @@ export default function ProgressiveImage({
 
   // Generate different quality versions
   const generateSrcSet = (baseSrc: string) => {
-    if (!baseSrc.startsWith('/') && !baseSrc.startsWith('http')) {
+    if (!baseSrc.startsWith("/") && !baseSrc.startsWith("http")) {
       return baseSrc;
     }
 
@@ -66,13 +66,13 @@ export default function ProgressiveImage({
   const generatePlaceholder = (baseSrc: string) => {
     if (placeholderSrc) return placeholderSrc;
 
-    if (!baseSrc.startsWith('/') && !baseSrc.startsWith('http')) {
+    if (!baseSrc.startsWith("/") && !baseSrc.startsWith("http")) {
       return baseSrc;
     }
 
     const params = new URLSearchParams({
-      w: '40',
-      q: '10',
+      w: "40",
+      q: "10",
     });
 
     return `${baseSrc}?${params}`;
@@ -93,20 +93,20 @@ export default function ProgressiveImage({
     // Try fallback sources
     if (imgSrc === src) {
       // Try to remove query parameters
-      const cleanSrc = src.split('?')[0];
+      const cleanSrc = src.split("?")[0];
       if (cleanSrc !== src) {
         setImgSrc(cleanSrc);
         return;
       }
 
       // Try different format
-      if (src.includes('.webp')) {
-        setImgSrc(src.replace('.webp', '.jpg'));
+      if (src.includes(".webp")) {
+        setImgSrc(src.replace(".webp", ".jpg"));
         return;
       }
 
-      if (src.includes('.avif')) {
-        setImgSrc(src.replace('.avif', '.webp'));
+      if (src.includes(".avif")) {
+        setImgSrc(src.replace(".avif", ".webp"));
         return;
       }
     }
@@ -114,33 +114,35 @@ export default function ProgressiveImage({
 
   // Preload high-quality image when in viewport
   useEffect(() => {
-    if (!priority && 'IntersectionObserver' in window) {
+    if (!priority && "IntersectionObserver" in window) {
       const img = new window.Image();
       img.src = generateSrcSet(imgSrc);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgSrc, priority, quality, width]);
 
   const imageProps = fill
     ? {
         fill: true,
         sizes,
-        style: { objectFit: 'cover' as const }
+        style: { objectFit: "cover" as const },
       }
     : {
         width,
         height,
-        style: { width: 'auto', height: 'auto' }
+        style: { width: "auto", height: "auto" },
       };
 
   // Base64 encoded minimal placeholder
-  const blurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
+  const blurDataURL =
+    "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
 
   if (imgError) {
     return (
       <div
         className={cn(
-          'bg-gray-200 flex items-center justify-center rounded-lg',
-          fill ? 'w-full h-full' : '',
+          "bg-gray-200 flex items-center justify-center rounded-lg",
+          fill ? "w-full h-full" : "",
           className
         )}
         style={fill ? {} : { width, height }}
@@ -154,7 +156,13 @@ export default function ProgressiveImage({
   }
 
   return (
-    <div className={cn('relative overflow-hidden', fill ? 'w-full h-full' : '', className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden",
+        fill ? "w-full h-full" : "",
+        className
+      )}
+    >
       {/* Low-quality placeholder */}
       {!imgLoaded && (
         <Image
@@ -164,8 +172,8 @@ export default function ProgressiveImage({
           quality={10}
           priority={priority}
           className={cn(
-            'absolute inset-0 transition-opacity duration-300',
-            'blur-sm scale-105 z-0'
+            "absolute inset-0 transition-opacity duration-300",
+            "blur-sm scale-105 z-0"
           )}
           placeholder="blur"
           blurDataURL={blurDataURL}
@@ -180,8 +188,8 @@ export default function ProgressiveImage({
         quality={quality}
         priority={priority}
         className={cn(
-          'transition-opacity duration-500 z-10',
-          imgLoaded ? 'opacity-100' : 'opacity-0',
+          "transition-opacity duration-500 z-10",
+          imgLoaded ? "opacity-100" : "opacity-0",
           className
         )}
         onLoad={handleLoad}

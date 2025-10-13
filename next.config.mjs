@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Core optimizations
   compress: true,
   poweredByHeader: false,
@@ -11,11 +10,6 @@ const nextConfig: NextConfig = {
   // Skip type checking during build for memory optimization
   typescript: {
     ignoreBuildErrors: true,
-  },
-
-  // Disable static optimization to avoid module issues
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   // Experimental features for better performance
@@ -80,7 +74,7 @@ const nextConfig: NextConfig = {
   },
 
   // Webpack optimizations
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config, { dev }) => {
     // Only for production builds
     if (!dev) {
       // Tree shaking optimizations
@@ -105,94 +99,80 @@ const nextConfig: NextConfig = {
           },
           common: {
             minChunks: 2,
-            priority: -20,
-            chunks: 'all',
+            priority: -15,
             reuseExistingChunk: true,
-          },
-          // Separate chunk for UI components
-          ui: {
-            test: /[\\/]components[\\/]ui[\\/]/,
-            name: 'ui-components',
-            priority: 10,
-            chunks: 'all',
-          },
-          // Separate chunk for Radix UI
-          radix: {
-            test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-            name: 'radix-ui',
-            priority: 20,
-            chunks: 'all',
           },
         },
       };
     }
 
-    // Optimize imports
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      // Optimize lodash imports
-      'lodash': 'lodash-es',
-    };
-
     return config;
   },
 
-  // Performance and security headers
+  // Security and performance headers
   async headers() {
     return [
+      // Apply to all routes
       {
-        source: "/:path*",
+        source: '/:path*',
         headers: [
-          // Security headers
           {
-            key: "X-Frame-Options",
-            value: "SAMEORIGIN",
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
           },
           {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
           },
           {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
           },
           {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
           },
           // Performance headers
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       // Static assets caching
       {
-        source: "/images/:path*",
+        source: '/images/:path*',
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       {
-        source: "/_next/static/:path*",
+        source: '/_next/static/:path*',
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       // API routes
       {
-        source: "/api/:path*",
+        source: '/api/:path*',
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=300, s-maxage=300",
+            key: 'Cache-Control',
+            value: 'public, max-age=300, s-maxage=300',
           },
         ],
       },

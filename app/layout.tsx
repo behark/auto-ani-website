@@ -5,12 +5,12 @@ import "./globals.css";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import FinancingCalculator from "@/components/ui/FinancingCalculator";
 import FloatingContactWidget from "@/components/ui/FloatingContactWidget";
 import TradeInEstimator from "@/components/ui/TradeInEstimator";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
 
 const inter = Inter({
   subsets: ["latin"],

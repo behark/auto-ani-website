@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from "react";
 
-import { VEHICLES } from '@/lib/constants';
-import { Vehicle, VehicleFilters } from '@/lib/types';
+import { VEHICLES } from "@/lib/constants";
+import { Vehicle, VehicleFilters } from "@/lib/types";
 
 interface SearchState {
   query: string;
@@ -28,253 +28,296 @@ export function useVehicleSearch(options: UseVehicleSearchOptions = {}) {
     debounceMs = 300,
     enableHistory = true,
     maxHistoryItems = 10,
-    enableSuggestions = true
+    enableSuggestions = true,
   } = options;
 
   const [searchState, setSearchState] = useState<SearchState>({
-    query: '',
+    query: "",
     filters: {},
-    sortBy: 'relevance',
+    sortBy: "relevance",
     results: [],
     isLoading: false,
     resultCount: 0,
     suggestions: [],
-    searchHistory: []
+    searchHistory: [],
   });
 
   // Load search history from localStorage
   useEffect(() => {
-    if (enableHistory && typeof window !== 'undefined') {
-      const savedHistory = localStorage.getItem('vehicleSearchHistory');
+    if (enableHistory && typeof window !== "undefined") {
+      const savedHistory = localStorage.getItem("vehicleSearchHistory");
       if (savedHistory) {
         try {
           const history = JSON.parse(savedHistory);
-          setSearchState(prev => ({ ...prev, searchHistory: history }));
+          setSearchState((prev) => ({ ...prev, searchHistory: history }));
         } catch (error) {
-          console.warn('Failed to parse search history:', error);
+          console.warn("Failed to parse search history:", error);
         }
       }
     }
   }, [enableHistory]);
 
   // Save search history to localStorage
-  const saveSearchHistory = useCallback((history: string[]) => {
-    if (enableHistory && typeof window !== 'undefined') {
-      localStorage.setItem('vehicleSearchHistory', JSON.stringify(history));
-    }
-  }, [enableHistory]);
+  const saveSearchHistory = useCallback(
+    (history: string[]) => {
+      if (enableHistory && typeof window !== "undefined") {
+        localStorage.setItem("vehicleSearchHistory", JSON.stringify(history));
+      }
+    },
+    [enableHistory]
+  );
 
   // Generate search suggestions
-  const generateSuggestions = useCallback((query: string): string[] => {
-    if (!enableSuggestions || !query || query.length < 2) return [];
+  const generateSuggestions = useCallback(
+    (query: string): string[] => {
+      if (!enableSuggestions || !query || query.length < 2) return [];
 
-    const lowerQuery = query.toLowerCase();
-    const suggestions = new Set<string>();
-
-    // Search in vehicle makes, models, and features
-    VEHICLES.forEach(vehicle => {
-      const searchableFields = [
-        vehicle.make,
-        vehicle.model,
-        `${vehicle.make} ${vehicle.model}`,
-        vehicle.bodyType,
-        vehicle.fuelType,
-        vehicle.transmission,
-        vehicle.color,
-        ...vehicle.features
-      ];
-
-      searchableFields.forEach(field => {
-        if (field.toLowerCase().includes(lowerQuery)) {
-          // Add the full field as suggestion
-          suggestions.add(field);
-
-          // Add partial matches for longer fields
-          if (field.toLowerCase().startsWith(lowerQuery)) {
-            suggestions.add(field);
-          }
-        }
-      });
-    });
-
-    return Array.from(suggestions).slice(0, 8);
-  }, [enableSuggestions]);
-
-  // Perform search with scoring for relevance
-  const performSearch = useCallback((
-    query: string,
-    filters: VehicleFilters,
-    sortBy: string
-  ): Vehicle[] => {
-    let results = [...VEHICLES];
-
-    // Apply text search with scoring
-    if (query.trim()) {
       const lowerQuery = query.toLowerCase();
-      const queryTerms = lowerQuery.split(' ').filter(term => term.length > 0);
+      const suggestions = new Set<string>();
 
-      results = results.map(vehicle => {
-        let score = 0;
-        const searchText = `${vehicle.make} ${vehicle.model} ${vehicle.description} ${vehicle.features.join(' ')} ${vehicle.color} ${vehicle.bodyType} ${vehicle.fuelType}`.toLowerCase();
+      // Search in vehicle makes, models, and features
+      VEHICLES.forEach((vehicle) => {
+        const searchableFields = [
+          vehicle.make,
+          vehicle.model,
+          `${vehicle.make} ${vehicle.model}`,
+          vehicle.bodyType,
+          vehicle.fuelType,
+          vehicle.transmission,
+          vehicle.color,
+          ...vehicle.features,
+        ];
 
-        queryTerms.forEach(term => {
-          // Exact match in make/model gets highest score
-          if (vehicle.make.toLowerCase().includes(term) || vehicle.model.toLowerCase().includes(term)) {
-            score += 10;
-          }
-          // Match in description
-          if (vehicle.description.toLowerCase().includes(term)) {
-            score += 3;
-          }
-          // Match in features
-          if (vehicle.features.some(feature => feature.toLowerCase().includes(term))) {
-            score += 2;
-          }
-          // General text match
-          if (searchText.includes(term)) {
-            score += 1;
+        searchableFields.forEach((field) => {
+          if (field.toLowerCase().includes(lowerQuery)) {
+            // Add the full field as suggestion
+            suggestions.add(field);
+
+            // Add partial matches for longer fields
+            if (field.toLowerCase().startsWith(lowerQuery)) {
+              suggestions.add(field);
+            }
           }
         });
+      });
 
-        return { ...vehicle, searchScore: score };
-      }).filter(vehicle => vehicle.searchScore > 0);
-    }
+      return Array.from(suggestions).slice(0, 8);
+    },
+    [enableSuggestions]
+  );
 
-    // Apply filters
-    if (filters.make) {
-      results = results.filter(v => v.make === filters.make);
-    }
-    if (filters.bodyType) {
-      results = results.filter(v => v.bodyType === filters.bodyType);
-    }
-    if (filters.fuelType) {
-      results = results.filter(v => v.fuelType === filters.fuelType);
-    }
-    if (filters.transmission) {
-      results = results.filter(v => v.transmission === filters.transmission);
-    }
-    if (filters.priceMin !== undefined) {
-      results = results.filter(v => v.price >= filters.priceMin!);
-    }
-    if (filters.priceMax !== undefined) {
-      results = results.filter(v => v.price <= filters.priceMax!);
-    }
-    if (filters.yearMin !== undefined) {
-      results = results.filter(v => v.year >= filters.yearMin!);
-    }
-    if (filters.yearMax !== undefined) {
-      results = results.filter(v => v.year <= filters.yearMax!);
-    }
+  // Perform search with scoring for relevance
+  const performSearch = useCallback(
+    (query: string, filters: VehicleFilters, sortBy: string): Vehicle[] => {
+      let results = [...VEHICLES];
 
-    // Apply sorting
-    switch (sortBy) {
-      case 'price-low':
-        results.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        results.sort((a, b) => b.price - a.price);
-        break;
-      case 'year-new':
-        results.sort((a, b) => b.year - a.year);
-        break;
-      case 'year-old':
-        results.sort((a, b) => a.year - b.year);
-        break;
-      case 'mileage-low':
-        results.sort((a, b) => a.mileage - b.mileage);
-        break;
-      case 'featured':
-        results.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-        break;
-      case 'relevance':
-      default:
-        if (query.trim()) {
-          // Sort by search score for text queries
-          results.sort((a, b) => (b.searchScore || 0) - (a.searchScore || 0));
-        } else {
-          // Default to featured + facebook order for browsing
-          results.sort((a, b) => {
-            if (a.featured !== b.featured) {
-              return b.featured ? 1 : -1;
-            }
-            const aOrder = 'facebook_order' in a ? (a as any).facebook_order : 999;
-            const bOrder = 'facebook_order' in b ? (b as any).facebook_order : 999;
-            return (aOrder || 999) - (bOrder || 999);
-          });
-        }
-        break;
-    }
+      // Apply text search with scoring
+      if (query.trim()) {
+        const lowerQuery = query.toLowerCase();
+        const queryTerms = lowerQuery
+          .split(" ")
+          .filter((term) => term.length > 0);
 
-    return results;
-  }, []);
+        results = results
+          .map((vehicle) => {
+            let score = 0;
+            const searchText =
+              `${vehicle.make} ${vehicle.model} ${vehicle.description} ${vehicle.features.join(" ")} ${vehicle.color} ${vehicle.bodyType} ${vehicle.fuelType}`.toLowerCase();
+
+            queryTerms.forEach((term) => {
+              // Exact match in make/model gets highest score
+              if (
+                vehicle.make.toLowerCase().includes(term) ||
+                vehicle.model.toLowerCase().includes(term)
+              ) {
+                score += 10;
+              }
+              // Match in description
+              if (vehicle.description.toLowerCase().includes(term)) {
+                score += 3;
+              }
+              // Match in features
+              if (
+                vehicle.features.some((feature) =>
+                  feature.toLowerCase().includes(term)
+                )
+              ) {
+                score += 2;
+              }
+              // General text match
+              if (searchText.includes(term)) {
+                score += 1;
+              }
+            });
+
+            return { ...vehicle, searchScore: score };
+          })
+          .filter((vehicle) => vehicle.searchScore > 0);
+      }
+
+      // Apply filters
+      if (filters.make) {
+        results = results.filter((v) => v.make === filters.make);
+      }
+      if (filters.bodyType) {
+        results = results.filter((v) => v.bodyType === filters.bodyType);
+      }
+      if (filters.fuelType) {
+        results = results.filter((v) => v.fuelType === filters.fuelType);
+      }
+      if (filters.transmission) {
+        results = results.filter(
+          (v) => v.transmission === filters.transmission
+        );
+      }
+      if (filters.priceMin !== undefined) {
+        results = results.filter((v) => v.price >= filters.priceMin!);
+      }
+      if (filters.priceMax !== undefined) {
+        results = results.filter((v) => v.price <= filters.priceMax!);
+      }
+      if (filters.yearMin !== undefined) {
+        results = results.filter((v) => v.year >= filters.yearMin!);
+      }
+      if (filters.yearMax !== undefined) {
+        results = results.filter((v) => v.year <= filters.yearMax!);
+      }
+
+      // Apply sorting
+      switch (sortBy) {
+        case "price-low":
+          results.sort((a, b) => a.price - b.price);
+          break;
+        case "price-high":
+          results.sort((a, b) => b.price - a.price);
+          break;
+        case "year-new":
+          results.sort((a, b) => b.year - a.year);
+          break;
+        case "year-old":
+          results.sort((a, b) => a.year - b.year);
+          break;
+        case "mileage-low":
+          results.sort((a, b) => a.mileage - b.mileage);
+          break;
+        case "featured":
+          results.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+          break;
+        case "relevance":
+        default:
+          if (query.trim()) {
+            // Sort by search score for text queries
+            results.sort((a, b) => (b.searchScore || 0) - (a.searchScore || 0));
+          } else {
+            // Default to featured + facebook order for browsing
+            results.sort((a, b) => {
+              if (a.featured !== b.featured) {
+                return b.featured ? 1 : -1;
+              }
+              // Facebook marketplace uses a special 'facebook_order' field
+              if (sortBy === "facebook_order") {
+                const aOrder =
+                  "facebook_order" in a
+                    ? (a as { facebook_order: number }).facebook_order
+                    : 999;
+                const bOrder =
+                  "facebook_order" in b
+                    ? (b as { facebook_order: number }).facebook_order
+                    : 999;
+                return (aOrder || 999) - (bOrder || 999);
+              }
+              return 0;
+            });
+          }
+          break;
+      }
+
+      return results;
+    },
+    []
+  );
 
   // Debounced search effect
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSearchState(prev => ({
+      setSearchState((prev) => ({
         ...prev,
-        isLoading: true
+        isLoading: true,
       }));
 
-      const results = performSearch(searchState.query, searchState.filters, searchState.sortBy);
+      const results = performSearch(
+        searchState.query,
+        searchState.filters,
+        searchState.sortBy
+      );
       const suggestions = generateSuggestions(searchState.query);
 
-      setSearchState(prev => ({
+      setSearchState((prev) => ({
         ...prev,
         results,
         resultCount: results.length,
         suggestions,
-        isLoading: false
+        isLoading: false,
       }));
     }, debounceMs);
 
     return () => clearTimeout(timer);
-  }, [searchState.query, searchState.filters, searchState.sortBy, debounceMs, performSearch, generateSuggestions]);
+  }, [
+    searchState.query,
+    searchState.filters,
+    searchState.sortBy,
+    debounceMs,
+    performSearch,
+    generateSuggestions,
+  ]);
 
   // Actions
   const setQuery = useCallback((query: string) => {
-    setSearchState(prev => ({ ...prev, query }));
+    setSearchState((prev) => ({ ...prev, query }));
   }, []);
 
   const setFilters = useCallback((filters: VehicleFilters) => {
-    setSearchState(prev => ({ ...prev, filters }));
+    setSearchState((prev) => ({ ...prev, filters }));
   }, []);
 
   const setSortBy = useCallback((sortBy: string) => {
-    setSearchState(prev => ({ ...prev, sortBy }));
+    setSearchState((prev) => ({ ...prev, sortBy }));
   }, []);
 
-  const addToHistory = useCallback((query: string) => {
-    if (!enableHistory || !query.trim()) return;
+  const addToHistory = useCallback(
+    (query: string) => {
+      if (!enableHistory || !query.trim()) return;
 
-    setSearchState(prev => {
-      const newHistory = [
-        query,
-        ...prev.searchHistory.filter(item => item !== query)
-      ].slice(0, maxHistoryItems);
+      setSearchState((prev) => {
+        const newHistory = [
+          query,
+          ...prev.searchHistory.filter((item) => item !== query),
+        ].slice(0, maxHistoryItems);
 
-      saveSearchHistory(newHistory);
+        saveSearchHistory(newHistory);
 
-      return {
-        ...prev,
-        searchHistory: newHistory
-      };
-    });
-  }, [enableHistory, maxHistoryItems, saveSearchHistory]);
+        return {
+          ...prev,
+          searchHistory: newHistory,
+        };
+      });
+    },
+    [enableHistory, maxHistoryItems, saveSearchHistory]
+  );
 
   const clearHistory = useCallback(() => {
-    setSearchState(prev => ({ ...prev, searchHistory: [] }));
-    if (enableHistory && typeof window !== 'undefined') {
-      localStorage.removeItem('vehicleSearchHistory');
+    setSearchState((prev) => ({ ...prev, searchHistory: [] }));
+    if (enableHistory && typeof window !== "undefined") {
+      localStorage.removeItem("vehicleSearchHistory");
     }
   }, [enableHistory]);
 
   const clearSearch = useCallback(() => {
-    setSearchState(prev => ({
+    setSearchState((prev) => ({
       ...prev,
-      query: '',
+      query: "",
       filters: {},
-      suggestions: []
+      suggestions: [],
     }));
   }, []);
 
@@ -292,6 +335,6 @@ export function useVehicleSearch(options: UseVehicleSearchOptions = {}) {
     setSortBy,
     addToHistory,
     clearHistory,
-    clearSearch
+    clearSearch,
   };
 }
