@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
 import { Vehicle } from '@/lib/types';
 
 interface FavoritesContextType {

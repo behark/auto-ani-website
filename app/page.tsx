@@ -1,10 +1,11 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+
 import HeroSection from '@/components/home/HeroSection';
-import SuspenseWrapper from '@/components/ui/SuspenseWrapper';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import LazySection from '@/components/ui/LazySection';
+import SuspenseWrapper from '@/components/ui/SuspenseWrapper';
 
 const FeaturedVehicles = dynamic(() => import('@/components/home/FeaturedVehicles'), {
   ssr: true,

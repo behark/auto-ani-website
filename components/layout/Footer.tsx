@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { Car, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Footer() {
   return (

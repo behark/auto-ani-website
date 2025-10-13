@@ -1,6 +1,8 @@
 // API Utilities for AUTO ANI Website
 // Shared utilities for error handling, rate limiting, and response formatting
 
+import crypto from 'crypto';
+
 import { NextRequest, NextResponse } from 'next/server';
 
 // Custom error classes
@@ -9,7 +11,7 @@ export class APIError extends Error {
     public statusCode: number,
     public message: string,
     public code?: string,
-    public details?: any
+    public details?: Record<string, unknown>
   ) {
     super(message);
     this.name = 'APIError';
@@ -23,7 +25,7 @@ export class RateLimitError extends APIError {
 }
 
 export class ValidationError extends APIError {
-  constructor(message: string, details?: any) {
+  constructor(message: string, details?: Record<string, unknown>) {
     super(400, message, 'VALIDATION_ERROR', details);
   }
 }
@@ -41,7 +43,7 @@ export class NotFoundError extends APIError {
 }
 
 export class ExternalAPIError extends APIError {
-  constructor(service: string, message: string, details?: any) {
+  constructor(service: string, message: string, details?: Record<string, unknown>) {
     super(502, `${service} API Error: ${message}`, 'EXTERNAL_API_ERROR', {
       service,
       ...details,
@@ -82,7 +84,7 @@ export function errorResponse(error: unknown): NextResponse {
 export function successResponse<T>(
   data: T,
   message?: string,
-  meta?: any
+  meta?: Record<string, unknown>
 ): NextResponse {
   return NextResponse.json({
     success: true,
@@ -178,7 +180,7 @@ export async function retryWithBackoff<T>(
     initialDelayMs?: number;
     maxDelayMs?: number;
     backoffMultiplier?: number;
-    shouldRetry?: (error: any) => boolean;
+    shouldRetry?: (error: Error) => boolean;
   } = {}
 ): Promise<T> {
   const {
@@ -189,15 +191,15 @@ export async function retryWithBackoff<T>(
     shouldRetry = () => true,
   } = options;
 
-  let lastError: any;
+  let lastError: Error = new Error('Unknown error');
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (error) {
-      lastError = error;
+      lastError = error instanceof Error ? error : new Error('Unknown error');
 
-      if (attempt === maxRetries || !shouldRetry(error)) {
+      if (attempt === maxRetries || !shouldRetry(lastError)) {
         throw error;
       }
 
@@ -219,15 +221,18 @@ export async function retryWithBackoff<T>(
 
 // Request validator
 export function validateRequest<T>(
-  data: any,
+  data: unknown,
   schema: {
-    parse: (data: any) => T;
+    parse: (data: unknown) => T;
   }
 ): T {
   try {
     return schema.parse(data);
-  } catch (error: any) {
-    throw new ValidationError('Invalid request data', error.errors);
+  } catch (error: unknown) {
+    const errorDetails = error instanceof Error && 'errors' in error
+      ? (error as { errors: unknown }).errors
+      : undefined;
+    throw new ValidationError('Invalid request data', { errors: errorDetails });
   }
 }
 
@@ -318,7 +323,6 @@ export function validateWebhookSignature(
   secret: string,
   algorithm: 'sha256' | 'sha1' = 'sha256'
 ): boolean {
-  const crypto = require('crypto');
   const expectedSignature = crypto
     .createHmac(algorithm, secret)
     .update(payload)
@@ -330,7 +334,7 @@ export function validateWebhookSignature(
       Buffer.from(signature),
       Buffer.from(expectedSignature)
     );
-  } catch (error) {
+  } catch (_error) {
     // If buffers have different lengths, timingSafeEqual throws
     return false;
   }
@@ -354,7 +358,7 @@ export function getClientIP(req: NextRequest): string {
 }
 
 // API response types
-export interface APIResponse<T = any> {
+export interface APIResponse<T = unknown> {
   success: boolean;
   message?: string;
   data?: T;
@@ -362,12 +366,12 @@ export interface APIResponse<T = any> {
     page?: number;
     limit?: number;
     total?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   error?: {
     message: string;
     code?: string;
-    details?: any;
+    details?: Record<string, unknown>;
   };
 }
 
@@ -398,9 +402,9 @@ export function getEnvVar(key: string, defaultValue?: string): string {
 
 // Async handler wrapper for error handling
 export function asyncHandler(
-  handler: (req: NextRequest, context?: any) => Promise<NextResponse>
+  handler: (req: NextRequest, context?: Record<string, unknown>) => Promise<NextResponse>
 ) {
-  return async (req: NextRequest, context?: any): Promise<NextResponse> => {
+  return async (req: NextRequest, context?: Record<string, unknown>): Promise<NextResponse> => {
     try {
       return await handler(req, context);
     } catch (error) {

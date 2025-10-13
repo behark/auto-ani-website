@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Sun, Moon, Monitor, Palette } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Sun, Moon, Monitor, Palette } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,

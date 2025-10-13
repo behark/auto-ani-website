@@ -1,8 +1,9 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
+import { ReactNode, useEffect } from 'react';
+
 import { MOTION_VARIANTS, ANIMATION_CLASSES } from '@/lib/animations';
 
 interface PageTransitionProps {

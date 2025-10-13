@@ -26,7 +26,15 @@ export interface Vehicle {
   searchScore?: number;
   viewCount?: number;
   daysOnLot?: number;
-  inquiries?: any[];
+  inquiries?: Array<{
+    id: string;
+    customerName: string;
+    customerEmail: string;
+    customerPhone?: string;
+    message?: string;
+    date: Date;
+    status: 'new' | 'contacted' | 'completed';
+  }>;
 }
 
 export interface Service {

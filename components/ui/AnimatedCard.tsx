@@ -1,8 +1,8 @@
 'use client';
 
+import { motion, MotionProps, useReducedMotion, Variants } from 'framer-motion';
 import { forwardRef, ReactNode } from 'react';
 
-import { motion, MotionProps, useReducedMotion, Variants } from 'framer-motion';
 
 import { Card, CardProps } from '@/components/ui/card';
 import { MOTION_VARIANTS, ANIMATION_CLASSES } from '@/lib/animations';

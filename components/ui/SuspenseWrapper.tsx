@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, ReactNode } from 'react';
+
 import LoadingSpinner from './LoadingSpinner';
 import SectionSkeleton from './SectionSkeleton';
 

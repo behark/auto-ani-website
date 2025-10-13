@@ -60,7 +60,9 @@ export default function OptimizedVehicleImage({
   const handleError = () => {
     // If optimized image fails, fallback to original
     if (optimizedSrc !== src && imgSrc !== src) {
-      console.log(`Falling back to original image: ${src}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Falling back to original image: ${src}`);
+      }
       setImgSrc(src);
     }
   };

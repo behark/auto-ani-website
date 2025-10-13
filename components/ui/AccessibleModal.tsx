@@ -1,8 +1,9 @@
 'use client';
 
+import { X } from 'lucide-react';
 import { useEffect, useRef, forwardRef, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useFocusManagement, useKeyboardNavigation } from '@/hooks/useAccessibility';
 

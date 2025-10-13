@@ -1,9 +1,10 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import { Skeleton } from '@/components/ui/skeleton';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
 
 interface LazySectionProps {

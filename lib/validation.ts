@@ -1,5 +1,6 @@
-import { z, ZodError } from 'zod'
 import { NextRequest } from 'next/server'
+import { z, ZodError } from 'zod'
+
 import { errorResponse } from '@/types/api'
 
 // Helper to validate request body against a Zod schema
@@ -18,7 +19,7 @@ export async function validateRequest<T>(
           'Validation failed',
           400,
           'VALIDATION_ERROR',
-          (error as any).errors.map((e: any) => ({
+          error.issues.map((e: z.ZodIssue) => ({
             field: e.path.join('.'),
             message: e.message
           }))
@@ -52,7 +53,7 @@ export function validateQueryParams<T>(
           'Invalid query parameters',
           400,
           'VALIDATION_ERROR',
-          (error as any).errors.map((e: any) => ({
+          error.issues.map((e: z.ZodIssue) => ({
             field: e.path.join('.'),
             message: e.message
           }))

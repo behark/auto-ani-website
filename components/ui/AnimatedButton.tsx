@@ -1,9 +1,9 @@
 'use client';
 
-import { forwardRef, ReactNode } from 'react';
 
 import { VariantProps } from 'class-variance-authority';
 import { motion, MotionProps, Variants } from 'framer-motion';
+import { forwardRef, ReactNode } from 'react';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import { MOTION_VARIANTS, ANIMATION_CLASSES } from '@/lib/animations';
@@ -131,9 +131,9 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
       const x = e.clientX - rect.left - size / 2;
       const y = e.clientY - rect.top - size / 2;
 
-      ripple.style.width = ripple.style.height = size + 'px';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
+      ripple.style.width = ripple.style.height = `${size  }px`;
+      ripple.style.left = `${x  }px`;
+      ripple.style.top = `${y  }px`;
       ripple.classList.add('ripple-effect');
 
       button.appendChild(ripple);

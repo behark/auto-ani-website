@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Car, Eye } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Car, Eye } from 'lucide-react';
 import { Vehicle } from '@/lib/sanity';
 
 export default function FeaturedVehicles() {
@@ -24,7 +25,9 @@ export default function FeaturedVehicles() {
           setVehicles(mockVehicles);
         }
       } catch (error) {
-        console.error('Failed to fetch vehicles, using mock data:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to fetch vehicles, using mock data:', error);
+        }
         // Use mock data when API fails
         setVehicles(mockVehicles);
       } finally {

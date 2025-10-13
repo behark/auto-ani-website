@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import LazyImage from '@/components/ui/LazyImage';
 import { getImageWithFallback } from '@/lib/imageLoader';
 import { cn } from '@/lib/utils';

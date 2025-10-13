@@ -1,7 +1,8 @@
 'use client';
 
-import { forwardRef, ReactNode, useState, useId } from 'react';
 import { AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { forwardRef, ReactNode, useState, useId } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { useFormAccessibility, useScreenReader } from '@/hooks/useAccessibility';
 
@@ -50,7 +51,7 @@ export function AccessibleField({
                 ...children.props,
                 id: fieldId,
                 'aria-invalid': error ? 'true' : 'false',
-                'aria-describedby': `${error ? errorId + ' ' : ''}${help ? helpId : ''}`.trim() || undefined,
+                'aria-describedby': `${error ? `${errorId  } ` : ''}${help ? helpId : ''}`.trim() || undefined,
                 'aria-required': required
               }
             }
@@ -116,7 +117,7 @@ export const AccessibleInput = forwardRef<HTMLInputElement, AccessibleInputProps
           id={fieldId}
           type={inputType}
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={`${error ? errorId + ' ' : ''}${help ? helpId : ''}`.trim() || undefined}
+          aria-describedby={`${error ? `${errorId  } ` : ''}${help ? helpId : ''}`.trim() || undefined}
           aria-required={required}
           className={`
             block w-full px-3 py-2 border rounded-md shadow-sm
@@ -197,8 +198,8 @@ export const AccessibleTextarea = forwardRef<HTMLTextAreaElement, AccessibleText
         maxLength={maxLength}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={`
-          ${error ? errorId + ' ' : ''}
-          ${help ? helpId + ' ' : ''}
+          ${error ? `${errorId  } ` : ''}
+          ${help ? `${helpId  } ` : ''}
           ${showCharCount ? charCountId : ''}
         `.trim() || undefined}
         aria-required={required}
@@ -270,7 +271,7 @@ export const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectPr
         ref={ref}
         id={fieldId}
         aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={`${error ? errorId + ' ' : ''}${help ? helpId : ''}`.trim() || undefined}
+        aria-describedby={`${error ? `${errorId  } ` : ''}${help ? helpId : ''}`.trim() || undefined}
         aria-required={required}
         className={`
           block w-full px-3 py-2 border rounded-md shadow-sm bg-white
@@ -331,7 +332,7 @@ export const AccessibleCheckbox = forwardRef<HTMLInputElement, AccessibleCheckbo
           id={fieldId}
           type="checkbox"
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={`${error ? errorId + ' ' : ''}${description ? descId : ''}`.trim() || undefined}
+          aria-describedby={`${error ? `${errorId  } ` : ''}${description ? descId : ''}`.trim() || undefined}
           className={`
             mt-0.5 h-4 w-4 text-blue-600 border-gray-300 rounded
             focus:ring-blue-500 focus:ring-2 focus:ring-offset-2

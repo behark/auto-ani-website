@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageCircle,
@@ -12,6 +11,8 @@ import {
   ChevronUp,
   Send
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
 import { COMPANY_INFO } from '@/lib/constants';
 
 interface ContactMethod {

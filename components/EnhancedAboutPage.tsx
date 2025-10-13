@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Award, Users, TrendingUp, Shield } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
-import FallbackImage from '@/components/ui/FallbackImage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import FallbackImage from '@/components/ui/FallbackImage';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { client, queries, BusinessInfo, TeamMember, urlFor } from '@/lib/sanity';
 

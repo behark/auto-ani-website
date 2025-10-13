@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Vehicle } from '@/lib/types';
-import { VEHICLES } from '@/lib/constants';
-import VehicleCardSimple from './VehicleCardSimple';
+
 import { useLanguage } from '@/contexts/LanguageContext';
+import { VEHICLES } from '@/lib/constants';
+import { Vehicle } from '@/lib/types';
+
+import VehicleCardSimple from './VehicleCardSimple';
+
 
 interface VehiclesPageClientProps {
   initialVehicles: any[]; // Raw Sanity vehicles from server

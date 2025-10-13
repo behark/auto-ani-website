@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Vehicle, VehicleFilters } from '@/lib/types';
+
 import { VEHICLES } from '@/lib/constants';
+import { Vehicle, VehicleFilters } from '@/lib/types';
 
 interface SearchState {
   query: string;

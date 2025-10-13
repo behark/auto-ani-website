@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, forwardRef } from 'react';
 import Image from 'next/image';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { useState, forwardRef } from 'react';
+
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { imageLoader, generateBlurDataURL, getFallbackImage, validateImagePath, getResponsiveSizes } from '@/lib/imageLoader';
+import { cn } from '@/lib/utils';
 
 interface LazyImageProps {
   src: string;

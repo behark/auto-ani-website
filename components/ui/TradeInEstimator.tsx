@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calculator,
@@ -12,12 +11,12 @@ import {
   TrendingUp,
   CheckCircle,
   Info,
-  Euro,
   X,
   ChevronRight,
   Award,
   Zap
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface VehicleData {
   make: string;
@@ -339,7 +338,7 @@ export default function TradeInEstimator() {
                   </label>
                   <select
                     value={vehicleData.condition}
-                    onChange={(e) => setVehicleData(prev => ({...prev, condition: e.target.value as any}))}
+                    onChange={(e) => setVehicleData(prev => ({...prev, condition: e.target.value as VehicleData['condition']}))}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   >
                     <option value="excellent">E shkëlqyer</option>
@@ -357,7 +356,7 @@ export default function TradeInEstimator() {
                   </label>
                   <select
                     value={vehicleData.transmission}
-                    onChange={(e) => setVehicleData(prev => ({...prev, transmission: e.target.value as any}))}
+                    onChange={(e) => setVehicleData(prev => ({...prev, transmission: e.target.value as VehicleData['transmission']}))}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   >
                     <option value="manual">Manual</option>
@@ -409,7 +408,7 @@ export default function TradeInEstimator() {
                   ].map(fuel => (
                     <button
                       key={fuel.value}
-                      onClick={() => setVehicleData(prev => ({...prev, fuelType: fuel.value as any}))}
+                      onClick={() => setVehicleData(prev => ({...prev, fuelType: fuel.value as VehicleData['fuelType']}))}
                       className={`p-3 border rounded-lg transition-all ${
                         vehicleData.fuelType === fuel.value
                           ? 'border-purple-500 bg-purple-50 text-purple-700'

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
+
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
+
 import Footer from "@/components/layout/Footer";
-import FloatingContactWidget from "@/components/ui/FloatingContactWidget";
-import FinancingCalculator from "@/components/ui/FinancingCalculator";
-import TradeInEstimator from "@/components/ui/TradeInEstimator";
+import Navbar from "@/components/layout/Navbar";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
+import FinancingCalculator from "@/components/ui/FinancingCalculator";
+import FloatingContactWidget from "@/components/ui/FloatingContactWidget";
+import TradeInEstimator from "@/components/ui/TradeInEstimator";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import Script from "next/script";
+import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -98,6 +100,10 @@ export default function RootLayout({
             </ErrorBoundary>
           </ErrorBoundary>
         </LanguageProvider>
+
+        {/* Performance monitoring */}
+        <WebVitals debug={process.env.NODE_ENV === 'development'} />
+        <PerformanceMonitor />
       </body>
     </html>
   );

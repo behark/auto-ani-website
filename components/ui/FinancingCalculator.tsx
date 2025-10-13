@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calculator,
@@ -13,6 +12,7 @@ import {
   Calendar,
   Percent
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface CalculationResult {
   monthlyPayment: number;

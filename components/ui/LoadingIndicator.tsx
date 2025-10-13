@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { usePathname, useSearchParams } from 'next/navigation';
 import { Car, Loader2, ArrowRight, Zap } from 'lucide-react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+
 import { cn } from '@/lib/utils';
 
 interface LoadingIndicatorProps {

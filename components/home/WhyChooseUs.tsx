@@ -1,7 +1,8 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
 import { Users, Award, Clock, Shield } from 'lucide-react';
+
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function WhyChooseUs() {
   const features = [

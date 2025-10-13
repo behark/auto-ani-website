@@ -1,4 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
+
 import VehicleCardSkeleton from './VehicleCardSkeleton';
 
 interface SectionSkeletonProps {

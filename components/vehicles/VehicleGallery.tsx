@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, ZoomIn, Download, Share2 } from 'lucide-react';
-import VehicleImage from './VehicleImage';
+import { useState, useCallback } from 'react';
+
 import { cn } from '@/lib/utils';
+
+import VehicleImage from './VehicleImage';
+
 
 interface VehicleGalleryProps {
   images: (string | null | undefined)[];

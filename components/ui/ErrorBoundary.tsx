@@ -1,9 +1,10 @@
 'use client';
 
+import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -56,7 +57,9 @@ class ErrorBoundary extends Component<Props, State> {
     // Auto-recover after 5 seconds in development
     if (process.env.NODE_ENV === 'development' && this.props.level !== 'page') {
       setTimeout(() => {
-        console.log('[ErrorBoundary] Auto-recovering from error...');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[ErrorBoundary] Auto-recovering from error...');
+        }
         this.handleRetry();
       }, 5000);
     }
@@ -71,7 +74,9 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   handleRetry = () => {
-    console.log('[ErrorBoundary] Attempting to recover from error...');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[ErrorBoundary] Attempting to recover from error...');
+    }
     this.setState({
       hasError: false,
       error: null,
@@ -230,7 +235,9 @@ class ErrorBoundary extends Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     // Clear error state if children prop changes (indicating a route change)
     if (prevProps.children !== this.props.children && this.state.hasError) {
-      console.log('[ErrorBoundary] Children changed, clearing error state...');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[ErrorBoundary] Children changed, clearing error state...');
+      }
       this.setState({
         hasError: false,
         error: null,
@@ -243,7 +250,9 @@ class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       // Add timestamp to error display to help debugging
-      console.log(`[ErrorBoundary] Rendering error UI at ${new Date().toISOString()}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[ErrorBoundary] Rendering error UI at ${new Date().toISOString()}`);
+      }
       return this.renderFallback();
     }
 

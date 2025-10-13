@@ -1,7 +1,8 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
+
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Testimonials() {
   const testimonials = [

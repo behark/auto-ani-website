@@ -1,12 +1,13 @@
 'use client';
 
+import { Calendar, Eye, Fuel, Heart, Navigation, Settings } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Vehicle } from '@/lib/types';
-import { Calendar, Eye, Fuel, Heart, Navigation, Settings } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;

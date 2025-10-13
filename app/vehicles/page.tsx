@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
+
 import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import type { Vehicle } from '@/lib/types';
-import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
