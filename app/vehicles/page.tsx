@@ -24,7 +24,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function VehiclesPage() {
-  // Use client-side loading to bypass server-side issues
-  return <VehiclesPageClient initialVehicles={[]} />;
+async function getVehicles() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/vehicles`, {
+      cache: 'no-store', // Ensure fresh data
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.success && data.data.vehicles ? data.data.vehicles : [];
+  } catch (error) {
+    console.error('Failed to fetch vehicles on server:', error);
+    return [];
+  }
+}
+
+export default async function VehiclesPage() {
+  const serverVehicles = await getVehicles();
+
+  return <VehiclesPageClient initialVehicles={serverVehicles} />;
 }
