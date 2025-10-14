@@ -3,13 +3,14 @@
 import { Car, Eye } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { logger } from "@/lib/logger";
 import { MOCK_FEATURED_VEHICLES } from "@/lib/mock-data/vehicles";
-import { Vehicle } from "@/lib/sanity";
+import { Vehicle, urlFor } from "@/lib/sanity";
 
 export default function FeaturedVehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -86,8 +87,20 @@ export default function FeaturedVehicles() {
                 key={vehicle._id}
                 className="overflow-hidden hover:shadow-lg transition-shadow"
               >
-                <div className="relative h-48 bg-gray-200 flex items-center justify-center">
-                  <Car className="w-16 h-16 text-gray-400" />
+                <div className="relative h-48 bg-gray-200">
+                  {vehicle.mainImage ? (
+                    <Image
+                      src={urlFor(vehicle.mainImage).url()}
+                      alt={`${vehicle.brand} ${vehicle.model}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <Car className="w-16 h-16 text-gray-400" />
+                    </div>
+                  )}
                   <div className="absolute top-4 left-4">
                     <Badge className="bg-[var(--primary-orange)] text-white">
                       Featured
@@ -114,7 +127,7 @@ export default function FeaturedVehicles() {
                     <span>{vehicle.specifications?.fuelType || "N/A"}</span>
                   </div>
 
-                  <Link href={`/vehicles/${vehicle.slug.current}`}>
+                  <Link href={`/vehicles/${vehicle.slug?.current || vehicle._id}`}>
                     <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600 text-white">
                       <Eye className="h-4 w-4 mr-2" />
                       Shiko Detajet
