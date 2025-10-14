@@ -4,7 +4,7 @@ import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import type { Vehicle } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0; // Disable caching
+export const revalidate = 60; // seconds
 
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",
