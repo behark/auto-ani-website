@@ -4,6 +4,7 @@ import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import type { Vehicle } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Disable caching
 
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",
@@ -55,8 +56,8 @@ async function getVehicles() {
   }
 }
 
-export default async function VehiclesPage() {
-  const serverVehicles = await getVehicles();
-
-  return <VehiclesPageClient initialVehicles={serverVehicles} />;
+export default function VehiclesPage() {
+  // Force client-side rendering to ensure vehicles display
+  console.log('VehiclesPage: Rendering client-side only');
+  return <VehiclesPageClient initialVehicles={[]} />;
 }
