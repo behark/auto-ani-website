@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     if (minPrice) filters.push(`price >= ${minPrice}`);
     if (maxPrice) filters.push(`price <= ${maxPrice}`);
 
-    // Construct the complete query
+    // Construct the complete query - INCLUDE mainImage and gallery
     let query = `*[${filters.join(" && ")}] {
       _id,
       _type,
@@ -39,6 +39,8 @@ export async function GET(request: NextRequest) {
       featured,
       description,
       specifications,
+      mainImage,
+      gallery,
       images[]{
         asset->{
           _id,
@@ -73,7 +75,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Failed to fetch vehicles:", error);
-
     return NextResponse.json(
       {
         success: false,
