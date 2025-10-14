@@ -10,7 +10,7 @@ function getClient(): SanityClient {
     cachedClient = createClient({
       projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "j2t31xge",
       dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-      useCdn: false, // Disable CDN for fresh data
+      useCdn: true, // Disable CDN for fresh data
       apiVersion: "2024-01-01",
     });
   }
