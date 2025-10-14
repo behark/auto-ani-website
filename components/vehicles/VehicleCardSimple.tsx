@@ -2,6 +2,7 @@
 
 import { Calendar, Eye, Fuel, Heart, Navigation, Settings } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +31,20 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
 
   const vehicleSlug = vehicle.slug || vehicle.id;
 
+  // Get image URL - handle both string URLs and Sanity image objects
+  const getImageUrl = () => {
+    if (!vehicle.images?.[0]) return '/images/placeholder-vehicle.svg';
+    
+    // If it's already a string URL, return it
+    if (typeof vehicle.images[0] === 'string') {
+      return vehicle.images[0];
+    }
+    
+    // If it's a Sanity image object, it should already be converted to URL
+    // by the VehiclesPageClient conversion function
+    return '/images/placeholder-vehicle.svg';
+  };
+
   return (
     <Card
       className="overflow-hidden shadow-card-hover cursor-pointer group"
@@ -38,13 +53,14 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
     >
       {/* Image Container */}
       <div className="relative h-64 overflow-hidden bg-gray-200">
-        <img
-          src={vehicle.images?.[0] || '/images/placeholder-vehicle.svg'}
+        <Image
+          src={getImageUrl()}
           alt={`${vehicle.make} ${vehicle.model}`}
-          className={`w-full h-full object-cover transition-transform duration-300 ${
+          fill
+          className={`object-cover transition-transform duration-300 ${
             hoveredCard ? 'scale-110' : ''
           }`}
-          loading="lazy"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
 
         {/* Overlay Actions */}
