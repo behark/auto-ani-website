@@ -100,8 +100,10 @@ export default function VehiclesPageClient({
   // Initialize with converted server vehicles if available, otherwise empty array
   const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
     if (initialVehicles && initialVehicles.length > 0) {
+      console.log(`Client initialized with ${initialVehicles.length} server vehicles`);
       return convertSanityVehiclesToVehicles(initialVehicles);
     }
+    console.log('Client initialized with no server vehicles, will fetch client-side');
     return [];
   });
 
@@ -132,11 +134,14 @@ export default function VehiclesPageClient({
           data.data.vehicles &&
           data.data.vehicles.length > 0
         ) {
+          console.log(`Client fetched ${data.data.vehicles.length} vehicles from API`);
           const convertedVehicles = convertSanityVehiclesToVehicles(
             data.data.vehicles
           );
+          console.log(`Client converted to ${convertedVehicles.length} display vehicles`);
           setVehicles(convertedVehicles);
         } else {
+          console.log('Client API returned no vehicles, using fallback');
           // Fallback to static vehicles
           setVehicles(VEHICLES);
         }

@@ -27,19 +27,30 @@ export const metadata: Metadata = {
 
 async function getVehicles() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // Try multiple base URL sources
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ||
+                   process.env.RENDER_EXTERNAL_URL ||
+                   'https://auto-ani-simple.onrender.com';
+
     const response = await fetch(`${baseUrl}/api/vehicles`, {
       cache: 'no-store', // Ensure fresh data
+      headers: {
+        'User-Agent': 'Next.js Server',
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      console.warn(`Server fetch failed (${response.status}): ${response.statusText}`);
+      // Return empty array to let client-side handle it
+      return [];
     }
 
     const data = await response.json();
+    console.log(`Server fetched ${data?.data?.vehicles?.length || 0} vehicles`);
     return data.success && data.data.vehicles ? data.data.vehicles : [];
   } catch (error) {
     console.error('Failed to fetch vehicles on server:', error);
+    // Return empty array to let client-side handle it
     return [];
   }
 }
