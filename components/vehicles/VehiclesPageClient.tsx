@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VEHICLES } from "@/lib/constants";
 import { logger } from "@/lib/logger";
+import { urlFor } from "@/lib/sanity";
 import { Vehicle } from "@/lib/types";
 
 import VehicleCardSimple from "./VehicleCardSimple";
@@ -24,7 +25,9 @@ interface SanityVehicle {
     features?: string[];
   };
   featured?: boolean;
-  images?: Array<{ asset?: { url?: string } }>;
+  mainImage?: any; // Sanity image reference
+  images?: any[]; // Sanity image references
+  gallery?: any[]; // Sanity image references
   slug?: { current?: string };
   description?: string;
 }
@@ -39,6 +42,44 @@ function convertSanityVehiclesToVehicles(
   return sanityVehicles
     .map((v: SanityVehicle, index: number) => {
       try {
+        // Convert Sanity images to URLs
+        const imageUrls: string[] = [];
+        
+        // Try mainImage first
+        if (v.mainImage) {
+          try {
+            imageUrls.push(urlFor(v.mainImage).url());
+          } catch (e) {
+            logger.debug('Failed to convert mainImage', { error: e });
+          }
+        }
+        
+        // Then try gallery images
+        if (v.gallery && Array.isArray(v.gallery)) {
+          v.gallery.forEach((img) => {
+            try {
+              imageUrls.push(urlFor(img).url());
+            } catch (e) {
+              logger.debug('Failed to convert gallery image', { error: e });
+            }
+          });
+        }
+        
+        // Fallback to images array
+        if (imageUrls.length === 0 && v.images && Array.isArray(v.images)) {
+          v.images.forEach((img) => {
+            try {
+              if (img.asset?.url) {
+                imageUrls.push(img.asset.url);
+              } else {
+                imageUrls.push(urlFor(img).url());
+              }
+            } catch (e) {
+              logger.debug('Failed to convert image', { error: e });
+            }
+          });
+        }
+
         return {
           id: v._id,
           make: v.brand || "Unknown",
@@ -71,10 +112,7 @@ function convertSanityVehiclesToVehicles(
           features: v.specifications?.features || [],
           status: "Available",
           featured: v.featured || false,
-          images:
-            v.images
-              ?.map((img) => img.asset?.url)
-              .filter((url): url is string => !!url) || [],
+          images: imageUrls,
           slug: v.slug?.current || v._id,
           description: v.description || "",
         };
