@@ -2,14 +2,13 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { client, urlFor } from "@/lib/sanity";
 import { Vehicle } from "@/lib/sanity";
-import ContactForm from "@/components/ContactForm";
 
 interface PageProps {
   params: { slug: string };
 }
 
 export default async function VehicleDetailPage({ params }: PageProps) {
-  // Fetch vehicle by slug (not _id)
+  // Fetch vehicle by slug
   const vehicle = await client.fetch<Vehicle>(
     `*[_type == "vehicle" && slug.current == $slug][0]{
       _id,
@@ -38,26 +37,35 @@ export default async function VehicleDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const whatsappMessage = `Hi, I'm interested in ${vehicle.brand} ${vehicle.model} - €${vehicle.price.toLocaleString()}`;
+  const whatsappUrl = `https://wa.me/38349204242?text=${encodeURIComponent(whatsappMessage)}`;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Vehicle Images */}
         <div>
-          <div className="relative h-96 mb-4 rounded-lg overflow-hidden">
-            <Image
-              src={vehicle.mainImage ? urlFor(vehicle.mainImage).url() : "/placeholder.jpg"}
-              alt={vehicle.title || `${vehicle.brand} ${vehicle.model}`}
-              fill
-              className="object-cover"
-              priority
-            />
+          <div className="relative h-96 mb-4 rounded-lg overflow-hidden bg-gray-100">
+            {vehicle.mainImage ? (
+              <Image
+                src={urlFor(vehicle.mainImage).url()}
+                alt={vehicle.title || `${vehicle.brand} ${vehicle.model}`}
+                fill
+                className="object-cover"
+                priority
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                No Image Available
+              </div>
+            )}
           </div>
           
           {/* Gallery */}
           {vehicle.gallery && vehicle.gallery.length > 0 && (
             <div className="grid grid-cols-4 gap-2">
               {vehicle.gallery.map((image, index) => (
-                <div key={index} className="relative h-24 rounded overflow-hidden">
+                <div key={index} className="relative h-24 rounded overflow-hidden bg-gray-100">
                   <Image
                     src={urlFor(image).url()}
                     alt={`${vehicle.brand} ${vehicle.model} - Image ${index + 1}`}
@@ -77,22 +85,34 @@ export default async function VehicleDetailPage({ params }: PageProps) {
           </h1>
           
           <div className="text-4xl font-bold text-orange-500 mb-6">
-            €{vehicle.price.toLocaleString()}
+            €{vehicle.price?.toLocaleString() || '0'}
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
-          
-              <p className="text-gray-600">Mileage</p>
-              <p className="font-semibold">{vehicle.mileage?.toLocaleString()} km</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Fuel Type</p>
-              <p className="font-semibold">{vehicle.fuelType}</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Transmission</p>
-              <p className="font-semibold">{vehicle.transmission}</p>
-            </div>
+            {vehicle.year && (
+              <div>
+                <p className="text-gray-600">Year</p>
+                <p className="font-semibold">{vehicle.year}</p>
+              </div>
+            )}
+            {vehicle.mileage && (
+              <div>
+                <p className="text-gray-600">Mileage</p>
+                <p className="font-semibold">{vehicle.mileage.toLocaleString()} km</p>
+              </div>
+            )}
+            {vehicle.fuelType && (
+              <div>
+                <p className="text-gray-600">Fuel Type</p>
+                <p className="font-semibold">{vehicle.fuelType}</p>
+              </div>
+            )}
+            {vehicle.transmission && (
+              <div>
+                <p className="text-gray-600">Transmission</p>
+                <p className="font-semibold">{vehicle.transmission}</p>
+              </div>
+            )}
             {vehicle.color && (
               <div>
                 <p className="text-gray-600">Color</p>
@@ -119,7 +139,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
               <h2 className="text-xl font-semibold mb-2">Features</h2>
               <ul className="grid grid-cols-2 gap-2">
                 {vehicle.features.map((feature, index) => (
-                  <li key={index} className="flex items-center">
+                  <li key={index} className="flex items-center text-sm">
                     <span className="text-green-500 mr-2">✓</span>
                     {feature}
                   </li>
@@ -128,9 +148,31 @@ export default async function VehicleDetailPage({ params }: PageProps) {
             </div>
           )}
 
+          {/* Contact Section */}
           <div className="bg-orange-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Interested in this vehicle?</h2>
-            <ContactForm vehicleInfo={`${vehicle.brand} ${vehicle.model} - €${vehicle.price.toLocaleString()}`} />
+            <div className="space-y-3">
+              <a 
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-green-500 text-white text-center px-6 py-3 rounded-lg hover:bg-green-600 transition"
+              >
+                WhatsApp Us
+              </a>
+              <a 
+                href="tel:+38349204242"
+                className="block w-full bg-orange-500 text-white text-center px-6 py-3 rounded-lg hover:bg-orange-600 transition"
+              >
+                Call: +383 49 204 242
+              </a>
+              <a 
+                href="mailto:aniautosallon@gmail.com"
+                className="block w-full bg-gray-700 text-white text-center px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+              >
+                Email Us
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -140,15 +182,18 @@ export default async function VehicleDetailPage({ params }: PageProps) {
 
 // Generate static params for better performance
 export async function generateStaticParams() {
-  const vehicles = await client.fetch<Vehicle[]>(
-    `*[_type == "vehicle"]{ slug }`
-  );
+  try {
+    const vehicles = await client.fetch<Array<{ slug: { current: string } }>>(
+      `*[_type == "vehicle" && defined(slug.current)]{ slug }`
+    );
 
-  return vehicles
-    .filter(vehicle => vehicle.slug?.current)
-    .map((vehicle) => ({
+    return vehicles.map((vehicle) => ({
       slug: vehicle.slug.current,
     }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
 }
 
 // Enable ISR
