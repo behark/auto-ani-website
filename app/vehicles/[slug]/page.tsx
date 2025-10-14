@@ -81,11 +81,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div>
-              <p className="text-gray-600">Year</p>
-              <p className="font-semibold">{vehicle.year}</p>
-            </div>
-            <div>
+          
               <p className="text-gray-600">Mileage</p>
               <p className="font-semibold">{vehicle.mileage?.toLocaleString()} km</p>
             </div>
