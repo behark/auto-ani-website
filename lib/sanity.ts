@@ -10,7 +10,7 @@ function getClient(): SanityClient {
     cachedClient = createClient({
       projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "j2t31xge",
       dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-      useCdn: true, // Disable CDN for fresh data
+      useCdn: true,
       apiVersion: "2024-01-01",
     });
   }
@@ -71,7 +71,7 @@ export const queries = {
     bookingRequired
   }`,
 
-  // Vehicles (existing)
+  // Vehicles (existing - legacy)
   allVehicles: `*[_type == "vehicle"] | order(_createdAt desc){
     _id,
     brand,
@@ -105,6 +105,51 @@ export const queries = {
     mainImage,
     description,
     slug
+  }`,
+
+  // OPTIMIZED: For listing page (thumbnails only)
+  allVehiclesOptimized: `*[_type == "vehicle"] | order(_createdAt desc){
+    _id,
+    brand,
+    model,
+    year,
+    price,
+    mileage,
+    fuelType,
+    transmission,
+    category,
+    color,
+    featured,
+    slug,
+    "mainImage": mainImage.asset->{
+      url,
+      "metadata": metadata {
+        lqip,
+        dimensions
+      }
+    }
+  }`,
+
+  // OPTIMIZED: For detail page (with limited images)
+  vehicleBySlugOptimized: `*[_type == "vehicle" && slug.current == $slug][0]{
+    _id,
+    title,
+    brand,
+    model,
+    year,
+    price,
+    mileage,
+    fuelType,
+    transmission,
+    category,
+    description,
+    color,
+    engine,
+    drivetrain,
+    features,
+    slug,
+    "mainImage": mainImage.asset->url,
+    "gallery": gallery[0...6].asset->url
   }`,
 
   // Testimonials
@@ -180,6 +225,7 @@ export interface Service {
   bookingRequired?: boolean;
 }
 
+// Legacy Vehicle interface (for backward compatibility with old queries)
 export interface Vehicle {
   _id: string;
   _type: "vehicle";
@@ -193,6 +239,29 @@ export interface Vehicle {
   category: "new" | "used" | "certified";
   featured?: boolean;
   description?: string;
+  // Direct properties for easier access
+  fuelType?: string;
+  transmission?: string;
+  color?: string;
+  engine?: string;
+  drivetrain?: string;
+  features?: string[];
+  // Image properties (object references)
+  mainImage?: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+    };
+    alt?: string;
+  };
+  gallery?: Array<{
+    asset: {
+      _ref: string;
+      _type: "reference";
+    };
+    alt?: string;
+  }>;
+  // Legacy nested specifications for backward compatibility
   specifications?: {
     engine?: string;
     transmission?: string;
@@ -209,6 +278,81 @@ export interface Vehicle {
   }>;
   _createdAt: string;
   _updatedAt: string;
+}
+
+// ✅ NEW: Optimized Vehicle interface for detail pages
+// Use this when fetching with optimized queries that return URL strings
+export interface VehicleDetail {
+  _id: string;
+  title?: string;
+  brand: string;
+  model: string;
+  year: number;
+  price: number;
+  originalPrice?: number;
+  mileage?: number;
+  fuelType?: string;
+  transmission?: string;
+  category?: string;
+  description?: string;
+  color?: string;
+  engine?: string;
+  status?: string;
+  condition?: string;
+  features?: string[];
+  specifications?: {
+    doors?: number;
+    seats?: number;
+    engineSize?: number;
+    power?: number;
+    torque?: number;
+    acceleration?: number;
+    topSpeed?: number;
+    fuelConsumption?: number;
+    co2Emissions?: number;
+    weight?: number;
+    length?: number;
+    width?: number;
+    height?: number;
+    wheelbase?: number;
+    trunkCapacity?: number;
+  };
+  financing?: {
+    available?: boolean;
+    downPayment?: number;
+    monthlyPayment?: number;
+    loanTerm?: number;
+    interestRate?: number;
+    tradeInAccepted?: boolean;
+  };
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  };
+  slug: { current: string };
+  dateAdded?: string;
+  lastUpdated?: string;
+  mainImage?: {
+    asset: {
+      url: string;
+      metadata?: {
+        dimensions?: any;
+        lqip?: string;
+      };
+    };
+    alt?: string;
+  };
+  gallery?: Array<{
+    asset: {
+      url: string;
+      metadata?: {
+        dimensions?: any;
+      };
+    };
+    alt?: string;
+    caption?: string;
+  }>;
 }
 
 export interface Testimonial {

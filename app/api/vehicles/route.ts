@@ -9,12 +9,15 @@ export async function GET(request: NextRequest) {
     const { client } = await import("@/lib/sanity");
 
     const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get("limit") || "12", 10);
     const category = searchParams.get("category");
     const featured = searchParams.get("featured") === "true";
     const brand = searchParams.get("brand");
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
+
+    // Optional limit parameter - if provided, use it, otherwise fetch all
+    const limitParam = searchParams.get("limit");
+    const limit = limitParam ? parseInt(limitParam, 10) : null;
 
     // Build GROQ query with filters
     const filters = ['_type == "vehicle"'];
@@ -24,7 +27,8 @@ export async function GET(request: NextRequest) {
     if (minPrice) filters.push(`price >= ${minPrice}`);
     if (maxPrice) filters.push(`price <= ${maxPrice}`);
 
-    // Construct the complete query - INCLUDE mainImage and gallery
+    // ✅ OPTIMIZED: Only fetch mainImage (first image), not entire gallery
+    // ✅ NO DEFAULT LIMIT - Fetch all vehicles unless limit is explicitly provided
     let query = `*[${filters.join(" && ")}] {
       _id,
       _type,
@@ -38,21 +42,17 @@ export async function GET(request: NextRequest) {
       category,
       featured,
       description,
-      specifications,
-      mainImage,
-      gallery,
-      images[]{
-        asset->{
-          _id,
-          url
-        },
-        alt
-      },
+      fuelType,
+      transmission,
+      color,
+      engine,
+      "mainImage": mainImage.asset->url,
       _createdAt,
       _updatedAt
     } | order(_createdAt desc)`;
 
-    if (limit > 0) {
+    // Only apply limit if explicitly provided in query params
+    if (limit && limit > 0) {
       query += `[0...${limit}]`;
     }
 
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
           brand,
           minPrice,
           maxPrice,
-          limit,
+          ...(limit && { limit }),
         },
       },
     });

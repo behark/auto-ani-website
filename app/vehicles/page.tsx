@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 
 import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
+import StructuredData from '@/components/seo/StructuredData';
+import { generatePageSchemas } from '@/lib/seo-schema';
 import type { Vehicle } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -57,7 +59,15 @@ async function getVehicles() {
 }
 
 export default function VehiclesPage() {
+  // Generate vehicles page schema
+  const schemas = generatePageSchemas('vehicles');
+
   // Force client-side rendering to ensure vehicles display
   console.log('VehiclesPage: Rendering client-side only');
-  return <VehiclesPageClient initialVehicles={[]} />;
+  return (
+    <>
+      <StructuredData schemas={schemas} />
+      <VehiclesPageClient initialVehicles={[]} />
+    </>
+  );
 }

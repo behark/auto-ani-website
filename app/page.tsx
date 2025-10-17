@@ -6,6 +6,8 @@ import HeroSection from '@/components/home/HeroSection';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import LazySection from '@/components/ui/LazySection';
 import SuspenseWrapper from '@/components/ui/SuspenseWrapper';
+import StructuredData from '@/components/seo/StructuredData';
+import { generatePageSchemas } from '@/lib/seo-schema';
 
 const FeaturedVehicles = dynamic(() => import('@/components/home/FeaturedVehicles'), {
   ssr: true,
@@ -21,8 +23,13 @@ const Testimonials = dynamic(() => import('@/components/home/Testimonials'), {
 });
 
 export default function HomePage() {
+  // Generate homepage schema
+  const schemas = generatePageSchemas('homepage');
+
   return (
-    <div>
+    <>
+      <StructuredData schemas={schemas} />
+      <div>
       <ErrorBoundary level="section">
         <HeroSection />
       </ErrorBoundary>
@@ -58,5 +65,6 @@ export default function HomePage() {
         </LazySection>
       </ErrorBoundary>
     </div>
+    </>
   );
 }

@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from 'react';
 
 import { COMPANY_INFO } from '@/lib/constants';
+import { whatsapp } from '@/lib/whatsapp-integration';
 
 interface ContactMethod {
   id: string;
@@ -80,8 +81,8 @@ export default function FloatingContactWidget() {
       icon: MessageCircle,
       label: 'WhatsApp',
       action: () => {
-        const message = 'Përshëndetje! Jam i interesuar për automjetet tuaja.';
-        window.open(`https://wa.me/${COMPANY_INFO.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+        const generalInquiry = whatsapp.generateGeneralInquiry();
+        window.open(generalInquiry.url, '_blank');
       },
       bgColor: 'bg-green-500',
       hoverColor: 'hover:bg-green-600',

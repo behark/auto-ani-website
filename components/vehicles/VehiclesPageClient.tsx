@@ -9,6 +9,7 @@ import { urlFor } from "@/lib/sanity";
 import { Vehicle } from "@/lib/types";
 
 import VehicleCardSimple from "./VehicleCardSimple";
+import VehicleFilters from "./VehicleFilters";
 
 interface SanityVehicle {
   _id: string;
@@ -18,6 +19,12 @@ interface SanityVehicle {
   price?: number;
   mileage?: number;
   category?: string;
+  // ✅ Direct fields from optimized API
+  fuelType?: string;
+  transmission?: string;
+  color?: string;
+  engine?: string;
+  // Legacy nested specifications for backward compatibility
   specifications?: {
     fuelType?: string;
     transmission?: string;
@@ -25,7 +32,7 @@ interface SanityVehicle {
     features?: string[];
   };
   featured?: boolean;
-  mainImage?: any; // Sanity image reference
+  mainImage?: any; // Can be string URL or Sanity image reference
   images?: any[]; // Sanity image references
   gallery?: any[]; // Sanity image references
   slug?: { current?: string };
@@ -42,40 +49,29 @@ function convertSanityVehiclesToVehicles(
   return sanityVehicles
     .map((v: SanityVehicle, index: number) => {
       try {
-        // Convert Sanity images to URLs
+        // ✅ Handle the optimized API response
         const imageUrls: string[] = [];
-        
-        // Try mainImage first
-        if (v.mainImage) {
+
+        // Check if mainImage is already a URL string (from optimized API)
+        if (typeof v.mainImage === 'string') {
+          imageUrls.push(v.mainImage);
+        }
+        // Or if it's still a Sanity reference object
+        else if (v.mainImage) {
           try {
             imageUrls.push(urlFor(v.mainImage).url());
           } catch (e) {
             logger.debug('Failed to convert mainImage', { error: e });
           }
         }
-        
-        // Then try gallery images
-        if (v.gallery && Array.isArray(v.gallery)) {
-          v.gallery.forEach((img) => {
+
+        // Fallback to gallery/images if mainImage isn't available (only take first image)
+        if (imageUrls.length === 0 && v.gallery && Array.isArray(v.gallery)) {
+          v.gallery.slice(0, 1).forEach((img) => {
             try {
               imageUrls.push(urlFor(img).url());
             } catch (e) {
               logger.debug('Failed to convert gallery image', { error: e });
-            }
-          });
-        }
-        
-        // Fallback to images array
-        if (imageUrls.length === 0 && v.images && Array.isArray(v.images)) {
-          v.images.forEach((img) => {
-            try {
-              if (img.asset?.url) {
-                imageUrls.push(img.asset.url);
-              } else {
-                imageUrls.push(urlFor(img).url());
-              }
-            } catch (e) {
-              logger.debug('Failed to convert image', { error: e });
             }
           });
         }
@@ -87,8 +83,9 @@ function convertSanityVehiclesToVehicles(
           year: v.year || 2020,
           price: v.price || 0,
           mileage: v.mileage || 0,
-          fuelType: v.specifications?.fuelType || "Diesel",
-          transmission: v.specifications?.transmission || "Manual",
+          // ✅ Use direct fields first, fallback to specifications for backward compatibility
+          fuelType: v.fuelType || v.specifications?.fuelType || "Diesel",
+          transmission: v.transmission || v.specifications?.transmission || "Manual",
           bodyType: (v.category === "sedan"
             ? "Sedan"
             : v.category === "suv"
@@ -106,8 +103,8 @@ function convertSanityVehiclesToVehicles(
             | "Coupe"
             | "Hatchback"
             | "Van",
-          color: "Unknown",
-          engineSize: v.specifications?.engineSize || "2.0L",
+          color: v.color || "Unknown",
+          engineSize: v.engine || v.specifications?.engineSize || "2.0L",
           drivetrain: "FWD",
           features: v.specifications?.features || [],
           status: "Available",
@@ -136,7 +133,7 @@ export default function VehiclesPageClient({
   const { t } = useLanguage();
 
   // Initialize with converted server vehicles if available, otherwise empty array
-  const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
+  const [allVehicles, setAllVehicles] = useState<Vehicle[]>(() => {
     if (initialVehicles && initialVehicles.length > 0) {
       console.log(`Client initialized with ${initialVehicles.length} server vehicles`);
       return convertSanityVehiclesToVehicles(initialVehicles);
@@ -145,6 +142,7 @@ export default function VehiclesPageClient({
     return [];
   });
 
+  const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(
     !initialVehicles || initialVehicles.length === 0
   );
@@ -177,18 +175,18 @@ export default function VehiclesPageClient({
             data.data.vehicles
           );
           console.log(`Client converted to ${convertedVehicles.length} display vehicles`);
-          setVehicles(convertedVehicles);
+          setAllVehicles(convertedVehicles);
         } else {
           console.log('Client API returned no vehicles, using fallback');
           // Fallback to static vehicles
-          setVehicles(VEHICLES);
+          setAllVehicles(VEHICLES);
         }
       } catch (error) {
         logger.error("Failed to fetch vehicles", {
           error: error instanceof Error ? error.message : "Unknown error",
         });
         setError(error instanceof Error ? error.message : "Unknown error");
-        setVehicles(VEHICLES);
+        setAllVehicles(VEHICLES);
       } finally {
         setLoading(false);
       }
@@ -208,11 +206,20 @@ export default function VehiclesPageClient({
           </p>
         </div>
 
+        {/* Advanced Vehicle Filters */}
+        <div className="mb-8">
+          <VehicleFilters
+            vehicles={allVehicles}
+            onFilter={(filtered) => setFilteredVehicles(filtered)}
+            className="mb-6"
+          />
+        </div>
+
         {/* Vehicle Stats */}
         <div className="mb-8">
           <p className="text-gray-600">
-            {t("vehicles.showing")} {vehicles.length} {t("vehicles.of")}{" "}
-            {vehicles.length} {t("vehicles.vehicles")}
+            {t("vehicles.showing")} {filteredVehicles.length} {t("vehicles.of")}{" "}
+            {allVehicles.length} {t("vehicles.vehicles")}
           </p>
         </div>
 
@@ -221,9 +228,9 @@ export default function VehiclesPageClient({
           <div className="text-center py-12">
             <p className="text-gray-600">{t("common.loading")}</p>
           </div>
-        ) : vehicles.length > 0 ? (
+        ) : filteredVehicles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vehicles.map((vehicle, index) => (
+            {filteredVehicles.map((vehicle, index) => (
               <div key={vehicle.id || vehicle.slug || index}>
                 <VehicleCardSimple vehicle={vehicle} />
               </div>

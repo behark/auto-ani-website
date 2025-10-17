@@ -1,14 +1,20 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { Phone, MessageCircle, Car } from "lucide-react";
 
 import { client, VehicleDetail } from "@/lib/sanity";
+import StructuredData from "@/components/seo/StructuredData";
+import { generatePageSchemas } from "@/lib/seo-schema";
+import WhatsAppQuickActions from "@/components/whatsapp/WhatsAppQuickActions";
+import EnhancedImageGallery from "@/components/gallery/EnhancedImageGallery";
 
 interface PageProps {
   params: { slug: string };
 }
 
 export default async function VehicleDetailPage({ params }: PageProps) {
-  // Fetch vehicle by slug with optimized query
+  // Fetch vehicle by slug with comprehensive query including new fields
   const vehicle = await client.fetch<VehicleDetail>(
     `*[_type == "vehicle" && slug.current == $slug][0]{
       _id,
@@ -17,6 +23,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
       model,
       year,
       price,
+      originalPrice,
       mileage,
       fuelType,
       transmission,
@@ -24,11 +31,34 @@ export default async function VehicleDetailPage({ params }: PageProps) {
       description,
       color,
       engine,
-      drivetrain,
+      status,
+      condition,
       features,
+      specifications,
+      financing,
+      seo,
       slug,
-      "mainImage": mainImage.asset->url,
-      "gallery": gallery[0...6].asset->url
+      dateAdded,
+      "mainImage": mainImage{
+        "asset": asset->{
+          url,
+          "metadata": metadata{
+            dimensions,
+            lqip
+          }
+        },
+        alt
+      },
+      "gallery": gallery[]{
+        "asset": asset->{
+          url,
+          "metadata": metadata{
+            dimensions
+          }
+        },
+        alt,
+        caption
+      }
     }`,
     { slug: params.slug }
   );
@@ -40,48 +70,45 @@ export default async function VehicleDetailPage({ params }: PageProps) {
   const whatsappMessage = `Hi, I'm interested in ${vehicle.brand} ${vehicle.model} - €${vehicle.price.toLocaleString()}`;
   const whatsappUrl = `https://wa.me/38349204242?text=${encodeURIComponent(whatsappMessage)}`;
 
+  // Generate structured data schemas
+  const breadcrumbs = [
+    { name: "Home", url: "https://autosalonani.com" },
+    { name: "Vehicles", url: "https://autosalonani.com/vehicles" },
+    { name: `${vehicle.brand} ${vehicle.model}`, url: `https://autosalonani.com/vehicles/${vehicle.slug.current}` }
+  ];
+
+  const schemas = generatePageSchemas('vehicle', { vehicle, breadcrumbs });
+
   return (
+    <>
+      <StructuredData schemas={schemas} />
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Vehicle Images */}
+        {/* Enhanced Vehicle Image Gallery */}
         <div>
-          <div className="relative h-96 mb-4 rounded-lg overflow-hidden bg-gray-100">
-            {vehicle.mainImage ? (
-              <Image
-                src={vehicle.mainImage}
-                alt={vehicle.title || `${vehicle.brand} ${vehicle.model}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 800px"
-                quality={85}
-                priority
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-gray-400">
-                No Image Available
+          {(vehicle.gallery && vehicle.gallery.length > 0) || vehicle.mainImage ? (
+            <EnhancedImageGallery
+              images={vehicle.gallery && vehicle.gallery.length > 0
+                ? vehicle.gallery
+                : vehicle.mainImage
+                  ? [vehicle.mainImage]
+                  : []
+              }
+              title={`${vehicle.brand} ${vehicle.model} ${vehicle.year}`}
+              autoPlay={false}
+              showThumbnails={true}
+              enableZoom={true}
+              enableFullscreen={true}
+              enableDownload={true}
+              enableShare={true}
+              className="w-full"
+            />
+          ) : (
+            <div className="relative h-96 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+              <div className="text-center text-gray-400">
+                <Car className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <p>No images available</p>
               </div>
-            )}
-          </div>
-
-          {/* Gallery */}
-          {vehicle.gallery && vehicle.gallery.length > 0 && (
-            <div className="grid grid-cols-4 gap-2">
-              {vehicle.gallery.slice(0, 6).map((imageUrl, index) => (
-                <div
-                  key={index}
-                  className="relative h-24 rounded overflow-hidden bg-gray-100"
-                >
-                  <Image
-                    src={imageUrl}
-                    alt={`${vehicle.brand} ${vehicle.model} - Image ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="200px"
-                    quality={70}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
             </div>
           )}
         </div>
@@ -158,38 +185,141 @@ export default async function VehicleDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Contact Section */}
-          <div className="bg-orange-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">
-              Interested in this vehicle?
+          {/* Enhanced WhatsApp Contact Section */}
+          <div className="bg-gradient-to-br from-orange-50 to-green-50 p-6 rounded-xl border border-orange-100">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              💬 Kontaktoni për këtë veturë
             </h2>
-            <div className="space-y-3">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-green-500 text-white text-center px-6 py-3 rounded-lg hover:bg-green-600 transition"
-              >
-                WhatsApp Us
-              </a>
-              <a
-                href="tel:+38349204242"
-                className="block w-full bg-orange-500 text-white text-center px-6 py-3 rounded-lg hover:bg-orange-600 transition"
-              >
-                Call: +383 49 204 242
-              </a>
-              <a
-                href="mailto:aniautosallon@gmail.com"
-                className="block w-full bg-gray-700 text-white text-center px-6 py-3 rounded-lg hover:bg-gray-800 transition"
-              >
-                Email Us
-              </a>
+            <WhatsAppQuickActions
+              vehicle={vehicle}
+              layout="expanded"
+              showSecondary={true}
+              className="space-y-3"
+            />
+
+            {/* Alternative Contact Methods */}
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-600 mb-3">Ose kontaktoni drejtpërdrejt:</p>
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href="tel:+38349204242"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-orange-600 border border-orange-200 rounded-lg hover:bg-orange-50 transition"
+                >
+                  <Phone className="w-4 h-4" />
+                  Telefono
+                </a>
+                <a
+                  href="mailto:aniautosallon@gmail.com"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Email
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
+}
+
+// Generate dynamic metadata for SEO
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const vehicle = await client.fetch<{
+    brand: string;
+    model: string;
+    year: number;
+    price: number;
+    originalPrice?: number;
+    description?: string;
+    seo?: {
+      metaTitle?: string;
+      metaDescription?: string;
+      keywords?: string[];
+    };
+    mainImage: string;
+  }>(
+    `*[_type == "vehicle" && slug.current == $slug][0]{
+      brand,
+      model,
+      year,
+      price,
+      originalPrice,
+      description,
+      seo,
+      "mainImage": mainImage.asset->url
+    }`,
+    { slug: params.slug }
+  );
+
+  if (!vehicle) {
+    return {
+      title: 'Vehicle Not Found - AUTO ANI',
+      description: 'The requested vehicle was not found.'
+    };
+  }
+
+  // Use custom SEO fields if available, otherwise generate
+  const title = vehicle.seo?.metaTitle ||
+    `${vehicle.brand} ${vehicle.model} ${vehicle.year} - €${vehicle.price?.toLocaleString()} | AUTO ANI`;
+
+  const description = vehicle.seo?.metaDescription ||
+    vehicle.description ||
+    `${vehicle.brand} ${vehicle.model} ${vehicle.year} for sale at AUTO ANI, Kosovo's premier car dealership. Price: €${vehicle.price?.toLocaleString()}. Contact us for more details.`;
+
+  const keywords = vehicle.seo?.keywords || [
+    vehicle.brand,
+    vehicle.model,
+    vehicle.year.toString(),
+    'Kosovo',
+    'Mitrovica',
+    'car dealership',
+    'AUTO ANI'
+  ];
+
+  return {
+    title,
+    description,
+    keywords: keywords.join(', '),
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `https://autosalonani.com/vehicles/${params.slug}`,
+      images: vehicle.mainImage ? [
+        {
+          url: vehicle.mainImage,
+          width: 1200,
+          height: 630,
+          alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
+        }
+      ] : [],
+      siteName: 'AUTO ANI',
+      locale: 'sq_XK',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: vehicle.mainImage ? [vehicle.mainImage] : [],
+    },
+    alternates: {
+      canonical: `https://autosalonani.com/vehicles/${params.slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
 }
 
 // Generate static params for better performance

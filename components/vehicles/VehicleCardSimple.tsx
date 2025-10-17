@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Eye, Fuel, Heart, Navigation, Settings } from 'lucide-react';
+import { Calendar, Eye, Fuel, Heart, Navigation, Settings, ZoomIn } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Vehicle } from '@/lib/types';
+import WhatsAppQuickActions from '@/components/whatsapp/WhatsAppQuickActions';
+import { getVehicleCardImage } from '@/lib/image-optimization';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -31,18 +33,11 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
 
   const vehicleSlug = vehicle.slug || vehicle.id;
 
-  // Get image URL - handle both string URLs and Sanity image objects
+  // Get optimized image URL
   const getImageUrl = () => {
     if (!vehicle.images?.[0]) return '/images/placeholder-vehicle.svg';
-    
-    // If it's already a string URL, return it
-    if (typeof vehicle.images[0] === 'string') {
-      return vehicle.images[0];
-    }
-    
-    // If it's a Sanity image object, it should already be converted to URL
-    // by the VehiclesPageClient conversion function
-    return '/images/placeholder-vehicle.svg';
+
+    return getVehicleCardImage(vehicle.images[0], { width: 400, height: 250 });
   };
 
   return (
@@ -61,6 +56,10 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
             hoveredCard ? 'scale-110' : ''
           }`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={85}
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+          loading="lazy"
         />
 
         {/* Overlay Actions */}
@@ -124,12 +123,26 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
           </div>
         </div>
 
-        {/* Action Button */}
-        <Link href={`/vehicles/${vehicleSlug}`}>
-          <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600 text-white">
-            Shiko Detajet
-          </Button>
-        </Link>
+        {/* Action Buttons */}
+        <div className="space-y-2">
+          <Link href={`/vehicles/${vehicleSlug}`}>
+            <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600 text-white">
+              Shiko Detajet
+            </Button>
+          </Link>
+
+          {/* Compact WhatsApp Actions */}
+          <WhatsAppQuickActions
+            vehicle={{
+              ...vehicle,
+              brand: vehicle.make, // Map make to brand for WhatsApp integration
+              slug: { current: vehicle.slug || vehicle.id }
+            }}
+            layout="compact"
+            showSecondary={false}
+            className="justify-center"
+          />
+        </div>
       </CardContent>
     </Card>
   );
