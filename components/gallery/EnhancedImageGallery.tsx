@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -183,8 +184,10 @@ export default function EnhancedImageGallery({
     <>
       <div className={`relative ${className}`}>
         {/* Main Image Display */}
-        <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 group">
-          <Image
+        <div className="space-y-4">
+          {/* Main Image Container */}
+          <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 group">
+            <Image
             src={currentImage.asset.url}
             alt={currentImage.alt || `${title} - Image ${currentIndex + 1}`}
             fill
@@ -321,37 +324,34 @@ export default function EnhancedImageGallery({
               <p className="text-sm">{currentImage.caption}</p>
             </div>
           )}
-        </div>
-
-        {/* Thumbnail Strip */}
-        {showThumbnails && images.length > 1 && !showGrid && (
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-            {images.map((image, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`relative w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
-                  index === currentIndex
-                    ? 'border-orange-500 shadow-lg'
-                    : 'border-transparent hover:border-gray-300'
-                }`}
-                onClick={() => goToImage(index)}
-              >
-                <Image
-                  src={image.asset.url}
-                  alt={image.alt || `${title} thumbnail ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                  quality={60}
-                  placeholder={image.asset.metadata?.lqip ? "blur" : "empty"}
-                  blurDataURL={image.asset.metadata?.lqip}
-                />
-              </motion.div>
-            ))}
           </div>
-        )}
+
+          {/* Simple Thumbnail Grid Below Main Image */}
+          {showThumbnails && images.length > 1 && !showGrid && (
+            <div className="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+              {images.map((image, index) => (
+                <div
+                  key={index}
+                  className={`relative aspect-video rounded overflow-hidden cursor-pointer border transition-all ${
+                    index === currentIndex
+                      ? 'border-orange-500'
+                      : 'border-gray-300 hover:border-orange-400'
+                  }`}
+                  onClick={() => goToImage(index)}
+                >
+                  <Image
+                    src={image.asset.url}
+                    alt={image.alt || `${title} thumbnail ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="100px"
+                    quality={60}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Grid View */}
         {showGrid && (

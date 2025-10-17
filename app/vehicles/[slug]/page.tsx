@@ -107,10 +107,16 @@ export default async function VehicleDetailPage({ params }: PageProps) {
               className="w-full"
             />
           ) : (
-            <div className="relative h-96 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-              <div className="text-center text-gray-400">
-                <Car className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p>No images available</p>
+            <div className="relative h-96 rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <div className="text-center text-gray-500">
+                <div className="bg-white/80 backdrop-blur-sm rounded-full p-6 mb-4 mx-auto w-fit">
+                  <Car className="w-16 h-16 text-orange-500" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{vehicle.brand} {vehicle.model}</h3>
+                <p className="text-sm">Fotografitë do të shtohen së shpejti</p>
+                <div className="mt-4 text-xs text-gray-400">
+                  AUTO ANI • Premium Vehicles
+                </div>
               </div>
             </div>
           )}
@@ -151,11 +157,16 @@ export default async function VehicleDetailPage({ params }: PageProps) {
 
           <div className="flex items-center gap-4 mb-6">
             <div className="text-4xl font-bold text-orange-500">
-              €{vehicle.price?.toLocaleString() || "0"}
+              €{vehicle.price?.toLocaleString('de-DE') || "0"}
             </div>
             {vehicle.originalPrice && vehicle.originalPrice > vehicle.price && (
-              <div className="text-xl text-gray-500 line-through">
-                €{vehicle.originalPrice.toLocaleString()}
+              <div className="flex flex-col">
+                <div className="text-xl text-gray-500 line-through">
+                  €{vehicle.originalPrice.toLocaleString('de-DE')}
+                </div>
+                <div className="text-sm font-medium text-red-600">
+                  Kurseni €{(vehicle.originalPrice - vehicle.price).toLocaleString('de-DE')}
+                </div>
               </div>
             )}
           </div>
@@ -163,39 +174,39 @@ export default async function VehicleDetailPage({ params }: PageProps) {
           <div className="grid grid-cols-2 gap-4 mb-6">
             {vehicle.year && (
               <div>
-                <p className="text-gray-600">Year</p>
+                <p className="text-gray-600">Viti</p>
                 <p className="font-semibold">{vehicle.year}</p>
               </div>
             )}
             {vehicle.mileage && (
               <div>
-                <p className="text-gray-600">Mileage</p>
+                <p className="text-gray-600">Kilometrazhi</p>
                 <p className="font-semibold">
-                  {vehicle.mileage.toLocaleString()} km
+                  {vehicle.mileage.toLocaleString('de-DE')} km
                 </p>
               </div>
             )}
             {vehicle.fuelType && (
               <div>
-                <p className="text-gray-600">Fuel Type</p>
+                <p className="text-gray-600">Karburanti</p>
                 <p className="font-semibold">{vehicle.fuelType}</p>
               </div>
             )}
             {vehicle.transmission && (
               <div>
-                <p className="text-gray-600">Transmission</p>
+                <p className="text-gray-600">Transmisioni</p>
                 <p className="font-semibold">{vehicle.transmission}</p>
               </div>
             )}
             {vehicle.color && (
               <div>
-                <p className="text-gray-600">Color</p>
+                <p className="text-gray-600">Ngjyra</p>
                 <p className="font-semibold">{vehicle.color}</p>
               </div>
             )}
             {vehicle.engine && (
               <div>
-                <p className="text-gray-600">Engine</p>
+                <p className="text-gray-600">Motori</p>
                 <p className="font-semibold">{vehicle.engine}</p>
               </div>
             )}
@@ -297,7 +308,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
                   <div>
                     <span className="text-gray-600">Pagesë Mujore:</span>
                     <div className="text-lg font-bold text-blue-600">
-                      €{vehicle.financing.monthlyPayment}/muaj
+                      €{vehicle.financing.monthlyPayment?.toLocaleString('de-DE')}/muaj
                     </div>
                   </div>
                 )}
