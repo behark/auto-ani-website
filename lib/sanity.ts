@@ -299,6 +299,7 @@ export interface VehicleDetail {
   engine?: string;
   status?: string;
   condition?: string;
+  featured?: boolean;
   features?: string[];
   specifications?: {
     doors?: number;

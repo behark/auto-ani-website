@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { Phone, MessageCircle, Car } from "lucide-react";
+import { Phone, MessageCircle, Car, Gauge, Fuel, Settings2, Zap, Shield, Award } from "lucide-react";
 
 import { client, VehicleDetail } from "@/lib/sanity";
 import StructuredData from "@/components/seo/StructuredData";
 import { generatePageSchemas } from "@/lib/seo-schema";
 import WhatsAppQuickActions from "@/components/whatsapp/WhatsAppQuickActions";
 import EnhancedImageGallery from "@/components/gallery/EnhancedImageGallery";
+import { Badge } from "@/components/ui/badge";
 
 interface PageProps {
   params: { slug: string };
@@ -33,6 +34,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
       engine,
       status,
       condition,
+      featured,
       features,
       specifications,
       financing,
@@ -83,7 +85,8 @@ export default async function VehicleDetailPage({ params }: PageProps) {
     <>
       <StructuredData schemas={schemas} />
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Mobile-optimized layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Enhanced Vehicle Image Gallery */}
         <div>
           {(vehicle.gallery && vehicle.gallery.length > 0) || vehicle.mainImage ? (
@@ -115,12 +118,46 @@ export default async function VehicleDetailPage({ params }: PageProps) {
 
         {/* Vehicle Details */}
         <div>
+          {/* Status and Featured Badges */}
+          <div className="flex items-center gap-2 mb-4">
+            <Badge className={`${
+              vehicle.status === 'available' ? 'bg-green-500' :
+              vehicle.status === 'sold' ? 'bg-red-500' :
+              vehicle.status === 'reserved' ? 'bg-yellow-500' : 'bg-gray-500'
+            } text-white`}>
+              {vehicle.status === 'available' ? '✅ Në Dispozicion' :
+               vehicle.status === 'sold' ? '❌ E Shitur' :
+               vehicle.status === 'reserved' ? '⏳ E Rezervuar' : '🔜 Së Shpejti'}
+            </Badge>
+            {vehicle.featured && (
+              <Badge className="bg-orange-500 text-white">
+                <Award className="w-3 h-3 mr-1" />
+                ⭐ I Veçantë
+              </Badge>
+            )}
+            {vehicle.condition && (
+              <Badge variant="outline" className="border-blue-200 text-blue-700">
+                {vehicle.condition === 'new' ? 'I Ri' :
+                 vehicle.condition === 'used_excellent' ? 'Gjendje e Shkëlqyer' :
+                 vehicle.condition === 'used_good' ? 'Gjendje e Mirë' :
+                 vehicle.condition === 'certified' ? 'Certifikuar' : vehicle.condition}
+              </Badge>
+            )}
+          </div>
+
           <h1 className="text-3xl font-bold mb-4">
             {vehicle.brand} {vehicle.model}
           </h1>
 
-          <div className="text-4xl font-bold text-orange-500 mb-6">
-            €{vehicle.price?.toLocaleString() || "0"}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="text-4xl font-bold text-orange-500">
+              €{vehicle.price?.toLocaleString() || "0"}
+            </div>
+            {vehicle.originalPrice && vehicle.originalPrice > vehicle.price && (
+              <div className="text-xl text-gray-500 line-through">
+                €{vehicle.originalPrice.toLocaleString()}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
@@ -166,22 +203,151 @@ export default async function VehicleDetailPage({ params }: PageProps) {
 
           {vehicle.description && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Description</h2>
+              <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                <Car className="w-5 h-5" />
+                Përshkrimi
+              </h2>
               <p className="text-gray-700">{vehicle.description}</p>
+            </div>
+          )}
+
+          {/* Technical Specifications */}
+          {vehicle.specifications && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Settings2 className="w-5 h-5" />
+                Specifikimet Teknike
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-sm bg-gray-50 p-4 rounded-lg">
+                {vehicle.specifications.power && (
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <Zap className="w-4 h-4 text-orange-500" />
+                      Fuqia:
+                    </span>
+                    <span className="font-semibold">{vehicle.specifications.power} HP</span>
+                  </div>
+                )}
+                {vehicle.specifications.torque && (
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <Gauge className="w-4 h-4 text-blue-500" />
+                      Tork:
+                    </span>
+                    <span className="font-semibold">{vehicle.specifications.torque} Nm</span>
+                  </div>
+                )}
+                {vehicle.specifications.acceleration && (
+                  <div className="flex items-center justify-between">
+                    <span>0-100 km/h:</span>
+                    <span className="font-semibold">{vehicle.specifications.acceleration}s</span>
+                  </div>
+                )}
+                {vehicle.specifications.topSpeed && (
+                  <div className="flex items-center justify-between">
+                    <span>Shpejtësia Max:</span>
+                    <span className="font-semibold">{vehicle.specifications.topSpeed} km/h</span>
+                  </div>
+                )}
+                {vehicle.specifications.fuelConsumption && (
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <Fuel className="w-4 h-4 text-green-500" />
+                      Konsum:
+                    </span>
+                    <span className="font-semibold">{vehicle.specifications.fuelConsumption} L/100km</span>
+                  </div>
+                )}
+                {vehicle.specifications.co2Emissions && (
+                  <div className="flex items-center justify-between">
+                    <span>CO2 Emisions:</span>
+                    <span className="font-semibold">{vehicle.specifications.co2Emissions} g/km</span>
+                  </div>
+                )}
+                {vehicle.specifications.doors && (
+                  <div className="flex items-center justify-between">
+                    <span>Dyert:</span>
+                    <span className="font-semibold">{vehicle.specifications.doors}</span>
+                  </div>
+                )}
+                {vehicle.specifications.seats && (
+                  <div className="flex items-center justify-between">
+                    <span>Ulëset:</span>
+                    <span className="font-semibold">{vehicle.specifications.seats}</span>
+                  </div>
+                )}
+                {vehicle.specifications.trunkCapacity && (
+                  <div className="flex items-center justify-between">
+                    <span>Bagazhi:</span>
+                    <span className="font-semibold">{vehicle.specifications.trunkCapacity} L</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Financing Information */}
+          {vehicle.financing?.available && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-100 mb-6">
+              <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                💳 Financim i Disponueshëm
+              </h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                {vehicle.financing.monthlyPayment && (
+                  <div>
+                    <span className="text-gray-600">Pagesë Mujore:</span>
+                    <div className="text-lg font-bold text-blue-600">
+                      €{vehicle.financing.monthlyPayment}/muaj
+                    </div>
+                  </div>
+                )}
+                {vehicle.financing.downPayment && (
+                  <div>
+                    <span className="text-gray-600">Paradhënie:</span>
+                    <div className="text-lg font-bold text-green-600">
+                      {vehicle.financing.downPayment}%
+                    </div>
+                  </div>
+                )}
+                {vehicle.financing.loanTerm && (
+                  <div>
+                    <span className="text-gray-600">Afati:</span>
+                    <div className="font-medium">
+                      {vehicle.financing.loanTerm} muaj
+                    </div>
+                  </div>
+                )}
+                {vehicle.financing.interestRate && (
+                  <div>
+                    <span className="text-gray-600">Norma Interest:</span>
+                    <div className="font-medium">
+                      {vehicle.financing.interestRate}%
+                    </div>
+                  </div>
+                )}
+              </div>
+              {vehicle.financing.tradeInAccepted && (
+                <div className="mt-3 p-2 bg-green-100 rounded text-sm text-green-800">
+                  ✅ Shkëmbim veture të pranueshëm
+                </div>
+              )}
             </div>
           )}
 
           {vehicle.features && vehicle.features.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Features</h2>
-              <ul className="grid grid-cols-2 gap-2">
+              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                Karakteristikat & Pajisjet
+              </h2>
+              <div className="grid grid-cols-2 gap-2">
                 {vehicle.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-sm">
+                  <div key={index} className="flex items-center text-sm p-2 bg-green-50 rounded">
                     <span className="text-green-500 mr-2">✓</span>
-                    {feature}
-                  </li>
+                    <span className="font-medium">{feature}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
