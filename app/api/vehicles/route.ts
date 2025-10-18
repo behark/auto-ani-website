@@ -1,31 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
+import { validateVehicleQuery } from "@/lib/validation/vehicle-api";
+import { rateLimit } from "@/lib/api-utils";
 
 // Force dynamic rendering for API route
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await rateLimit(request, {
+      maxRequests: 100,
+      windowMs: 60 * 1000, // 1 minute
+    });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests" },
+        { status: 429 }
+      );
+    }
+
+    // Validate and sanitize input parameters
+    const validation = validateVehicleQuery(request.nextUrl.searchParams);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error },
+        { status: 400 }
+      );
+    }
+
+    const params = validation.data!;
+
     // Dynamic import to avoid build-time issues
     const { client } = await import("@/lib/sanity");
 
-    const searchParams = request.nextUrl.searchParams;
-    const category = searchParams.get("category");
-    const featured = searchParams.get("featured") === "true";
-    const brand = searchParams.get("brand");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-
-    // Optional limit parameter - if provided, use it, otherwise fetch all
-    const limitParam = searchParams.get("limit");
-    const limit = limitParam ? parseInt(limitParam, 10) : null;
-
-    // Build GROQ query with filters
+    // Build GROQ query with validated and sanitized filters
     const filters = ['_type == "vehicle"'];
-    if (category) filters.push(`category == "${category}"`);
-    if (featured) filters.push(`featured == true`);
-    if (brand) filters.push(`brand match "${brand}*"`);
-    if (minPrice) filters.push(`price >= ${minPrice}`);
-    if (maxPrice) filters.push(`price <= ${maxPrice}`);
+    if (params.category && params.category !== 'all') {
+      filters.push(`category == "${params.category}"`);
+    }
+    if (params.featured === 'true') {
+      filters.push(`featured == true`);
+    }
+    if (params.brand) {
+      // Brand is already sanitized by validation
+      filters.push(`brand match "${params.brand}*"`);
+    }
+    if (params.minPrice !== undefined) {
+      filters.push(`price >= ${params.minPrice}`);
+    }
+    if (params.maxPrice !== undefined) {
+      filters.push(`price <= ${params.maxPrice}`);
+    }
 
     // ✅ OPTIMIZED: Only fetch mainImage (first image), not entire gallery
     // ✅ NO DEFAULT LIMIT - Fetch all vehicles unless limit is explicitly provided
@@ -51,9 +77,9 @@ export async function GET(request: NextRequest) {
       _updatedAt
     } | order(_createdAt desc)`;
 
-    // Only apply limit if explicitly provided in query params
-    if (limit && limit > 0) {
-      query += `[0...${limit}]`;
+    // Only apply limit if explicitly provided and validated
+    if (params.limit && params.limit > 0) {
+      query += `[0...${params.limit}]`;
     }
 
     const vehicles = await client.fetch(query);
@@ -64,22 +90,29 @@ export async function GET(request: NextRequest) {
         vehicles,
         total: vehicles.length,
         filters: {
-          category,
-          featured,
-          brand,
-          minPrice,
-          maxPrice,
-          ...(limit && { limit }),
+          category: params.category,
+          featured: params.featured === 'true',
+          brand: params.brand,
+          minPrice: params.minPrice,
+          maxPrice: params.maxPrice,
+          ...(params.limit && { limit: params.limit }),
         },
       },
     });
   } catch (error) {
     console.error("Failed to fetch vehicles:", error);
+
+    // Don't expose internal error details in production
+    const isProduction = process.env.NODE_ENV === 'production';
+    const errorMessage = isProduction
+      ? "Failed to fetch vehicles"
+      : (error instanceof Error ? error.message : "Unknown error");
+
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to fetch vehicles from Sanity CMS",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: "Failed to fetch vehicles from database",
+        ...(isProduction ? {} : { details: errorMessage }),
       },
       { status: 500 }
     );

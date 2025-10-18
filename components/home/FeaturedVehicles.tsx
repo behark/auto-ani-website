@@ -8,11 +8,13 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { logger } from "@/lib/logger";
 import { MOCK_FEATURED_VEHICLES } from "@/lib/mock-data/vehicles";
 import { Vehicle, urlFor } from "@/lib/sanity";
 
 export default function FeaturedVehicles() {
+  const { t } = useLanguage();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -198,7 +200,7 @@ export default function FeaturedVehicles() {
                     >
                       <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600 text-white transition-all duration-300 hover:shadow-lg">
                         <Eye className="h-4 w-4 mr-2" />
-                        Shiko Detajet
+                        {t('cta.viewDetails')}
                       </Button>
                     </Link>
                   </CardContent>

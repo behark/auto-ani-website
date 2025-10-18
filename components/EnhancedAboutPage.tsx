@@ -159,7 +159,7 @@ export default function EnhancedAboutPage() {
             <p className="text-xl">{displayDescription}</p>
             {error && (
               <div className="mt-4 bg-yellow-500/20 text-yellow-100 px-4 py-2 rounded-lg text-sm">
-                ⚠️ Using backup information
+                ⚠️ {t('about.loadingFallback')}
               </div>
             )}
           </div>

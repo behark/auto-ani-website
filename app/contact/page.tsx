@@ -126,17 +126,17 @@ export default function ContactPage() {
           <div className="lg:col-span-2">
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Forma e Kontaktit</CardTitle>
+                <CardTitle>{t('contact.contactForm')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Forma e kontaktit vjen së shpejti. Ju lutemi na telefononi drejtpërdrejt.</p>
+                <p className="text-gray-600">{t('contact.formComingSoon')}</p>
               </CardContent>
             </Card>
             <Card className="mt-6">
               <CardContent className="p-6">
                 <div className="text-center">
                   <p className="text-gray-600 mb-4">
-                    Për ndihmë të menjëhershme, ju lutemi na kontaktoni drejtpërdrejt:
+                    {t('contact.immediateHelp')}
                   </p>
                   <div className="space-y-2">
                     <a
@@ -151,7 +151,7 @@ export default function ContactPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Mesazh WhatsApp
+                      {t('contact.whatsappMessage')}
                     </a>
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export default function ContactPage() {
           <CardContent className="p-0">
             <div className="h-96 bg-gray-200 relative">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2928.0556741961704!2d20.86594731549!3d42.88184897915611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1353552c4c5f7b6d%3A0x4a7e2b4f7e8c5d9e!2sGazmend%20Baliu%2C%20Mitrovic%C3%AB%2040000%2C%20Kosovo!5e0!3m2!1sen!2s!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2928.0556741961704!2d20.86594731549!3d42.88184897915611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1353552c4c5f7b6d%3A0x4a7e2b4f7e8c5d9e!2sGazmend%20Baliu%2C%20Mitrovic%C3%AB%2040000%2C%20Kosovo!5e0!3m2!1sen!2s!4v1700000000000"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -176,6 +176,7 @@ export default function ContactPage() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="rounded-b-lg"
+                title="AUTO ANI Location Map"
               />
             </div>
           </CardContent>

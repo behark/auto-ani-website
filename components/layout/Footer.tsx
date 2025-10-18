@@ -2,8 +2,10 @@
 
 import { Car, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
@@ -17,7 +19,7 @@ export default function Footer() {
               <span className="text-2xl font-bold">AUTO ANI</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
-              Auto salon premium në Kosovë. Mbi 2500 klientë të kënaqur që nga 2015. Vetura cilësore, çmime konkurruese dhe shërbim i shkëlqyer.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <a
@@ -39,26 +41,26 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/vehicles" className="text-gray-400 hover:text-white transition-colors">
-                  View Vehicles
+                  {t('nav.vehicles')}
                 </Link>
               </li>
               <li>
                 <Link href="/services" className="text-gray-400 hover:text-white transition-colors">
-                  Our Services
+                  {t('nav.services')}
                 </Link>
               </li>
               <li>
                 <Link href="/trade-in" className="text-gray-400 hover:text-white transition-colors">
-                  Trade-In
+                  {t('trade.title')}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                  Contact Us
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
@@ -66,11 +68,11 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.contactInfo')}</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
-                <span className="text-gray-400">Pristina, Kosovo</span>
+                <span className="text-gray-400">{t('location.city')}, {t('location.country')}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
@@ -91,10 +93,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} AUTO ANI. All rights reserved.
+            © {new Date().getFullYear()} AUTO ANI. {t('footer.allRightsReserved')}
           </p>
           <p className="text-gray-400 text-sm mt-2 md:mt-0">
-            Premium Auto Salon - 9+ Years of Excellence
+            {t('footer.tagline')}
           </p>
         </div>
       </div>

@@ -153,7 +153,7 @@ export async function rateLimit(
     windowMs?: number;
     keyGenerator?: (req: NextRequest) => string;
   } = {}
-): Promise<void> {
+): Promise<{ success: boolean; message?: string; retryAfter?: number }> {
   const {
     maxRequests = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
     windowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
@@ -165,11 +165,14 @@ export async function rateLimit(
 
   if (!result.allowed) {
     const retryAfter = Math.ceil((result.resetAt - Date.now()) / 1000);
-    throw new RateLimitError(
-      `Rate limit exceeded. Try again in ${retryAfter} seconds`,
+    return {
+      success: false,
+      message: `Rate limit exceeded. Try again in ${retryAfter} seconds`,
       retryAfter
-    );
+    };
   }
+
+  return { success: true };
 }
 
 // Exponential backoff retry utility

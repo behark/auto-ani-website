@@ -3,28 +3,31 @@
 import { Users, Award, Clock, Shield } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function WhyChooseUs() {
+  const { t } = useLanguage();
+
   const features = [
     {
       icon: Users,
-      title: '2500+ Satisfied Customers',
-      description: 'Over 2500 happy customers since 2015 with excellent reviews and ratings'
+      title: t('whyUs.customers'),
+      description: t('whyUs.customersDesc')
     },
     {
       icon: Award,
-      title: '9+ Years Experience',
-      description: 'Nearly a decade of expertise in the automotive industry in Kosovo'
+      title: t('whyUs.experience'),
+      description: t('whyUs.experienceDesc')
     },
     {
       icon: Clock,
-      title: 'Quick Processing',
-      description: 'Fast and efficient service delivery for all your automotive needs'
+      title: t('whyUs.quickProcessing'),
+      description: t('whyUs.quickProcessingDesc')
     },
     {
       icon: Shield,
-      title: 'Quality Guarantee',
-      description: 'All vehicles come with warranty and quality certification'
+      title: t('whyUs.quality'),
+      description: t('whyUs.qualityDesc')
     }
   ];
 
@@ -34,10 +37,10 @@ export default function WhyChooseUs() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
-            Why Choose <span className="text-[var(--primary-orange)]">AUTO ANI</span>
+            {t('whyUs.title')} <span className="text-[var(--primary-orange)]">AUTO ANI</span>
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Trusted automotive partner in Kosovo with proven track record of excellence
+            {t('whyUs.subtitle')}
           </p>
         </div>
 

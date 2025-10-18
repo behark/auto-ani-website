@@ -15,20 +15,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // Additional memory optimizations for production
-  experimental: {
-    optimizePackageImports: [
-      'lucide-react',
-      'framer-motion',
-      '@radix-ui/react-accordion',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-select',
-    ],
-    // Reduce memory usage during build
-    webpackBuildWorker: true,
-  },
-
   // Reduce bundle size
   swcMinify: true,
 
@@ -74,6 +60,8 @@ const nextConfig = {
       '@radix-ui/react-dropdown-menu',
       '@radix-ui/react-select',
     ],
+    // Reduce memory usage during build
+    webpackBuildWorker: true,
   },
 
   // Security and performance headers

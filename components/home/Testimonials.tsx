@@ -3,26 +3,29 @@
 import { Star } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Testimonials() {
+  const { t } = useLanguage();
+
   const testimonials = [
     {
       name: 'Arben Gashi',
       location: 'Pristina',
       rating: 5,
-      text: 'Shërbim i shkëlqyer dhe vetura cilësore. Gjeta pikërisht atë që po kërkoja!'
+      text: t('testimonials.review1')
     },
     {
       name: 'Leonora Zeka',
       location: 'Mitrovica',
       rating: 5,
-      text: 'Ekip profesional dhe çmime të drejta. E rekomandoj fort AUTO ANI për këdo që kërkon automjet.'
+      text: t('testimonials.review2')
     },
     {
       name: 'Driton Krasniqi',
       location: 'Peja',
       rating: 5,
-      text: 'Përvojë e shkëlqyer nga fillimi në fund. Opsionet e financimit e bënë shumë të lehtë.'
+      text: t('testimonials.review3')
     }
   ];
 
@@ -32,10 +35,10 @@ export default function Testimonials() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
-            Çfarë Thonë <span className="text-[var(--primary-orange)]">Klientët</span> Tanë
+            {t('testimonials.title')} <span className="text-[var(--primary-orange)]">{t('testimonials.customers')}</span> {t('testimonials.our')}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Mos na besoni vetëm ne - dëgjoni nga klientët tanë të kënaqur
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -71,15 +74,15 @@ export default function Testimonials() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <div className="text-3xl font-bold text-[var(--primary-orange)]">4.9/5</div>
-              <div className="text-gray-600">Vlerësimi Mesatar</div>
+              <div className="text-gray-600">{t('testimonials.avgRating')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-[var(--primary-orange)]">500+</div>
-              <div className="text-gray-600">Vlerësime Google</div>
+              <div className="text-gray-600">{t('testimonials.googleReviews')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-[var(--primary-orange)]">98%</div>
-              <div className="text-gray-600">Kënaqësia e Klientëve</div>
+              <div className="text-gray-600">{t('testimonials.satisfaction')}</div>
             </div>
           </div>
         </div>

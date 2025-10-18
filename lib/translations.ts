@@ -34,7 +34,6 @@ export const translations = {
       listView: 'Pamje liste',
       noResults: 'Nuk u gjetën vetura që përputhen me kriteret tuaja.',
       clearFilters: 'Pastro Filtrat',
-      viewDetails: 'Shiko Detajet',
       compare: 'Krahaso',
       price: 'Çmimi',
       year: 'Viti',
@@ -60,11 +59,44 @@ export const translations = {
       print: 'Printo',
       certifiedPreOwned: 'Çertifikuar Para-Përdorur',
       extendedWarrantyAvailable: 'Garanci e Zgjatur në Dispozicion',
-      tradeInAccepted: 'Pranësimi i Shkëmbimit'
+      tradeInAccepted: 'Pranësimi i Shkëmbimit',
+      photosComingSoon: 'Fotografitë do të shtohen së shpejti',
+      status: {
+        available: 'Në Dispozicion',
+        sold: 'E Shitur',
+        reserved: 'E Rezervuar',
+        comingSoon: 'Së Shpejti'
+      },
+      featured: 'I Veçantë',
+      condition: {
+        new: 'I Ri',
+        excellentCondition: 'Gjendje e Shkëlqyer',
+        goodCondition: 'Gjendje e Mirë',
+        certified: 'Certifikuar'
+      },
+      color: 'Ngjyra',
+      technicalSpecs: 'Specifikimet Teknike',
+      power: 'Fuqia',
+      torque: 'Tork',
+      maxSpeed: 'Shpejtësia Max',
+      consumption: 'Konsum',
+      trunk: 'Bagazhi',
+      financingAvailable: 'Financim i Disponueshëm',
+      monthlyPayment: 'Pagesë Mujore',
+      month: 'muaj',
+      downPayment: 'Paradhënie',
+      loanTerm: 'Afati',
+      interestRate: 'Norma Interest',
+      featuresEquipment: 'Karakteristikat & Pajisjet',
+      contactForVehicle: 'Kontaktoni për këtë veturë',
+      orContactDirectly: 'Ose kontaktoni drejtpërdrejt',
+      phone: 'Telefono'
     },
     services: {
-      title: 'Shërbimet Tona',
+      title: 'Shërbimet',
+      our: 'Tona',
       subtitle: 'Zgjidhje të plota për nevojat tuaja automobilistike',
+      learnMore: 'Mësoni Më Shumë Për Shërbimet Tona',
       sales: 'Shitja e Veturave',
       salesDesc: 'Zgjedhje e gjerë e veturave të reja dhe të përdorura',
       financing: 'Financim',
@@ -80,6 +112,35 @@ export const translations = {
       qualityCertified: 'Automjete të certifikuara cilësore',
       competitivePricing: 'Çmime konkurruese',
       fullServiceHistory: 'Historiku i plotë i shërbimit',
+      vehicleSales: {
+        title: 'Shitja e Veturave',
+        desc: 'Gama e gjerë e veturave premium të reja dhe të përdorura',
+        feature1: 'Vetura të kontrolluara me kujdes',
+        feature2: 'Histori e plotë shërbimi',
+        feature3: 'Garanci e zgjatur'
+      },
+      financing: {
+        title: 'Financimi & Kreditimi',
+        desc: 'Opsione financimi fleksibël me normat më të mira',
+        feature1: 'Aprovim i shpejtë',
+        feature2: 'Norma konkurruese',
+        feature3: 'Plane të personalizuara'
+      },
+      tradeIn: {
+        title: 'Shkëmbim & Vlerësim',
+        desc: 'Vlerë e drejtë tregu për veturën tuaj aktuale',
+        feature1: 'Vlerësim falas',
+        feature2: 'Çmime të drejta',
+        feature3: 'Proces i shpejtë'
+      },
+      insurance: {
+        title: 'Sigurimi & Regjistrimi',
+        desc: 'Asistencë e plotë për sigurim dhe regjistrim',
+        feature1: 'Partnerë të besueshëm sigurimi',
+        feature2: 'Mbulim gjithëpërfshirës',
+        feature3: 'Asistencë në regjistrim'
+      },
+      loadingFallback: 'Duke përdorur informacionin rezervë të shërbimeve',
       quickApproval: 'Aprovim i shpejtë',
       flexibleTerms: 'Kushte fleksibile',
       fairValuation: 'Vlerësim i drejtë i tregut',
@@ -94,11 +155,68 @@ export const translations = {
       maintenancePack: 'Paketa mirëmbajtjeje',
       genuineParts: 'Pjesë origjinale'
     },
+    trade: {
+      title: 'Shkëmbim',
+      description: 'Vlerë e drejtë tregu për veturën tuaj aktuale',
+      subtitle: 'Merrni vlerën e drejtë të tregut për veturën tuaj aktuale me shërbimin tonë profesional të shkëmbimit',
+      specialPromotion: 'Promocioni Special i Shkëmbimit',
+      limitedOffer: 'Ofertë me kohë të kufizuar - Merrni bonus €1000 kur shkëmbeni veturën tuaj për një blerje të re',
+      howItWorks: 'Si Funksionon Shkëmbimi',
+      steps: {
+        step1: {
+          title: 'Vlerësimi i Veturës',
+          description: 'Sillni veturën tuaj për një vlerësim profesional'
+        },
+        step2: {
+          title: 'Vlerësimi i Çmimit',
+          description: 'Merrni vlerësimin e drejtë të tregut menjëherë'
+        },
+        step3: {
+          title: 'Krediti i Shkëmbimit',
+          description: 'Aplikoni kredin për blerjen e veturës tuaj të re'
+        }
+      },
+      benefitsTitle: 'Përfitimet e Shkëmbimit',
+      benefits: {
+        fairValue: 'Vlerësimi i drejtë i tregut',
+        bonusPromo: 'Promocioni Bonus Shkëmbimi €1000',
+        instantEval: 'Procesi i menjëhershëm i vlerësimit',
+        noHaggling: 'Nuk kërkohet pazarllëk',
+        proInspection: 'Inspektimi profesional',
+        docsHandled: 'Të gjitha dokumentet trajtohen',
+        instantCredit: 'Krediti aplikohet menjëherë',
+        taxBenefits: 'Përfitimet tatimore'
+      },
+      quickAssessment: 'Vlerësimi i Shpejtë i Shkëmbimit',
+      fastProcess: 'Procesi i Shpejtë',
+      fifteenMinutes: 'Vlerësim 15 minutësh',
+      fairAssessment: 'Vlerësim i Drejtë',
+      marketBased: 'Çmimi bazuar në treg',
+      scheduleText: 'Na kontaktoni për të planifikuar vlerësimin e veturës tuaj',
+      scheduleAssessment: 'Planifikoni Vlerësimin',
+      whatWeAccept: 'Cilat Vetura Pranojmë',
+      premiumBrands: 'Markat Premium',
+      premiumBrandsList: 'BMW, Mercedes, Audi, Porsche',
+      popularBrands: 'Markat Popullore',
+      popularBrandsList: 'VW, Toyota, Honda, Ford',
+      ageRange: 'Diapazoni i Moshës',
+      ageRangeText: '2010 ose më të reja të preferuara',
+      condition: 'Gjendja',
+      conditionText: 'Gjendje e mirë deri e shkëlqyer',
+      readyToTrade: 'Gati të Shkëmbeni Veturën Tuaj?',
+      startWithFree: 'Filloni me një vlerësim falas dhe shikoni sa vlen vetura juaj',
+      viewInventory: 'Shikoni Inventarin Tonë'
+    },
     stats: {
       yearsOfExcellence: 'Vite Përsosmërie',
       vehiclesSold: 'Vetura të Shitura',
       satisfiedCustomers: 'Klientë të Kënaqur',
-      rating: 'Vlerësimi'
+      rating: 'Vlerësimi',
+      yearsExperience: 'Vite Përvojë'
+    },
+    location: {
+      city: 'Mitrovica',
+      country: 'Kosovë'
     },
     contact: {
       title: 'Na Kontaktoni',
@@ -121,7 +239,7 @@ export const translations = {
       getInTouch: 'Merrni Kontakt',
       followUs: 'Na Ndiqni',
       responseTime: 'Koha e Përgjigjjes',
-      usuallyWithinHour: 'Zakonisht brenda 1 ore',
+      usuallyWithinHour: 'Zakonisht përgjigjet brenda 1 ore',
       averageRating: 'Vlerësimi Mesatar',
       fullName: 'Emri i Plotë',
       emailAddress: 'Adresa Email',
@@ -140,13 +258,20 @@ export const translations = {
       getInTouchDesc: 'Merrni kontakt me ekipin tonë për çdo pyetje rreth automjeteve, shërbimeve tona, ose për të caktuar një test drive',
       sending: 'Duke dërguar...',
       messageSentSuccess: 'Mesazhi u dërgua me sukses! Do t\'ju përgjigjemi së shpejti.',
-      messageSentError: 'Ndodhi një gabim gjatë dërgimit të mesazhit. Ju lutemi provoni përsëri.'
+      messageSentError: 'Ndodhi një gabim gjatë dërgimit të mesazhit. Ju lutemi provoni përsëri.',
+      contactForm: 'Forma e Kontaktit',
+      formComingSoon: 'Forma e kontaktit vjen së shpejti. Ju lutemi na telefononi drejtpërdrejt.',
+      immediateHelp: 'Për ndihmë të menjëhershme, ju lutemi na kontaktoni drejtpërdrejt:',
+      whatsappMessage: 'Mesazh WhatsApp'
     },
     footer: {
+      description: 'Auto salon premium në Kosovë. Mbi 2500 klientë të kënaqur që nga 2015. Vetura cilësore, çmime konkurruese dhe shërbim i shkëlqyer.',
       aboutUs: 'AUTO ANI është partneri juaj i besuar për vetura premium në Kosovë.',
       quickLinks: 'Lidhje të Shpejta',
       contactInfo: 'Informacion Kontakti',
       followUs: 'Na Ndiqni',
+      allRightsReserved: 'Të gjitha të drejtat e rezervuara',
+      tagline: 'Auto Salon Premium - 9+ Vite Përsosmërie',
       allRights: 'Të gjitha të drejtat e rezervuara',
       years: 'vite',
       vehiclesSold: 'vetura të shitura',
@@ -155,9 +280,12 @@ export const translations = {
     },
     cta: {
       viewDetails: 'Shiko Detajet',
+      brandNew: 'Krejtësisht e Re',
+      qualityAssured: 'Cilësi e Garantuar',
       contactUs: 'Na Kontaktoni',
       learnMore: 'Mëso Më Shumë',
       viewInventory: 'Shiko Inventarin',
+      viewAllVehicles: 'Shiko Të Gjitha Veturat',
       getQuote: 'Merrni Ofertë',
       schedule: 'Caktoni Takim',
       whatsapp: 'WhatsApp',
@@ -181,6 +309,7 @@ export const translations = {
     about: {
       title: 'Rreth',
       subtitle: 'Partneri juaj i besuar për automjete që nga viti 2015',
+      loadingFallback: 'Duke përdorur informacionin rezervë',
       ourStory: 'Historia Jonë',
       storyP1: 'E themeluar në vitin 2015, AUTO ANI filloi si një salon i vogël automjetesh në pronësi familjare me një mision të thjeshtë: të ofrojmë automjete cilësore dhe shërbim të jashtëzakonshëm për komunitetin tonë.',
       storyP2: 'Ndër vite, ne jemi rritur nga një operacion modest në një nga distributorët më të besuar të automjeteve në rajon.',
@@ -269,13 +398,35 @@ export const translations = {
       subtitle: 'Mbi 2,300 klientë të kënaqur kanë besuar tek ne për nevojat e tyre të automjeteve',
       purchased: 'Bleu',
       from: 'nga',
-      googleReviews: 'Vlerësime Google'
+      googleReviews: 'Vlerësime Google',
+      customers: 'Klientët',
+      our: 'Tanë',
+      review1: 'Shërbim i shkëlqyer dhe çmime të drejta. Jam shumë i kënaqur me veturën që bleva nga AUTO ANI.',
+      review2: 'Stafi profesional dhe i sjellshëm. Më ndihmuan të gjej veturën perfekte për familjen time.',
+      review3: 'Proces i shpejtë dhe transparent. E rekomandoj AUTO ANI për të gjithë!'
     },
     newsletter: {
       title: 'Abonohu në Buletinin Tonë',
       subtitle: 'Merrni lajmet më të fundit të automjeteve dhe ofertat speciale',
       placeholder: 'Email-i Juaj',
       button: 'Abonohu'
+    },
+    whyUs: {
+      title: 'Pse të Zgjidhni',
+      subtitle: 'Partneri juaj i besuar për mbi 9 vite',
+      customers: '2500+ Klientë të Kënaqur',
+      customersDesc: 'Mijëra klientë të kënaqur në të gjithë Kosovën',
+      experience: '9+ Vite Eksperiencë',
+      experienceDesc: 'Ekspertizë e provuar në tregun e automjeteve',
+      quickProcessing: 'Proces i Shpejtë',
+      quickProcessingDesc: 'Përpunim i shpejtë i dokumentacionit dhe dorëzim',
+      quality: 'Cilësi e Garantuar',
+      qualityDesc: 'Të gjitha veturat janë të kontrolluara dhe certifikuara'
+    },
+    featured: {
+      title: 'Veturat e Zgjedhura',
+      subtitle: 'Eksploroni koleksionin tonë premium të automjeteve',
+      noVehicles: 'Nuk ka vetura të zgjedhura në këtë moment.'
     }
   },
   sr: { // Serbian
@@ -313,7 +464,6 @@ export const translations = {
       listView: 'Lista prikaz',
       noResults: 'Nema vozila koja odgovaraju vašim kriterijumima.',
       clearFilters: 'Obriši Filtere',
-      viewDetails: 'Vidi Detalje',
       compare: 'Uporedi',
       price: 'Cena',
       year: 'Godina',
@@ -339,11 +489,44 @@ export const translations = {
       print: 'Štampaj',
       certifiedPreOwned: 'Sertifikovano Polovno',
       extendedWarrantyAvailable: 'Proširena Garancija Dostupna',
-      tradeInAccepted: 'Zamena Prihvaćena'
+      tradeInAccepted: 'Zamena Prihvaćena',
+      photosComingSoon: 'Fotografije će uskoro biti dodate',
+      status: {
+        available: 'Dostupno',
+        sold: 'Prodato',
+        reserved: 'Rezervisano',
+        comingSoon: 'Uskoro'
+      },
+      featured: 'Istaknuto',
+      condition: {
+        new: 'Novo',
+        excellentCondition: 'Odlično Stanje',
+        goodCondition: 'Dobro Stanje',
+        certified: 'Sertifikovano'
+      },
+      color: 'Boja',
+      technicalSpecs: 'Tehničke Specifikacije',
+      power: 'Snaga',
+      torque: 'Obrtni Momenat',
+      maxSpeed: 'Maksimalna Brzina',
+      consumption: 'Potrošnja',
+      trunk: 'Gepek',
+      financingAvailable: 'Dostupno Finansiranje',
+      monthlyPayment: 'Mesečna Rata',
+      month: 'meseci',
+      downPayment: 'Učešće',
+      loanTerm: 'Rok',
+      interestRate: 'Kamatna Stopa',
+      featuresEquipment: 'Karakteristike i Oprema',
+      contactForVehicle: 'Kontaktirajte za ovo vozilo',
+      orContactDirectly: 'Ili kontaktirajte direktno',
+      phone: 'Telefon'
     },
     services: {
-      title: 'Naše Usluge',
+      title: 'Usluge',
+      our: 'Naše',
       subtitle: 'Kompletna rešenja za vaše automobilske potrebe',
+      learnMore: 'Saznajte Više o Našim Uslugama',
       sales: 'Prodaja Vozila',
       salesDesc: 'Širok izbor novih i polovnih vozila',
       financing: 'Finansiranje',
@@ -373,11 +556,68 @@ export const translations = {
       maintenancePack: 'Paket održavanja',
       genuineParts: 'Originalni delovi'
     },
+    trade: {
+      title: 'Zamena',
+      description: 'Fer tržišna vrednost za vaše trenutno vozilo',
+      subtitle: 'Dobijte fer tržišnu vrednost za vaše trenutno vozilo sa našim profesionalnim servisom zamene',
+      specialPromotion: 'Specijalna Promocija Zamene',
+      limitedOffer: 'Ograničena ponuda - Dobijte bonus od €1000 kada zamenite vaše vozilo za novu kupovinu',
+      howItWorks: 'Kako Funkcioniše Zamena',
+      steps: {
+        step1: {
+          title: 'Procena Vozila',
+          description: 'Dovedite vaše vozilo za profesionalnu procenu'
+        },
+        step2: {
+          title: 'Procena Cene',
+          description: 'Dobijte fer tržišnu procenu odmah'
+        },
+        step3: {
+          title: 'Kredit Zamene',
+          description: 'Primenite kredit za kupovinu vašeg novog vozila'
+        }
+      },
+      benefitsTitle: 'Prednosti Zamene',
+      benefits: {
+        fairValue: 'Fer tržišna procena',
+        bonusPromo: 'Bonus promocija zamene €1000',
+        instantEval: 'Trenutni proces procene',
+        noHaggling: 'Bez cenkanja',
+        proInspection: 'Profesionalna inspekcija',
+        docsHandled: 'Svi dokumenti se obrađuju',
+        instantCredit: 'Kredit se primenjuje odmah',
+        taxBenefits: 'Poreske pogodnosti'
+      },
+      quickAssessment: 'Brza Procena Zamene',
+      fastProcess: 'Brz Proces',
+      fifteenMinutes: '15 minuta procene',
+      fairAssessment: 'Fer Procena',
+      marketBased: 'Cena bazirana na tržištu',
+      scheduleText: 'Kontaktirajte nas da zakažete procenu vašeg vozila',
+      scheduleAssessment: 'Zakažite Procenu',
+      whatWeAccept: 'Koja Vozila Prihvatamo',
+      premiumBrands: 'Premium Brendovi',
+      premiumBrandsList: 'BMW, Mercedes, Audi, Porsche',
+      popularBrands: 'Popularni Brendovi',
+      popularBrandsList: 'VW, Toyota, Honda, Ford',
+      ageRange: 'Raspon Starosti',
+      ageRangeText: '2010 ili novije preferirane',
+      condition: 'Stanje',
+      conditionText: 'Dobro do odlično stanje',
+      readyToTrade: 'Spremni da Zamenite Vaše Vozilo?',
+      startWithFree: 'Počnite sa besplatnom procenom i vidite koliko vredi vaše vozilo',
+      viewInventory: 'Pogledajte Naš Inventar'
+    },
     stats: {
       yearsOfExcellence: 'Godine Izvrsnosti',
       vehiclesSold: 'Prodatih Vozila',
       satisfiedCustomers: 'Zadovoljnih Kupaca',
-      rating: 'Ocena'
+      rating: 'Ocena',
+      yearsExperience: 'Godine Iskustva'
+    },
+    location: {
+      city: 'Mitrovica',
+      country: 'Kosovo'
     },
     contact: {
       title: 'Kontaktirajte Nas',
@@ -400,7 +640,7 @@ export const translations = {
       getInTouch: 'Stupi u Kontakt',
       followUs: 'Pratite Nas',
       responseTime: 'Vreme Odgovora',
-      usuallyWithinHour: 'Obično u roku od 1 sata',
+      usuallyWithinHour: 'Obično odgovara u roku od 1 sata',
       averageRating: 'Prosečna Ocena',
       fullName: 'Puno Ime',
       emailAddress: 'Email Adresa',
@@ -419,13 +659,20 @@ export const translations = {
       getInTouchDesc: 'Stupite u kontakt sa našim timom za bilo koje pitanje o našim vozilima, uslugama ili da zakažete test vožnju',
       sending: 'Šaljem...',
       messageSentSuccess: 'Poruka je uspešno poslata! Odgovorićemo vam uskoro.',
-      messageSentError: 'Došlo je do greške pri slanju poruke. Molimo pokušajte ponovo.'
+      messageSentError: 'Došlo je do greške pri slanju poruke. Molimo pokušajte ponovo.',
+      contactForm: 'Kontakt Forma',
+      formComingSoon: 'Kontakt forma dolazi uskoro. Molimo pozovite nas direktno.',
+      immediateHelp: 'Za trenutnu pomoć, molimo kontaktirajte nas direktno:',
+      whatsappMessage: 'WhatsApp Poruka'
     },
     footer: {
+      description: 'Premium auto salon na Kosovu. Preko 2500 zadovoljnih kupaca od 2015. Kvalitetna vozila, konkurentne cene i odlična usluga.',
       aboutUs: 'AUTO ANI je vaš pouzdani partner za premium vozila na Kosovu.',
       quickLinks: 'Brzi Linkovi',
       contactInfo: 'Kontakt Informacije',
       followUs: 'Pratite Nas',
+      allRightsReserved: 'Sva prava zadržana',
+      tagline: 'Premium Auto Salon - 9+ Godina Savršenstva',
       allRights: 'Sva prava zadržana',
       years: 'godine',
       vehiclesSold: 'prodatih vozila',
@@ -437,6 +684,7 @@ export const translations = {
       contactUs: 'Kontaktirajte Nas',
       learnMore: 'Saznaj Više',
       viewInventory: 'Pogledaj Inventar',
+      viewAllVehicles: 'Pogledaj Sva Vozila',
       getQuote: 'Dobijte Ponudu',
       schedule: 'Zakažite Termin',
       whatsapp: 'WhatsApp',
@@ -592,7 +840,6 @@ export const translations = {
       listView: 'List view',
       noResults: 'No vehicles found matching your criteria.',
       clearFilters: 'Clear Filters',
-      viewDetails: 'View Details',
       compare: 'Compare',
       price: 'Price',
       year: 'Year',
@@ -618,11 +865,44 @@ export const translations = {
       print: 'Print',
       certifiedPreOwned: 'Certified Pre-Owned',
       extendedWarrantyAvailable: 'Extended Warranty Available',
-      tradeInAccepted: 'Trade-In Accepted'
+      tradeInAccepted: 'Trade-In Accepted',
+      photosComingSoon: 'Photos will be added soon',
+      status: {
+        available: 'Available',
+        sold: 'Sold',
+        reserved: 'Reserved',
+        comingSoon: 'Coming Soon'
+      },
+      featured: 'Featured',
+      condition: {
+        new: 'New',
+        excellentCondition: 'Excellent Condition',
+        goodCondition: 'Good Condition',
+        certified: 'Certified'
+      },
+      color: 'Color',
+      technicalSpecs: 'Technical Specifications',
+      power: 'Power',
+      torque: 'Torque',
+      maxSpeed: 'Max Speed',
+      consumption: 'Consumption',
+      trunk: 'Trunk',
+      financingAvailable: 'Financing Available',
+      monthlyPayment: 'Monthly Payment',
+      month: 'months',
+      downPayment: 'Down Payment',
+      loanTerm: 'Term',
+      interestRate: 'Interest Rate',
+      featuresEquipment: 'Features & Equipment',
+      contactForVehicle: 'Contact for this vehicle',
+      orContactDirectly: 'Or contact directly',
+      phone: 'Phone'
     },
     services: {
-      title: 'Our Services',
+      title: 'Services',
+      our: 'Our',
       subtitle: 'Complete solutions for your automotive needs',
+      learnMore: 'Learn More About Our Services',
       sales: 'Vehicle Sales',
       salesDesc: 'Wide selection of new and used vehicles',
       financing: 'Financing',
@@ -652,11 +932,68 @@ export const translations = {
       maintenancePack: 'Maintenance packages',
       genuineParts: 'Genuine parts'
     },
+    trade: {
+      title: 'Trade-In',
+      description: 'Fair market value for your current vehicle',
+      subtitle: 'Get fair market value for your current vehicle with our professional trade-in service',
+      specialPromotion: 'Special Trade-In Promotion',
+      limitedOffer: 'Limited time offer - Get €1000 bonus when you trade your vehicle for a new purchase',
+      howItWorks: 'How Trade-In Works',
+      steps: {
+        step1: {
+          title: 'Vehicle Assessment',
+          description: 'Bring your vehicle for a professional assessment'
+        },
+        step2: {
+          title: 'Price Evaluation',
+          description: 'Get fair market valuation instantly'
+        },
+        step3: {
+          title: 'Trade-In Credit',
+          description: 'Apply credit towards your new vehicle purchase'
+        }
+      },
+      benefitsTitle: 'Trade-In Benefits',
+      benefits: {
+        fairValue: 'Fair market valuation',
+        bonusPromo: '€1000 Trade-In Bonus Promotion',
+        instantEval: 'Instant evaluation process',
+        noHaggling: 'No haggling required',
+        proInspection: 'Professional inspection',
+        docsHandled: 'All documents handled',
+        instantCredit: 'Credit applied instantly',
+        taxBenefits: 'Tax benefits'
+      },
+      quickAssessment: 'Quick Trade-In Assessment',
+      fastProcess: 'Fast Process',
+      fifteenMinutes: '15 minute assessment',
+      fairAssessment: 'Fair Assessment',
+      marketBased: 'Market-based pricing',
+      scheduleText: 'Contact us to schedule your vehicle assessment',
+      scheduleAssessment: 'Schedule Assessment',
+      whatWeAccept: 'What Vehicles We Accept',
+      premiumBrands: 'Premium Brands',
+      premiumBrandsList: 'BMW, Mercedes, Audi, Porsche',
+      popularBrands: 'Popular Brands',
+      popularBrandsList: 'VW, Toyota, Honda, Ford',
+      ageRange: 'Age Range',
+      ageRangeText: '2010 or newer preferred',
+      condition: 'Condition',
+      conditionText: 'Good to excellent condition',
+      readyToTrade: 'Ready to Trade Your Vehicle?',
+      startWithFree: 'Start with a free assessment and see what your vehicle is worth',
+      viewInventory: 'View Our Inventory'
+    },
     stats: {
       yearsOfExcellence: 'Years of Excellence',
       vehiclesSold: 'Vehicles Sold',
       satisfiedCustomers: 'Satisfied Customers',
-      rating: 'Rating'
+      rating: 'Rating',
+      yearsExperience: 'Years of Experience'
+    },
+    location: {
+      city: 'Mitrovica',
+      country: 'Kosovo'
     },
     contact: {
       title: 'Contact Us',
@@ -679,7 +1016,7 @@ export const translations = {
       getInTouch: 'Get In Touch',
       followUs: 'Follow Us',
       responseTime: 'Response Time',
-      usuallyWithinHour: 'Usually within 1 hour',
+      usuallyWithinHour: 'Usually responds within 1 hour',
       averageRating: 'Average Rating',
       fullName: 'Full Name',
       emailAddress: 'Email Address',
@@ -698,13 +1035,20 @@ export const translations = {
       getInTouchDesc: 'Get in touch with our team for any inquiries about our vehicles, services, or to schedule a test drive',
       sending: 'Sending...',
       messageSentSuccess: 'Message sent successfully! We will get back to you soon.',
-      messageSentError: 'An error occurred while sending the message. Please try again.'
+      messageSentError: 'An error occurred while sending the message. Please try again.',
+      contactForm: 'Contact Form',
+      formComingSoon: 'Contact form coming soon. Please call us directly.',
+      immediateHelp: 'For immediate assistance, please contact us directly:',
+      whatsappMessage: 'WhatsApp Message'
     },
     footer: {
+      description: 'Premium car dealership in Kosovo. Over 2500 satisfied customers since 2015. Quality vehicles, competitive prices and excellent service.',
       aboutUs: 'AUTO ANI is your trusted partner for premium vehicles in Kosovo.',
       quickLinks: 'Quick Links',
       contactInfo: 'Contact Info',
       followUs: 'Follow Us',
+      allRightsReserved: 'All rights reserved',
+      tagline: 'Premium Auto Salon - 9+ Years of Excellence',
       allRights: 'All rights reserved',
       years: 'years',
       vehiclesSold: 'vehicles sold',
@@ -716,6 +1060,7 @@ export const translations = {
       contactUs: 'Contact Us',
       learnMore: 'Learn More',
       viewInventory: 'View Inventory',
+      viewAllVehicles: 'View All Vehicles',
       getQuote: 'Get Quote',
       schedule: 'Schedule Appointment',
       whatsapp: 'WhatsApp',

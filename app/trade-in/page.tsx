@@ -13,33 +13,33 @@ export default function TradeInPage() {
   const tradeInSteps = [
     {
       step: 1,
-      title: 'Vlerësimi i Veturës',
-      description: 'Sillni veturën tuaj për një vlerësim profesional',
+      title: t('trade.steps.step1.title'),
+      description: t('trade.steps.step1.description'),
       icon: Car
     },
     {
       step: 2,
-      title: 'Vlerësimi i Çmimit',
-      description: 'Merrni vlerësimin e drejtë të tregut menjëherë',
+      title: t('trade.steps.step2.title'),
+      description: t('trade.steps.step2.description'),
       icon: Calculator
     },
     {
       step: 3,
-      title: 'Krediti i Shkëmbimit',
-      description: 'Aplikoni kredin për blerjen e veturës tuaj të re',
+      title: t('trade.steps.step3.title'),
+      description: t('trade.steps.step3.description'),
       icon: Euro
     }
   ];
 
   const tradeInBenefits = [
-    'Vlerësimi i drejtë i tregut',
-    'Promocioni Bonus Shkëmbimi €1000',
-    'Procesi i menjëhershëm i vlerësimit',
-    'Nuk kërkohet pazarllëk',
-    'Inspektimi profesional',
-    'Të gjitha dokumentet trajtohen',
-    'Krediti aplikohet menjëherë',
-    'Përfitimet tatimore'
+    t('trade.benefits.fairValue'),
+    t('trade.benefits.bonusPromo'),
+    t('trade.benefits.instantEval'),
+    t('trade.benefits.noHaggling'),
+    t('trade.benefits.proInspection'),
+    t('trade.benefits.docsHandled'),
+    t('trade.benefits.instantCredit'),
+    t('trade.benefits.taxBenefits')
   ];
 
   return (
@@ -51,22 +51,22 @@ export default function TradeInPage() {
             {t('services.tradeIn')}
           </h1>
           <p className="text-gray-700 max-w-2xl mx-auto font-medium">
-            Merrni vlerën e drejtë të tregut për veturën tuaj aktuale me shërbimin tonë profesional të shkëmbimit
+            {t('trade.subtitle')}
           </p>
         </div>
 
         {/* Special Promotion */}
         <div className="bg-gradient-to-r from-[var(--primary-orange)] to-[var(--accent-yellow)] rounded-lg p-8 text-white text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Promocioni Special i Shkëmbimit</h2>
+          <h2 className="text-3xl font-bold mb-4">{t('trade.specialPromotion')}</h2>
           <p className="text-xl mb-4">{t('promotions.tradeInBonus')}</p>
           <p className="text-white/90">
-            Ofertë me kohë të kufizuar - Merrni bonus €1000 kur shkëmbeni veturën tuaj për një blerje të re
+            {t('trade.limitedOffer')}
           </p>
         </div>
 
         {/* How It Works */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8">Si Funksionon Shkëmbimi</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">{t('trade.howItWorks')}</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {tradeInSteps.map((step) => {
               const Icon = step.icon;
@@ -92,7 +92,7 @@ export default function TradeInPage() {
         <section className="mb-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Përfitimet e Shkëmbimit</h2>
+              <h2 className="text-3xl font-bold mb-6">{t('trade.benefitsTitle')}</h2>
               <div className="space-y-3">
                 {tradeInBenefits.map((benefit, index) => (
                   <div key={index} className="flex items-center gap-3">
@@ -104,28 +104,28 @@ export default function TradeInPage() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle className="text-center">Vlerësimi i Shpejtë i Shkëmbimit</CardTitle>
+                <CardTitle className="text-center">{t('trade.quickAssessment')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <Clock className="h-8 w-8 text-[var(--primary-orange)] mx-auto mb-2" />
-                    <div className="font-semibold">Procesi i Shpejtë</div>
-                    <div className="text-sm text-gray-600">Vlerësim 15 minutësh</div>
+                    <div className="font-semibold">{t('trade.fastProcess')}</div>
+                    <div className="text-sm text-gray-600">{t('trade.fifteenMinutes')}</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <Shield className="h-8 w-8 text-[var(--primary-orange)] mx-auto mb-2" />
-                    <div className="font-semibold">Vlerësim i Drejtë</div>
-                    <div className="text-sm text-gray-600">Çmimi bazuar në treg</div>
+                    <div className="font-semibold">{t('trade.fairAssessment')}</div>
+                    <div className="text-sm text-gray-600">{t('trade.marketBased')}</div>
                   </div>
                 </div>
                 <div className="text-center">
                   <p className="text-gray-600 mb-4">
-                    Na kontaktoni për të planifikuar vlerësimin e veturës tuaj
+                    {t('trade.scheduleText')}
                   </p>
                   <Link href="/contact">
                     <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600">
-                      Planifikoni Vlerësimin
+                      {t('trade.scheduleAssessment')}
                     </Button>
                   </Link>
                 </div>
@@ -137,25 +137,25 @@ export default function TradeInPage() {
         {/* What We Accept */}
         <Card className="mb-12">
           <CardHeader>
-            <CardTitle className="text-center">Cilat Vetura Pranojmë</CardTitle>
+            <CardTitle className="text-center">{t('trade.whatWeAccept')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
-                <h4 className="font-semibold mb-2">Markat Premium</h4>
-                <p className="text-sm text-gray-600">BMW, Mercedes, Audi, Porsche</p>
+                <h4 className="font-semibold mb-2">{t('trade.premiumBrands')}</h4>
+                <p className="text-sm text-gray-600">{t('trade.premiumBrandsList')}</p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Markat Popullore</h4>
-                <p className="text-sm text-gray-600">VW, Toyota, Honda, Ford</p>
+                <h4 className="font-semibold mb-2">{t('trade.popularBrands')}</h4>
+                <p className="text-sm text-gray-600">{t('trade.popularBrandsList')}</p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Diapazoni i Moshës</h4>
-                <p className="text-sm text-gray-600">2010 ose më të reja të preferuara</p>
+                <h4 className="font-semibold mb-2">{t('trade.ageRange')}</h4>
+                <p className="text-sm text-gray-600">{t('trade.ageRangeText')}</p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Gjendja</h4>
-                <p className="text-sm text-gray-600">Gjendje e mirë deri e shkëlqyer</p>
+                <h4 className="font-semibold mb-2">{t('trade.condition')}</h4>
+                <p className="text-sm text-gray-600">{t('trade.conditionText')}</p>
               </div>
             </div>
           </CardContent>
@@ -163,19 +163,19 @@ export default function TradeInPage() {
 
         {/* CTA Section */}
         <div className="text-center bg-white rounded-lg shadow-lg p-8">
-          <h3 className="text-2xl font-bold mb-4">Gati të Shkëmbeni Veturën Tuaj?</h3>
+          <h3 className="text-2xl font-bold mb-4">{t('trade.readyToTrade')}</h3>
           <p className="text-gray-600 mb-6">
-            Filloni me një vlerësim falas dhe shikoni sa vlen vetura juaj
+            {t('trade.startWithFree')}
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/contact">
               <Button size="lg" className="bg-[var(--primary-orange)] hover:bg-orange-600">
-                Planifikoni Vlerësimin
+                {t('trade.scheduleAssessment')}
               </Button>
             </Link>
             <Link href="/vehicles">
               <Button size="lg" variant="outline">
-                Shikoni Inventarin Tonë
+                {t('trade.viewInventory')}
               </Button>
             </Link>
           </div>

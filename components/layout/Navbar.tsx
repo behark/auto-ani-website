@@ -1,20 +1,30 @@
 'use client';
 
-import { Menu, X, Phone, Car } from 'lucide-react';
+import { Menu, X, Phone, Car, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import type { Language } from '@/lib/translations';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const { t, language, setLanguage } = useLanguage();
 
   const navigation = [
-    { name: 'Ballina', href: '/' },
-    { name: 'Veturat', href: '/vehicles' },
-    { name: 'Shërbimet', href: '/services' },
-    { name: 'Shkëmbim', href: '/trade-in' },
-    { name: 'Kontakt', href: '/contact' }
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.vehicles'), href: '/vehicles' },
+    { name: t('nav.services'), href: '/services' },
+    { name: t('trade.title'), href: '/trade-in' },
+    { name: t('nav.contact'), href: '/contact' }
+  ];
+
+  const languages: { code: Language; name: string; flag: string }[] = [
+    { code: 'sq', name: 'Shqip', flag: '🇦🇱' },
+    { code: 'sr', name: 'Српски', flag: '🇷🇸' },
+    { code: 'en', name: 'English', flag: '🇬🇧' }
   ];
 
   return (
@@ -42,7 +52,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Phone Number */}
+          {/* Phone Number and Language Switcher */}
           <div className="hidden md:flex items-center space-x-4">
             <a
               href="tel:+38349123456"
@@ -51,6 +61,39 @@ export default function Navbar() {
               <Phone className="w-4 h-4" />
               <span className="font-medium">+383 49 123 456</span>
             </a>
+
+            {/* Language Switcher */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowLangMenu(!showLangMenu)}
+                className="flex items-center space-x-2"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{languages.find(l => l.code === language)?.flag}</span>
+              </Button>
+
+              {showLangMenu && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setShowLangMenu(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center space-x-2 ${
+                        language === lang.code ? 'bg-gray-50 font-semibold' : ''
+                      }`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -88,6 +131,28 @@ export default function Navbar() {
                   <Phone className="w-4 h-4" />
                   <span className="font-medium">+383 49 123 456</span>
                 </a>
+              </div>
+
+              {/* Mobile Language Switcher */}
+              <div className="px-3 py-2 border-t border-gray-200">
+                <div className="text-sm font-medium text-gray-500 mb-2">{t('nav.language')}</div>
+                <div className="space-y-1">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setIsOpen(false);
+                      }}
+                      className={`w-full px-3 py-2 text-left hover:bg-gray-100 rounded-md flex items-center space-x-2 ${
+                        language === lang.code ? 'bg-gray-100 font-semibold' : ''
+                      }`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

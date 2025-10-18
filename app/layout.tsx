@@ -7,9 +7,9 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
-import FinancingCalculator from "@/components/ui/FinancingCalculator";
-import FloatingContactWidget from "@/components/ui/FloatingContactWidget";
-import TradeInEstimator from "@/components/ui/TradeInEstimator";
+import LazyFinancingCalculator from "@/components/ui/LazyFinancingCalculator";
+import LazyFloatingContactWidget from "@/components/ui/LazyFloatingContactWidget";
+import LazyTradeInEstimator from "@/components/ui/LazyTradeInEstimator";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const inter = Inter({
@@ -90,13 +90,13 @@ export default function RootLayout({
               </footer>
             </ErrorBoundary>
             <ErrorBoundary level="component">
-              <FloatingContactWidget />
+              <LazyFloatingContactWidget />
             </ErrorBoundary>
             <ErrorBoundary level="component">
-              <FinancingCalculator />
+              <LazyFinancingCalculator />
             </ErrorBoundary>
             <ErrorBoundary level="component">
-              <TradeInEstimator />
+              <LazyTradeInEstimator />
             </ErrorBoundary>
           </ErrorBoundary>
         </LanguageProvider>

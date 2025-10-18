@@ -229,7 +229,7 @@ export default function EnhancedServicesPage() {
           </p>
           {error && (
             <div className="mt-4 bg-yellow-500/20 text-yellow-600 px-4 py-2 rounded-lg text-sm max-w-md mx-auto">
-              ⚠️ Using backup service information
+              ⚠️ {t('services.loadingFallback')}
             </div>
           )}
           {services.length > 0 && (

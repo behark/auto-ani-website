@@ -5,32 +5,51 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ServicesOverview() {
+  const { t } = useLanguage();
+
   const services = [
     {
       icon: Car,
-      title: 'Shitja e Veturave',
-      description: 'Vetura të përdorura me cilësi premium me histori të plotë shërbimi',
-      features: ['Cilësi e Certifikuar', 'Çmime Konkurruese', 'Histori e Plotë Shërbimi']
+      title: t('services.vehicleSales.title'),
+      description: t('services.vehicleSales.desc'),
+      features: [
+        t('services.vehicleSales.feature1'),
+        t('services.vehicleSales.feature2'),
+        t('services.vehicleSales.feature3')
+      ]
     },
     {
       icon: Calculator,
-      title: 'Zgjidhje Financimi',
-      description: 'Opsione fleksibël financimi me norma konkurruese',
-      features: ['Financim 0% i Disponueshëm', 'Miratim i Shpejtë', 'Kushte Fleksibël']
+      title: t('services.financing.title'),
+      description: t('services.financing.desc'),
+      features: [
+        t('services.financing.feature1'),
+        t('services.financing.feature2'),
+        t('services.financing.feature3')
+      ]
     },
     {
       icon: RefreshCw,
-      title: 'Shërbimi i Shkëmbimit',
-      description: 'Merrni vlerën më të mirë për veturën tuaj aktuale',
-      features: ['Vlerësim i Drejtë', 'Bonus Shkëmbimi €1000', 'Vlerësim i Menjëhershëm']
+      title: t('services.tradeIn.title'),
+      description: t('services.tradeIn.desc'),
+      features: [
+        t('services.tradeIn.feature1'),
+        t('services.tradeIn.feature2'),
+        t('services.tradeIn.feature3')
+      ]
     },
     {
       icon: Shield,
-      title: 'Sigurimi & Regjistrimi',
-      description: 'Ndihmë e plotë për sigurim dhe regjistrim',
-      features: ['Partnerë Sigurimesh', 'Ndihmë Regjistrimi', 'Normat më të Mira']
+      title: t('services.insurance.title'),
+      description: t('services.insurance.desc'),
+      features: [
+        t('services.insurance.feature1'),
+        t('services.insurance.feature2'),
+        t('services.insurance.feature3')
+      ]
     }
   ];
 
@@ -40,10 +59,10 @@ export default function ServicesOverview() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
-            Shërbimet <span className="text-[var(--primary-orange)]">Tona</span>
+            {t('services.title')} <span className="text-[var(--primary-orange)]">{t('services.our')}</span>
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Zgjidhje të plota automobilistike për të gjitha nevojat tuaja të veturave
+            {t('services.subtitle')}
           </p>
         </div>
 
@@ -74,7 +93,7 @@ export default function ServicesOverview() {
         <div className="text-center">
           <Link href="/services">
             <Button size="lg" className="bg-[var(--primary-orange)] hover:bg-orange-600 text-white">
-              Mësoni Më Shumë Për Shërbimet Tona
+              {t('services.learnMore')}
             </Button>
           </Link>
         </div>

@@ -4,8 +4,11 @@ import { Car, Users, Award, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function HeroSection() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       {/* Background overlay */}
@@ -18,10 +21,10 @@ export default function HeroSection() {
             AUTO <span className="text-[var(--primary-orange)]">ANI</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-300">
-            Auto Salon Premium - 9+ Vite Përsosmërie
+            {t('hero.tagline')}
           </p>
           <p className="text-lg mb-12 text-gray-400 max-w-2xl mx-auto">
-            Mbi 2500 vetura të shitura që nga 2015. Makina të përdorura me cilësi premium me financim 0% në dispozicion.
+            {t('hero.description')}
           </p>
 
           {/* CTAs */}
@@ -29,12 +32,12 @@ export default function HeroSection() {
             <Link href="/vehicles">
               <Button size="lg" className="bg-[var(--primary-orange)] hover:bg-orange-600 text-white px-8 py-3">
                 <Car className="w-5 h-5 mr-2" />
-                Shiko Inventarin
+                {t('cta.viewInventory')}
               </Button>
             </Link>
             <Link href="/contact">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black px-8 py-3">
-                Na Kontaktoni
+                {t('cta.contactUs')}
               </Button>
             </Link>
           </div>
@@ -46,21 +49,21 @@ export default function HeroSection() {
                 <Users className="w-8 h-8 text-[var(--primary-orange)]" />
               </div>
               <div className="text-3xl font-bold text-white">2500+</div>
-              <div className="text-gray-400">Klientë të Kënaqur</div>
+              <div className="text-gray-400">{t('stats.satisfiedCustomers')}</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-4">
                 <Award className="w-8 h-8 text-[var(--primary-orange)]" />
               </div>
               <div className="text-3xl font-bold text-white">9+</div>
-              <div className="text-gray-400">Vite Përvojë</div>
+              <div className="text-gray-400">{t('stats.yearsExperience')}</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-4">
                 <MapPin className="w-8 h-8 text-[var(--primary-orange)]" />
               </div>
-              <div className="text-3xl font-bold text-white">Mitrovica</div>
-              <div className="text-gray-400">Lokacioni Kosovë</div>
+              <div className="text-3xl font-bold text-white">{t('location.city')}</div>
+              <div className="text-gray-400">{t('location.country')}</div>
             </div>
           </div>
         </div>
