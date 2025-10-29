@@ -2,7 +2,7 @@
 
 import { Calendar, Eye, Fuel, Heart, Navigation, Settings, ZoomIn } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -51,26 +51,48 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
     return '/images/placeholder-vehicle.svg';
   };
 
-  // ✅ Preload vehicle detail page on hover for instant navigation
+  // ✅ Preload vehicle detail page AND ALL images on hover for instant navigation
   const handleMouseEnter = () => {
     setHoveredCard(true);
 
     // Only preload once per card
     if (!preloaded) {
+      // Prefetch the page route
       router.prefetch(vehicleUrl);
+
+      // Preload ALL vehicle images for instant detail page rendering
+      if (vehicle.images && vehicle.images.length > 0) {
+        // Preload first 3 images immediately (most important)
+        vehicle.images.slice(0, 3).forEach((imageSrc) => {
+          const img = new window.Image();
+          img.src = imageSrc;
+        });
+
+        // Preload remaining images with slight delay to avoid blocking
+        if (vehicle.images.length > 3) {
+          setTimeout(() => {
+            vehicle.images.slice(3).forEach((imageSrc) => {
+              const img = new window.Image();
+              img.src = imageSrc;
+            });
+          }, 100);
+        }
+      }
+
       setPreloaded(true);
     }
   };
 
   return (
-    <Card
-      className="overflow-hidden shadow-card-hover cursor-pointer group"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setHoveredCard(false)}
-    >
-      {/* Image Container */}
-      <div className="relative h-64 overflow-hidden bg-gray-200">
-        <Image
+    <Link href={vehicleUrl} className="block">
+      <Card
+        className="overflow-hidden shadow-card-hover cursor-pointer group"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={() => setHoveredCard(false)}
+      >
+        {/* Image Container */}
+        <div className="relative h-64 overflow-hidden bg-gray-200">
+        <NextImage
           src={getImageUrl()}
           alt={`${vehicle.make} ${vehicle.model}`}
           fill
@@ -78,27 +100,21 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
             hoveredCard ? 'scale-110' : ''
           }`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          quality={85}
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           loading="lazy"
         />
 
-        {/* Overlay Actions */}
+        {/* Hover Overlay */}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4 transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-black/10 transition-opacity duration-300 ${
             hoveredCard ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <div className="flex gap-2">
-            <Link href={vehicleUrl}>
-              <Button size="sm" variant="secondary" className="bg-white/90">
-                <Eye className="h-4 w-4 mr-1" /> Shiko Detajet
-              </Button>
-            </Link>
-            <Button size="sm" variant="ghost" className="bg-white/20 text-white hover:bg-white/30">
-              <Heart className="h-4 w-4" />
-            </Button>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="bg-white/95 rounded-full p-3 shadow-lg">
+              <Eye className="h-6 w-6 text-[var(--primary-orange)]" />
+            </div>
           </div>
         </div>
 
@@ -147,25 +163,22 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
 
         {/* Action Buttons */}
         <div className="space-y-2">
-          <Link href={vehicleUrl}>
-            <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600 text-white">
-              Shiko Detajet
-            </Button>
-          </Link>
-
           {/* Compact WhatsApp Actions */}
-          <WhatsAppQuickActions
-            vehicle={{
-              ...vehicle,
-              brand: vehicle.make, // Map make to brand for WhatsApp integration
-              slug: { current: vehicle.slug || vehicle.id }
-            }}
-            layout="compact"
-            showSecondary={false}
-            className="justify-center"
-          />
+          <div onClick={(e) => e.preventDefault()}>
+            <WhatsAppQuickActions
+              vehicle={{
+                ...vehicle,
+                brand: vehicle.make, // Map make to brand for WhatsApp integration
+                slug: { current: vehicle.slug || vehicle.id }
+              }}
+              layout="compact"
+              showSecondary={false}
+              className="justify-center"
+            />
+          </div>
         </div>
       </CardContent>
-    </Card>
+      </Card>
+    </Link>
   );
 }

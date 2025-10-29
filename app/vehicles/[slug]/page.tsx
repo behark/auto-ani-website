@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Phone, MessageCircle, Car, Gauge, Fuel, Settings2, Zap, Shield, Award } from "lucide-react";
@@ -41,26 +40,8 @@ export default async function VehicleDetailPage({ params }: PageProps) {
       seo,
       slug,
       dateAdded,
-      "mainImage": mainImage{
-        "asset": asset->{
-          url,
-          "metadata": metadata{
-            dimensions,
-            lqip
-          }
-        },
-        alt
-      },
-      "gallery": gallery[]{
-        "asset": asset->{
-          url,
-          "metadata": metadata{
-            dimensions
-          }
-        },
-        alt,
-        caption
-      }
+      "mainImage": mainImage.asset->url,
+      "gallery": gallery[].asset->url
     }`,
     { slug: params.slug }
   );
@@ -87,24 +68,22 @@ export default async function VehicleDetailPage({ params }: PageProps) {
     <div className="container mx-auto px-4 py-8">
       {/* Mobile-optimized layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Enhanced Vehicle Image Gallery */}
+        {/* Optimized Vehicle Image Gallery */}
         <div>
           {(vehicle.gallery && vehicle.gallery.length > 0) || vehicle.mainImage ? (
             <EnhancedImageGallery
-              images={vehicle.gallery && vehicle.gallery.length > 0
-                ? vehicle.gallery
-                : vehicle.mainImage
-                  ? [vehicle.mainImage]
-                  : []
+              images={
+                (vehicle.gallery && vehicle.gallery.length > 0
+                  ? vehicle.gallery
+                  : vehicle.mainImage
+                    ? [vehicle.mainImage]
+                    : []
+                ).map((url: string) => ({
+                  asset: { url },
+                  alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
+                }))
               }
               title={`${vehicle.brand} ${vehicle.model} ${vehicle.year}`}
-              autoPlay={false}
-              showThumbnails={true}
-              enableZoom={true}
-              enableFullscreen={true}
-              enableDownload={true}
-              enableShare={true}
-              className="w-full"
             />
           ) : (
             <div className="relative h-96 rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
@@ -426,7 +405,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       originalPrice,
       description,
       seo,
-      "mainImage": mainImage.asset->url
+      "mainImage": mainImage.asset->url + "?w=1200&h=630&fit=crop&fm=webp&q=90"
     }`,
     { slug: params.slug }
   );

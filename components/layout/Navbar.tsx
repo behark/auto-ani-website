@@ -55,11 +55,11 @@ export default function Navbar() {
           {/* Phone Number and Language Switcher */}
           <div className="hidden md:flex items-center space-x-4">
             <a
-              href="tel:+38349123456"
+              href="tel:+38349204242"
               className="flex items-center space-x-2 text-[var(--primary-orange)] hover:text-orange-600 transition-colors"
             >
               <Phone className="w-4 h-4" />
-              <span className="font-medium">+383 49 123 456</span>
+              <span className="font-medium">+383 49 204 242</span>
             </a>
 
             {/* Language Switcher */}
@@ -125,11 +125,11 @@ export default function Navbar() {
               ))}
               <div className="px-3 py-2 border-t border-gray-200">
                 <a
-                  href="tel:+38349123456"
+                  href="tel:+38349204242"
                   className="flex items-center space-x-2 text-[var(--primary-orange)] hover:text-orange-600 transition-colors"
                 >
                   <Phone className="w-4 h-4" />
-                  <span className="font-medium">+383 49 123 456</span>
+                  <span className="font-medium">+383 49 204 242</span>
                 </a>
               </div>
 

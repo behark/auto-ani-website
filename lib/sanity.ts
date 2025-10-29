@@ -397,26 +397,8 @@ export interface VehicleDetail {
   slug: { current: string };
   dateAdded?: string;
   lastUpdated?: string;
-  mainImage?: {
-    asset: {
-      url: string;
-      metadata?: {
-        dimensions?: any;
-        lqip?: string;
-      };
-    };
-    alt?: string;
-  };
-  gallery?: Array<{
-    asset: {
-      url: string;
-      metadata?: {
-        dimensions?: any;
-      };
-    };
-    alt?: string;
-    caption?: string;
-  }>;
+  mainImage?: string; // ✅ Optimized CDN URL string
+  gallery?: string[]; // ✅ Array of optimized CDN URL strings
 }
 
 export interface Testimonial {

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import VehicleCard from '../VehicleCard'
+import VehicleCard from '../VehicleCardSimple'
 import { Vehicle } from '@/lib/types'
 
 // Mock the LanguageContext

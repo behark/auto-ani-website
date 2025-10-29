@@ -50,15 +50,13 @@ function convertSanityVehiclesToVehicles(
   return sanityVehicles
     .map((v: SanityVehicle, index: number) => {
       try {
-        // ✅ Handle the optimized API response
+        // ✅ Handle the optimized API response with gallery images
         const imageUrls: string[] = [];
 
-        // Check if mainImage is already a URL string (from optimized API)
+        // Add mainImage first
         if (typeof v.mainImage === 'string') {
           imageUrls.push(v.mainImage);
-        }
-        // Or if it's still a Sanity reference object
-        else if (v.mainImage) {
+        } else if (v.mainImage) {
           try {
             imageUrls.push(urlFor(v.mainImage).url());
           } catch (e) {
@@ -66,13 +64,19 @@ function convertSanityVehiclesToVehicles(
           }
         }
 
-        // Fallback to gallery/images if mainImage isn't available (only take first image)
-        if (imageUrls.length === 0 && v.gallery && Array.isArray(v.gallery)) {
-          v.gallery.slice(0, 1).forEach((img) => {
-            try {
-              imageUrls.push(urlFor(img).url());
-            } catch (e) {
-              logger.debug('Failed to convert gallery image', { error: e });
+        // Add all gallery images for preloading
+        if (v.gallery && Array.isArray(v.gallery)) {
+          v.gallery.forEach((img) => {
+            // Gallery images are already URL strings from optimized API
+            if (typeof img === 'string') {
+              imageUrls.push(img);
+            } else {
+              // Or convert Sanity reference objects
+              try {
+                imageUrls.push(urlFor(img).url());
+              } catch (e) {
+                logger.debug('Failed to convert gallery image', { error: e });
+              }
             }
           });
         }

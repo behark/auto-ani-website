@@ -51,8 +51,9 @@ async function getVehicles() {
       transmission,
       color,
       engine,
-      "mainImage": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=85",
-      "thumbnail": mainImage.asset->url + "?w=300&h=200&fit=crop&fm=webp&q=80",
+      "mainImage": mainImage.asset->url + "?w=800&h=600&fit=crop&fm=webp&q=90",
+      "thumbnail": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=85",
+      "gallery": gallery[].asset->url + "?w=800&h=600&fit=crop&fm=webp&q=90",
       _createdAt
     } | order(_createdAt desc)`;
 

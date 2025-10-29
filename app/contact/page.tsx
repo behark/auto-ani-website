@@ -166,18 +166,25 @@ export default function ContactPage() {
             <CardTitle>{t('contact.findUs')}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="h-96 bg-gray-200 relative">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2928.0556741961704!2d20.86594731549!3d42.88184897915611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1353552c4c5f7b6d%3A0x4a7e2b4f7e8c5d9e!2sGazmend%20Baliu%2C%20Mitrovic%C3%AB%2040000%2C%20Kosovo!5e0!3m2!1sen!2s!4v1700000000000"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-b-lg"
-                title="AUTO ANI Location Map"
-              />
+            <div className="h-96 bg-gray-200 relative rounded-b-lg overflow-hidden">
+              <a
+                href="https://www.google.com/maps?q=42.871313,20.860395"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors group"
+              >
+                <div className="text-center">
+                  <MapPin className="h-16 w-16 text-[var(--primary-orange)] mx-auto mb-4" />
+                  <p className="text-xl font-semibold text-gray-900 mb-2">AUTO ANI - Mitrovica</p>
+                  <p className="text-gray-600 mb-4">Click to open in Google Maps</p>
+                  <div className="inline-flex items-center gap-2 text-[var(--primary-orange)] group-hover:underline">
+                    <span>View on Google Maps</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
             </div>
           </CardContent>
         </Card>
