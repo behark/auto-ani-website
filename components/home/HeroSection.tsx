@@ -6,7 +6,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  vehicleCount?: number;
+}
+
+export default function HeroSection({ vehicleCount = 0 }: HeroSectionProps) {
   const { t } = useLanguage();
 
   return (
@@ -43,7 +47,14 @@ export default function HeroSection() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-4">
+                <Car className="w-8 h-8 text-[var(--primary-orange)]" />
+              </div>
+              <div className="text-3xl font-bold text-white">{vehicleCount}+</div>
+              <div className="text-gray-400">{t('stats.vehiclesInStock')}</div>
+            </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-4">
                 <Users className="w-8 h-8 text-[var(--primary-orange)]" />

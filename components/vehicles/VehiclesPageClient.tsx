@@ -10,6 +10,7 @@ import { Vehicle } from "@/lib/types";
 
 import VehicleCardSimple from "./VehicleCardSimple";
 import VehicleFilters from "./VehicleFilters";
+import ComparisonFloatingButton from "./ComparisonFloatingButton";
 
 interface SanityVehicle {
   _id: string;
@@ -251,6 +252,9 @@ export default function VehiclesPageClient({
           </div>
         )}
       </div>
+
+      {/* Floating Comparison Button */}
+      <ComparisonFloatingButton />
     </div>
   );
 }

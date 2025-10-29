@@ -49,9 +49,27 @@ async function getFeaturedVehicles() {
   }
 }
 
+// Get total vehicle count for dynamic display
+async function getVehicleCount() {
+  try {
+    const query = `count(*[_type == "vehicle"])`;
+    const count = await client.fetch(query, {}, {
+      next: {
+        revalidate: 60, // ISR: Revalidate every 60 seconds
+        tags: ['vehicles'],
+      }
+    });
+    return count || 0;
+  } catch (error) {
+    console.error('Error fetching vehicle count:', error);
+    return 0;
+  }
+}
+
 export default async function HomePage() {
   // Fetch data on the server
   const vehiclesPromise = getFeaturedVehicles();
+  const vehicleCount = await getVehicleCount();
 
   // Generate homepage schema
   const schemas = generatePageSchemas('homepage');
@@ -61,7 +79,7 @@ export default async function HomePage() {
       <StructuredData schemas={schemas} />
       <div>
         <ErrorBoundary level="section">
-          <HeroSection />
+          <HeroSection vehicleCount={vehicleCount} />
         </ErrorBoundary>
 
         <ErrorBoundary level="section">

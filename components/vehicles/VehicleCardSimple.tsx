@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Eye, Fuel, Heart, Navigation, Settings, ZoomIn } from 'lucide-react';
+import { Calendar, Eye, Fuel, Heart, Navigation, Settings, ZoomIn, Scale } from 'lucide-react';
 import Link from 'next/link';
 import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Vehicle } from '@/lib/types';
 import WhatsAppQuickActions from '@/components/whatsapp/WhatsAppQuickActions';
 import { getVehicleCardImage } from '@/lib/image-optimization';
+import { useComparison } from '@/contexts/ComparisonContext';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -21,6 +22,7 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
   const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState(false);
   const [preloaded, setPreloaded] = useState(false);
+  const { addToComparison, removeFromComparison, isInComparison, canAddMore } = useComparison();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-EU', {
@@ -126,6 +128,39 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
           {vehicle.featured && (
             <Badge className="bg-[var(--primary-orange)] text-white">Të Zgjedhura</Badge>
           )}
+        </div>
+
+        {/* Comparison Button */}
+        <div className="absolute top-4 right-4">
+          <Button
+            size="icon"
+            variant={isInComparison(vehicle.id || vehicle._id) ? "default" : "secondary"}
+            className="bg-white/90 backdrop-blur-sm shadow-md"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (isInComparison(vehicle.id || vehicle._id)) {
+                removeFromComparison(vehicle.id || vehicle._id);
+              } else if (canAddMore) {
+                addToComparison({
+                  _id: vehicle.id || vehicle._id,
+                  title: `${vehicle.make} ${vehicle.model}`,
+                  slug: { current: vehicle.slug || vehicle.id },
+                  brand: vehicle.make,
+                  model: vehicle.model,
+                  year: vehicle.year,
+                  price: vehicle.price,
+                  mileage: vehicle.mileage,
+                  fuelType: vehicle.fuelType,
+                  transmission: vehicle.transmission,
+                  engine: vehicle.engine || '',
+                  mainImage: getImageUrl(),
+                });
+              }
+            }}
+          >
+            <Scale className={`h-4 w-4 ${isInComparison(vehicle.id || vehicle._id) ? 'text-[var(--primary-orange)]' : ''}`} />
+          </Button>
         </div>
       </div>
 

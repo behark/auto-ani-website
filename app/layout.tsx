@@ -11,6 +11,9 @@ import LazyFinancingCalculator from "@/components/ui/LazyFinancingCalculator";
 import LazyFloatingContactWidget from "@/components/ui/LazyFloatingContactWidget";
 import LazyTradeInEstimator from "@/components/ui/LazyTradeInEstimator";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ComparisonProvider } from "@/contexts/ComparisonContext";
+import WhatsAppChatWidget from "@/components/whatsapp/WhatsAppChatWidget";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -73,17 +76,18 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${montserrat.variable} antialiased transition-colors duration-300`}>
         <LanguageProvider>
-          <ErrorBoundary level="page" showDetails={process.env.NODE_ENV === 'development'}>
-            <ErrorBoundary level="component">
-              <header id="navigation" role="banner">
-                <Navbar />
-              </header>
-            </ErrorBoundary>
-            <main id="main-content" className="min-h-screen pt-20" role="main" tabIndex={-1}>
-              <ErrorBoundary level="section">
-                {children}
+          <ComparisonProvider>
+            <ErrorBoundary level="page" showDetails={process.env.NODE_ENV === 'development'}>
+              <ErrorBoundary level="component">
+                <header id="navigation" role="banner">
+                  <Navbar />
+                </header>
               </ErrorBoundary>
-            </main>
+              <main id="main-content" className="min-h-screen pt-20" role="main" tabIndex={-1}>
+                <ErrorBoundary level="section">
+                  {children}
+                </ErrorBoundary>
+              </main>
             <ErrorBoundary level="component">
               <footer id="footer" role="contentinfo">
                 <Footer />
@@ -98,8 +102,15 @@ export default function RootLayout({
             <ErrorBoundary level="component">
               <LazyTradeInEstimator />
             </ErrorBoundary>
+            <ErrorBoundary level="component">
+              <WhatsAppChatWidget />
+            </ErrorBoundary>
           </ErrorBoundary>
+          </ComparisonProvider>
         </LanguageProvider>
+
+        {/* Toast Notifications */}
+        <Toaster position="top-right" richColors />
 
         {/* Performance monitoring */}
         <WebVitals debug={process.env.NODE_ENV === 'development'} />
