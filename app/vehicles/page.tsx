@@ -30,27 +30,35 @@ export const metadata: Metadata = {
 
 async function getVehicles() {
   try {
-    // Try multiple base URL sources
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ||
-                   process.env.RENDER_EXTERNAL_URL ||
-                   'https://auto-ani-simple.onrender.com';
+    // ✅ Direct Sanity fetch on server - no HTTP roundtrip needed
+    const { client } = await import('@/lib/sanity');
 
-    const response = await fetch(`${baseUrl}/api/vehicles`, {
-      cache: 'no-store', // Ensure fresh data
-      headers: {
-        'User-Agent': 'Next.js Server',
-      },
-    });
+    // ✅ OPTIMIZED: Fetch images with CDN transformations built into URL
+    // This creates optimized thumbnail URLs directly from Sanity CDN
+    const query = `*[_type == "vehicle"] {
+      _id,
+      title,
+      slug,
+      brand,
+      model,
+      year,
+      price,
+      mileage,
+      category,
+      featured,
+      description,
+      fuelType,
+      transmission,
+      color,
+      engine,
+      "mainImage": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=85",
+      "thumbnail": mainImage.asset->url + "?w=300&h=200&fit=crop&fm=webp&q=80",
+      _createdAt
+    } | order(_createdAt desc)`;
 
-    if (!response.ok) {
-      console.warn(`Server fetch failed (${response.status}): ${response.statusText}`);
-      // Return empty array to let client-side handle it
-      return [];
-    }
-
-    const data = await response.json();
-    console.log(`Server fetched ${data?.data?.vehicles?.length || 0} vehicles`);
-    return data.success && data.data.vehicles ? data.data.vehicles : [];
+    const vehicles = await client.fetch(query);
+    console.log(`Server fetched ${vehicles?.length || 0} vehicles with optimized images`);
+    return vehicles || [];
   } catch (error) {
     console.error('Failed to fetch vehicles on server:', error);
     // Return empty array to let client-side handle it
@@ -58,16 +66,17 @@ async function getVehicles() {
   }
 }
 
-export default function VehiclesPage() {
+export default async function VehiclesPage() {
   // Generate vehicles page schema
   const schemas = generatePageSchemas('vehicles');
 
-  // Force client-side rendering to ensure vehicles display
-  console.log('VehiclesPage: Rendering client-side only');
+  // ✅ Fetch vehicles on server for instant render
+  const initialVehicles = await getVehicles();
+
   return (
     <>
       <StructuredData schemas={schemas} />
-      <VehiclesPageClient initialVehicles={[]} />
+      <VehiclesPageClient initialVehicles={initialVehicles} />
     </>
   );
 }

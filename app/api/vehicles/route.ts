@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       filters.push(`price <= ${params.maxPrice}`);
     }
 
-    // ✅ OPTIMIZED: Only fetch mainImage (first image), not entire gallery
+    // ✅ OPTIMIZED: Fetch images with CDN transformations and thumbnails
     // ✅ NO DEFAULT LIMIT - Fetch all vehicles unless limit is explicitly provided
     let query = `*[${filters.join(" && ")}] {
       _id,
@@ -72,7 +72,8 @@ export async function GET(request: NextRequest) {
       transmission,
       color,
       engine,
-      "mainImage": mainImage.asset->url,
+      "mainImage": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=85",
+      "thumbnail": mainImage.asset->url + "?w=300&h=200&fit=crop&fm=webp&q=80",
       _createdAt,
       _updatedAt
     } | order(_createdAt desc)`;

@@ -14,6 +14,7 @@ export interface Vehicle {
   drivetrain: 'FWD' | 'RWD' | 'AWD' | '4WD' | 'Quattro AWD';
   features: string[];
   images: string[];
+  thumbnail?: string; // ✅ Optimized thumbnail URL (300x200 webp)
   description: string;
   featured: boolean;
   status: 'Available' | 'Sold' | 'Reserved' | 'I Disponueshëm' | 'I Shitur' | 'I Rezervuar';

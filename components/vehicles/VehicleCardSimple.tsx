@@ -3,7 +3,8 @@
 import { Calendar, Eye, Fuel, Heart, Navigation, Settings, ZoomIn } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,9 @@ interface VehicleCardProps {
 }
 
 export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
+  const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState(false);
+  const [preloaded, setPreloaded] = useState(false);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-EU', {
@@ -32,18 +35,37 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
   };
 
   const vehicleSlug = vehicle.slug || vehicle.id;
+  const vehicleUrl = `/vehicles/${vehicleSlug}`;
 
-  // Get optimized image URL
+  // ✅ Use optimized thumbnail if available, fallback to full image
   const getImageUrl = () => {
-    if (!vehicle.images?.[0]) return '/images/placeholder-vehicle.svg';
+    // Priority 1: Use pre-generated thumbnail (300x200 webp)
+    if (vehicle.thumbnail) return vehicle.thumbnail;
 
-    return getVehicleCardImage(vehicle.images[0], { width: 400, height: 250 });
+    // Priority 2: Use main image from images array
+    if (vehicle.images?.[0]) {
+      return getVehicleCardImage(vehicle.images[0], { width: 400, height: 250 });
+    }
+
+    // Priority 3: Fallback to placeholder
+    return '/images/placeholder-vehicle.svg';
+  };
+
+  // ✅ Preload vehicle detail page on hover for instant navigation
+  const handleMouseEnter = () => {
+    setHoveredCard(true);
+
+    // Only preload once per card
+    if (!preloaded) {
+      router.prefetch(vehicleUrl);
+      setPreloaded(true);
+    }
   };
 
   return (
     <Card
       className="overflow-hidden shadow-card-hover cursor-pointer group"
-      onMouseEnter={() => setHoveredCard(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHoveredCard(false)}
     >
       {/* Image Container */}
@@ -69,7 +91,7 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
           }`}
         >
           <div className="flex gap-2">
-            <Link href={`/vehicles/${vehicleSlug}`}>
+            <Link href={vehicleUrl}>
               <Button size="sm" variant="secondary" className="bg-white/90">
                 <Eye className="h-4 w-4 mr-1" /> Shiko Detajet
               </Button>
@@ -125,7 +147,7 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
 
         {/* Action Buttons */}
         <div className="space-y-2">
-          <Link href={`/vehicles/${vehicleSlug}`}>
+          <Link href={vehicleUrl}>
             <Button className="w-full bg-[var(--primary-orange)] hover:bg-orange-600 text-white">
               Shiko Detajet
             </Button>

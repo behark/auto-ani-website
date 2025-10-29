@@ -33,6 +33,7 @@ interface SanityVehicle {
   };
   featured?: boolean;
   mainImage?: any; // Can be string URL or Sanity image reference
+  thumbnail?: string; // ✅ Optimized thumbnail URL
   images?: any[]; // Sanity image references
   gallery?: any[]; // Sanity image references
   slug?: { current?: string };
@@ -110,6 +111,7 @@ function convertSanityVehiclesToVehicles(
           status: "Available",
           featured: v.featured || false,
           images: imageUrls,
+          thumbnail: v.thumbnail, // ✅ Include optimized thumbnail
           slug: v.slug?.current || v._id,
           description: v.description || "",
         };

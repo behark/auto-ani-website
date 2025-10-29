@@ -26,6 +26,69 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
+// ✅ Optimized image URL helpers with CDN transformations
+export const imageOptimizations = {
+  // Thumbnail for vehicle cards (300x200, webp, quality 80)
+  thumbnail: (source: SanityImageSource) =>
+    builder.image(source)
+      .width(300)
+      .height(200)
+      .fit('crop')
+      .format('webp')
+      .quality(80)
+      .url(),
+
+  // Card image for vehicle listings (600x400, webp, quality 85)
+  card: (source: SanityImageSource) =>
+    builder.image(source)
+      .width(600)
+      .height(400)
+      .fit('crop')
+      .format('webp')
+      .quality(85)
+      .url(),
+
+  // Hero/featured images (1200x800, webp, quality 90)
+  hero: (source: SanityImageSource) =>
+    builder.image(source)
+      .width(1200)
+      .height(800)
+      .fit('crop')
+      .format('webp')
+      .quality(90)
+      .url(),
+
+  // Gallery images for detail pages (800x600, webp, quality 85)
+  gallery: (source: SanityImageSource) =>
+    builder.image(source)
+      .width(800)
+      .height(600)
+      .fit('crop')
+      .format('webp')
+      .quality(85)
+      .url(),
+
+  // Full size for lightbox (1600x1200, webp, quality 90)
+  fullSize: (source: SanityImageSource) =>
+    builder.image(source)
+      .width(1600)
+      .height(1200)
+      .fit('max')
+      .format('webp')
+      .quality(90)
+      .url(),
+
+  // Low Quality Image Placeholder (50x33, webp, quality 20)
+  lqip: (source: SanityImageSource) =>
+    builder.image(source)
+      .width(50)
+      .height(33)
+      .blur(10)
+      .format('webp')
+      .quality(20)
+      .url(),
+}
+
 // Comprehensive GROQ queries for all automotive data
 export const queries = {
   // Business Info
