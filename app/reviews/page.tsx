@@ -8,6 +8,10 @@ import { Progress } from '@/components/ui/progress';
 import StructuredData from '@/components/seo/StructuredData';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
+// Enable ISR with 6-hour revalidation for customer reviews
+// Reviews are added periodically but not frequently enough to need shorter caching
+export const revalidate = 21600; // 6 hours
+
 export const metadata: Metadata = {
   title: "Vlerësimet e Klientëve | AUTO ANI - 2500+ Klientë të Kënaqur",
   description: "Lexoni përvojat e klientëve tanë në AUTO ANI. Mbi 2500 klientë të kënaqur që nga viti 2015. Vlerësim mesatar 4.8/5 yje.",

@@ -1,5 +1,6 @@
 export interface Vehicle {
   id: string;
+  _id?: string; // Sanity document ID
   slug?: string;
   make: string;
   model: string;
@@ -10,6 +11,7 @@ export interface Vehicle {
   transmission: 'Manual' | 'Automatic' | 'CVT' | 'DSG Automatic';
   bodyType: 'Sedan' | 'SUV' | 'Truck' | 'Coupe' | 'Hatchback' | 'Van';
   color: string;
+  engine?: string; // Engine details (e.g., "2.0L Turbo")
   engineSize: string;
   drivetrain: 'FWD' | 'RWD' | 'AWD' | '4WD' | 'Quattro AWD';
   features: string[];

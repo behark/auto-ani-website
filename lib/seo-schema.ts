@@ -318,7 +318,7 @@ export function generateProductCollectionSchema(vehicles: Vehicle[], businessInf
 }
 
 // Utility function to generate all schemas for a page
-export function generatePageSchemas(type: 'vehicle' | 'homepage' | 'vehicles' | 'about', data?: any) {
+export function generatePageSchemas(type: 'vehicle' | 'homepage' | 'vehicles' | 'about' | 'deals' | 'financing' | 'reviews', data?: any) {
   const businessInfo = {
     name: "AUTO ANI",
     address: "Gazmend Baliu, Mitrovicë, Kosovo 40000",
@@ -354,6 +354,18 @@ export function generatePageSchemas(type: 'vehicle' | 'homepage' | 'vehicles' | 
       if (data?.featuredVehicles) {
         schemas.push(generateProductCollectionSchema(data.featuredVehicles, businessInfo));
       }
+      break;
+
+    case 'deals':
+      // For deals page, just use the organization and auto dealer schemas
+      break;
+
+    case 'financing':
+      // For financing page, just use the organization and auto dealer schemas
+      break;
+
+    case 'reviews':
+      // For reviews page, just use the organization and auto dealer schemas
       break;
   }
 

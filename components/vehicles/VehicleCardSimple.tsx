@@ -134,16 +134,16 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
         <div className="absolute top-4 right-4">
           <Button
             size="icon"
-            variant={isInComparison(vehicle.id || vehicle._id) ? "default" : "secondary"}
+            variant={isInComparison(vehicle.id || vehicle._id || '') ? "default" : "secondary"}
             className="bg-white/90 backdrop-blur-sm shadow-md"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              if (isInComparison(vehicle.id || vehicle._id)) {
-                removeFromComparison(vehicle.id || vehicle._id);
+              if (isInComparison(vehicle.id || vehicle._id || '')) {
+                removeFromComparison(vehicle.id || vehicle._id || '');
               } else if (canAddMore) {
                 addToComparison({
-                  _id: vehicle.id || vehicle._id,
+                  _id: vehicle.id || vehicle._id || '',
                   title: `${vehicle.make} ${vehicle.model}`,
                   slug: { current: vehicle.slug || vehicle.id },
                   brand: vehicle.make,
@@ -159,7 +159,7 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
               }
             }}
           >
-            <Scale className={`h-4 w-4 ${isInComparison(vehicle.id || vehicle._id) ? 'text-[var(--primary-orange)]' : ''}`} />
+            <Scale className={`h-4 w-4 ${isInComparison(vehicle.id || vehicle._id || '') ? 'text-[var(--primary-orange)]' : ''}`} />
           </Button>
         </div>
       </div>

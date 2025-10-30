@@ -9,6 +9,10 @@ import StructuredData from '@/components/seo/StructuredData';
 import { generatePageSchemas } from '@/lib/seo-schema';
 import { client } from '@/lib/sanity';
 
+// Enable ISR with 30-minute revalidation for deals and promotions
+// Deals change frequently enough to warrant shorter cache duration
+export const revalidate = 1800; // 30 minutes
+
 export const metadata: Metadata = {
   title: "Ofertat dhe Promovime | AUTO ANI - Zbritje Speciale",
   description: "Ofertat më të mira të muajit në AUTO ANI. Zbritje deri në €2000, financim 0%, bonus shkëmbimi €1000. Shikoni ofertat e kufizuara në kohë.",

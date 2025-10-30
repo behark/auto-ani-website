@@ -5,8 +5,9 @@ import StructuredData from '@/components/seo/StructuredData';
 import { generatePageSchemas } from '@/lib/seo-schema';
 import type { Vehicle } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 60; // seconds
+// Enable ISR with 3-minute revalidation for better balance between freshness and performance
+// Vehicles update regularly but not every minute, so 3 minutes provides good caching
+export const revalidate = 180; // 3 minutes
 
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",
