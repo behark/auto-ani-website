@@ -33,54 +33,54 @@ export function urlFor(source: SanityImageSource) {
 
 // ✅ Optimized image URL helpers with CDN transformations
 export const imageOptimizations = {
-  // Thumbnail for vehicle cards (300x200, webp, quality 80)
+  // Thumbnail for vehicle cards (300x200, webp, quality 70)
   thumbnail: (source: SanityImageSource) =>
     builder.image(source)
       .width(300)
       .height(200)
       .fit('crop')
       .format('webp')
-      .quality(80)
+      .quality(70)
       .url(),
 
-  // Card image for vehicle listings (600x400, webp, quality 85)
+  // Card image for vehicle listings (600x400, webp, quality 75)
   card: (source: SanityImageSource) =>
     builder.image(source)
       .width(600)
       .height(400)
       .fit('crop')
       .format('webp')
-      .quality(85)
+      .quality(75)
       .url(),
 
-  // Hero/featured images (1200x800, webp, quality 90)
+  // Hero/featured images (1200x800, webp, quality 80)
   hero: (source: SanityImageSource) =>
     builder.image(source)
       .width(1200)
       .height(800)
       .fit('crop')
       .format('webp')
-      .quality(90)
+      .quality(80)
       .url(),
 
-  // Gallery images for detail pages (800x600, webp, quality 85)
+  // Gallery images for detail pages (640x480, webp, quality 75)
   gallery: (source: SanityImageSource) =>
     builder.image(source)
-      .width(800)
-      .height(600)
+      .width(640)
+      .height(480)
       .fit('crop')
       .format('webp')
-      .quality(85)
+      .quality(75)
       .url(),
 
-  // Full size for lightbox (1600x1200, webp, quality 90)
+  // Full size for lightbox (1200x900, webp, quality 85)
   fullSize: (source: SanityImageSource) =>
     builder.image(source)
-      .width(1600)
-      .height(1200)
+      .width(1200)
+      .height(900)
       .fit('max')
       .format('webp')
-      .quality(90)
+      .quality(85)
       .url(),
 
   // Low Quality Image Placeholder (50x33, webp, quality 20)

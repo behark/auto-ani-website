@@ -13,6 +13,20 @@ interface PageProps {
   params: { slug: string };
 }
 
+// Enable ISR: Revalidate every hour (3600 seconds)
+export const revalidate = 3600;
+
+// Generate static params for all vehicles at build time
+export async function generateStaticParams() {
+  const vehicles = await client.fetch<Array<{ slug: { current: string } }>>(
+    `*[_type == "vehicle"]{ slug }`
+  );
+
+  return vehicles.map((vehicle) => ({
+    slug: vehicle.slug.current,
+  }));
+}
+
 export default async function VehicleDetailPage({ params }: PageProps) {
   // Fetch vehicle by slug with comprehensive query including new fields
   const vehicle = await client.fetch<VehicleDetail>(

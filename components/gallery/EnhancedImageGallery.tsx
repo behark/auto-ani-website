@@ -187,7 +187,7 @@ export default function EnhancedImageGallery({
         {/* Main Image Display */}
         <div className="space-y-4">
           {/* Main Image Container */}
-          <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 group">
+          <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 group" style={{ aspectRatio: '4/3' }}>
             <Image
             src={currentImage.asset.url}
             alt={currentImage.alt || `${title} - Image ${currentIndex + 1}`}
@@ -197,7 +197,7 @@ export default function EnhancedImageGallery({
               transform: `scale(${zoomLevel}) rotate(${rotation}deg)`
             }}
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
-            quality={90}
+            quality={75}
             priority={currentIndex === 0}
             placeholder={currentImage.asset.metadata?.lqip ? "blur" : "empty"}
             blurDataURL={currentImage.asset.metadata?.lqip}
@@ -535,7 +535,7 @@ export default function EnhancedImageGallery({
                 width={currentImage.asset.metadata?.dimensions?.width || 1200}
                 height={currentImage.asset.metadata?.dimensions?.height || 800}
                 className="object-contain w-full h-full"
-                quality={95}
+                quality={85}
                 priority
               />
             </div>
