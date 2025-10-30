@@ -13,9 +13,9 @@ interface PageProps {
   params: { slug: string };
 }
 
-export default async function VehicleDetailPage({ params }: PageProps) {
-  // Fetch vehicle by slug with comprehensive query including new fields
-  const vehicle = await client.fetch<VehicleDetail>(
+// Shared data fetching function to avoid duplicate queries
+async function getVehicleData(slug: string) {
+  return await client.fetch<VehicleDetail>(
     `*[_type == "vehicle" && slug.current == $slug][0]{
       _id,
       title,
@@ -40,18 +40,33 @@ export default async function VehicleDetailPage({ params }: PageProps) {
       seo,
       slug,
       dateAdded,
-      "mainImage": mainImage.asset->url,
-      "gallery": gallery[].asset->url
+      "mainImage": {
+        "url": mainImage.asset->url,
+        "optimized": mainImage.asset->url + "?w=1200&h=800&fit=crop&fm=webp&q=85",
+        "thumbnail": mainImage.asset->url + "?w=400&h=300&fit=crop&fm=webp&q=75"
+      },
+      "gallery": gallery[]{
+        "url": asset->url,
+        "optimized": asset->url + "?w=1080&h=720&fit=crop&fm=webp&q=80",
+        "thumbnail": asset->url + "?w=150&h=100&fit=crop&fm=webp&q=70",
+        "mobile": asset->url + "?w=640&h=480&fit=crop&fm=webp&q=75"
+      }
     }`,
-    { slug: params.slug }
+    { slug }
   );
+}
+
+export default async function VehicleDetailPage({ params }: PageProps) {
+  // Use shared data fetching function
+  const vehicle = await getVehicleData(params.slug);
 
   if (!vehicle) {
     notFound();
   }
 
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '38349204242';
   const whatsappMessage = `Hi, I'm interested in ${vehicle.brand} ${vehicle.model} - €${vehicle.price.toLocaleString()}`;
-  const _whatsappUrl = `https://wa.me/38349204242?text=${encodeURIComponent(whatsappMessage)}`;
+  const _whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   // Generate structured data schemas
   const breadcrumbs = [
@@ -74,14 +89,24 @@ export default async function VehicleDetailPage({ params }: PageProps) {
             <EnhancedImageGallery
               images={
                 (vehicle.gallery && vehicle.gallery.length > 0
-                  ? vehicle.gallery
+                  ? vehicle.gallery.map((img: any) => ({
+                      asset: {
+                        url: img.optimized || img.url,
+                        thumbnail: img.thumbnail,
+                        mobile: img.mobile
+                      },
+                      alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
+                    }))
                   : vehicle.mainImage
-                    ? [vehicle.mainImage]
+                    ? [{
+                        asset: {
+                          url: vehicle.mainImage.optimized || vehicle.mainImage.url,
+                          thumbnail: vehicle.mainImage.thumbnail
+                        },
+                        alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
+                      }]
                     : []
-                ).map((url: string) => ({
-                  asset: { url },
-                  alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
-                }))
+                )
               }
               title={`${vehicle.brand} ${vehicle.model} ${vehicle.year}`}
             />
@@ -358,14 +383,14 @@ export default async function VehicleDetailPage({ params }: PageProps) {
               <p className="text-sm text-gray-600 mb-3">Ose kontaktoni drejtpërdrejt:</p>
               <div className="grid grid-cols-2 gap-3">
                 <a
-                  href="tel:+38349204242"
+                  href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER || '+38349204242'}`}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-orange-600 border border-orange-200 rounded-lg hover:bg-orange-50 transition"
                 >
                   <Phone className="w-4 h-4" />
                   Telefono
                 </a>
                 <a
-                  href="mailto:aniautosallon@gmail.com"
+                  href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'aniautosallon@gmail.com'}`}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                 >
                   <MessageCircle className="w-4 h-4" />
@@ -383,32 +408,8 @@ export default async function VehicleDetailPage({ params }: PageProps) {
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const vehicle = await client.fetch<{
-    brand: string;
-    model: string;
-    year: number;
-    price: number;
-    originalPrice?: number;
-    description?: string;
-    seo?: {
-      metaTitle?: string;
-      metaDescription?: string;
-      keywords?: string[];
-    };
-    mainImage: string;
-  }>(
-    `*[_type == "vehicle" && slug.current == $slug][0]{
-      brand,
-      model,
-      year,
-      price,
-      originalPrice,
-      description,
-      seo,
-      "mainImage": mainImage.asset->url + "?w=1200&h=630&fit=crop&fm=webp&q=90"
-    }`,
-    { slug: params.slug }
-  );
+  // Use shared data fetching function to avoid duplicate queries
+  const vehicle = await getVehicleData(params.slug);
 
   if (!vehicle) {
     return {
@@ -446,7 +447,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `https://autosalonani.com/vehicles/${params.slug}`,
       images: vehicle.mainImage ? [
         {
-          url: vehicle.mainImage,
+          url: vehicle.mainImage.optimized || vehicle.mainImage.url || vehicle.mainImage,
           width: 1200,
           height: 630,
           alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
@@ -459,7 +460,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title,
       description,
-      images: vehicle.mainImage ? [vehicle.mainImage] : [],
+      images: vehicle.mainImage ? [vehicle.mainImage.optimized || vehicle.mainImage.url || vehicle.mainImage] : [],
     },
     alternates: {
       canonical: `https://autosalonani.com/vehicles/${params.slug}`,

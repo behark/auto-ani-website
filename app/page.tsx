@@ -18,10 +18,9 @@ export const revalidate = 86400; // 24 hours
 // Server Component - fetches data on the server
 async function getFeaturedVehicles() {
   try {
+    // Optimized query - fetch only essential fields for homepage display
     const query = `*[_type == "vehicle" && featured == true] | order(_createdAt desc) [0...6] {
       _id,
-      _type,
-      title,
       slug,
       brand,
       model,
@@ -30,14 +29,10 @@ async function getFeaturedVehicles() {
       mileage,
       category,
       featured,
-      description,
       fuelType,
       transmission,
-      color,
       engine,
-      "mainImage": mainImage.asset->url,
-      _createdAt,
-      _updatedAt
+      "mainImage": mainImage.asset->url + "?w=640&h=400&auto=format&q=85"
     }`;
 
     const vehicles = await client.fetch(query);

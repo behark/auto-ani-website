@@ -4,7 +4,7 @@ import { Calendar, Eye, Fuel, Navigation, Settings, Scale } from 'lucide-react';
 import NextImage from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -53,7 +53,23 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
     return '/images/placeholder-vehicle.svg';
   };
 
-  // ✅ Preload vehicle detail page AND ALL images on hover for instant navigation
+  // Image preload management to prevent memory leaks
+  const preloadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const preloadTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Cleanup preloaded images
+  useEffect(() => {
+    return () => {
+      // Clear any pending timeouts
+      if (preloadTimeoutRef.current) {
+        clearTimeout(preloadTimeoutRef.current);
+      }
+      // Clear image references for garbage collection
+      preloadedImagesRef.current = [];
+    };
+  }, []);
+
+  // ✅ Optimized image preloading with memory management
   const handleMouseEnter = () => {
     setHoveredCard(true);
 
@@ -62,26 +78,56 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
       // Prefetch the page route
       router.prefetch(vehicleUrl);
 
-      // Preload ALL vehicle images for instant detail page rendering
+      // Intelligent image preloading with memory management
       if (vehicle.images && vehicle.images.length > 0) {
-        // Preload first 3 images immediately (most important)
-        vehicle.images.slice(0, 3).forEach((imageSrc) => {
+        // Clear any existing preloaded images
+        preloadedImagesRef.current = [];
+
+        // Preload only first 2 images (most critical)
+        const criticalImages = vehicle.images.slice(0, 2);
+        criticalImages.forEach((imageSrc) => {
           const img = new window.Image();
           img.src = imageSrc;
+          // Add abort handler to prevent memory leaks
+          img.onerror = () => {
+            // Remove failed image from cache
+            const index = preloadedImagesRef.current.indexOf(img);
+            if (index > -1) {
+              preloadedImagesRef.current.splice(index, 1);
+            }
+          };
+          preloadedImagesRef.current.push(img);
         });
 
-        // Preload remaining images with slight delay to avoid blocking
-        if (vehicle.images.length > 3) {
-          setTimeout(() => {
-            vehicle.images.slice(3).forEach((imageSrc) => {
+        // Lazy preload additional images only if still hovering
+        if (vehicle.images.length > 2) {
+          preloadTimeoutRef.current = setTimeout(() => {
+            // Only preload one more image to save memory
+            const additionalImage = vehicle.images[2];
+            if (additionalImage) {
               const img = new window.Image();
-              img.src = imageSrc;
-            });
-          }, 100);
+              img.src = additionalImage;
+              img.onerror = () => {
+                const index = preloadedImagesRef.current.indexOf(img);
+                if (index > -1) {
+                  preloadedImagesRef.current.splice(index, 1);
+                }
+              };
+              preloadedImagesRef.current.push(img);
+            }
+          }, 200);
         }
       }
 
       setPreloaded(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredCard(false);
+    // Clear pending preloads if user moves away quickly
+    if (preloadTimeoutRef.current) {
+      clearTimeout(preloadTimeoutRef.current);
     }
   };
 
@@ -90,7 +136,7 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
       <Card
         className="overflow-hidden shadow-card-hover cursor-pointer group"
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={() => setHoveredCard(false)}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Image Container */}
         <div className="relative h-64 overflow-hidden bg-gray-200" style={{ aspectRatio: '4/3' }}>

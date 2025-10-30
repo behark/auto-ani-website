@@ -19,11 +19,15 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap", // Add font-display: swap for faster FCP
+  preload: true,
 });
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
+  display: "swap", // Add font-display: swap for faster FCP
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -85,6 +89,11 @@ export default function RootLayout({
     <html lang="sq" className="light" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#ffffff" />
+        {/* Resource hints for critical third-party origins */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} antialiased transition-colors duration-300`}>
         <LanguageProvider>

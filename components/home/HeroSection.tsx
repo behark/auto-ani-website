@@ -14,7 +14,19 @@ export default function HeroSection({ vehicleCount = 0 }: HeroSectionProps) {
   const { t } = useLanguage();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <section
+      className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white"
+      style={{
+        // Inline critical styles for faster FCP
+        minHeight: '100vh',
+        background: 'linear-gradient(to bottom right, rgb(17 24 39), rgb(31 41 55), rgb(0 0 0))',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative'
+      }}
+    >
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50" />
 

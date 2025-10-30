@@ -87,7 +87,8 @@ export default function FeaturedVehiclesServer({
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      priority={vehicles.indexOf(vehicle) < 3} // Priority for first 3 images
+                      priority={vehicles.indexOf(vehicle) < 2} // Priority for first 2 images
+                      quality={85} // Consistent quality for better caching
                     />
                     {badge && (
                       <div className="absolute top-4 left-4">
