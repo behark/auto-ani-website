@@ -17,6 +17,10 @@ function getClient(): SanityClient {
         maxRetries: 3,
         retryDelay: 1000,
       },
+      // Suppress localStorage warning in server-side Node.js environment
+      stega: {
+        enabled: false,
+      },
     });
   }
   return cachedClient;
