@@ -14,7 +14,7 @@ services:
     startCommand: npm start
 
     # Health check endpoint
-    healthCheckPath: /
+    healthCheckPath: /api/health
 
     # Environment variables
     envVars:
