@@ -11,9 +11,11 @@ import LoadingSkeletons from '@/components/ui/LoadingSkeletons';
 import { client } from '@/lib/sanity';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Enable ISR (Incremental Static Regeneration) with 5-minute revalidation
-// This ensures the homepage shows fresh featured vehicles while maintaining good performance
-export const revalidate = 300; // 5 minutes
+// Fully Static Generation - Pre-render at build time for maximum performance
+// Since content updates monthly, no need for ISR revalidation
+// Redeploy after adding new vehicles in Sanity to update the homepage
+export const dynamic = 'force-static';
+export const revalidate = false; // Fully static (no revalidation)
 
 // Server Component - fetches data on the server
 async function getFeaturedVehicles() {
