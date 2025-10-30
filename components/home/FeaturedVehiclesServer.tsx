@@ -6,17 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Vehicle, urlFor } from "@/lib/sanity";
-import { getServerTranslation } from "@/lib/server-translations";
+import { getStaticTranslation } from "@/lib/server-translations";
 
 interface FeaturedVehiclesServerProps {
-  vehiclesPromise: Promise<Vehicle[]>;
+  vehicles: Vehicle[];
 }
 
-export default async function FeaturedVehiclesServer({
-  vehiclesPromise
+export default function FeaturedVehiclesServer({
+  vehicles
 }: FeaturedVehiclesServerProps) {
-  const vehicles = await vehiclesPromise;
-  const t = getServerTranslation();
+  const t = getStaticTranslation('sq'); // Use static translation for ISR
 
   // Helper functions
   const formatPrice = (price: number) => {

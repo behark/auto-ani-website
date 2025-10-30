@@ -40,12 +40,7 @@ async function getFeaturedVehicles() {
       _updatedAt
     }`;
 
-    const vehicles = await client.fetch(query, {}, {
-      next: {
-        revalidate: 60, // ISR: Revalidate every 60 seconds
-        tags: ['vehicles', 'featured'],
-      }
-    });
+    const vehicles = await client.fetch(query);
 
     return vehicles || [];
   } catch (error) {
@@ -58,12 +53,7 @@ async function getFeaturedVehicles() {
 async function getVehicleCount() {
   try {
     const query = `count(*[_type == "vehicle"])`;
-    const count = await client.fetch(query, {}, {
-      next: {
-        revalidate: 60, // ISR: Revalidate every 60 seconds
-        tags: ['vehicles'],
-      }
-    });
+    const count = await client.fetch(query);
     return count || 0;
   } catch (error) {
     console.error('Error fetching vehicle count:', error);
@@ -72,8 +62,8 @@ async function getVehicleCount() {
 }
 
 export default async function HomePage() {
-  // Fetch data on the server
-  const vehiclesPromise = getFeaturedVehicles();
+  // Fetch data on the server - await all data for static generation
+  const vehicles = await getFeaturedVehicles();
   const vehicleCount = await getVehicleCount();
 
   // Generate homepage schema
@@ -88,9 +78,7 @@ export default async function HomePage() {
         </ErrorBoundary>
 
         <ErrorBoundary level="section">
-          <Suspense fallback={<LoadingSkeletons type="featured-vehicles" />}>
-            <FeaturedVehiclesServer vehiclesPromise={vehiclesPromise} />
-          </Suspense>
+          <FeaturedVehiclesServer vehicles={vehicles} />
         </ErrorBoundary>
 
         <ErrorBoundary level="section">

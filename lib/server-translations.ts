@@ -18,3 +18,18 @@ export function getServerTranslation() {
     return (value as string) || key;
   };
 }
+
+// Static translation helper for ISR pages (doesn't use cookies)
+export function getStaticTranslation(lang: 'sq' | 'en' = 'sq') {
+  return (key: string): string => {
+    const keys = key.split('.');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let value: any = translations[lang];
+
+    for (const k of keys) {
+      value = value?.[k];
+    }
+
+    return (value as string) || key;
+  };
+}
