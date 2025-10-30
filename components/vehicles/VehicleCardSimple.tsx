@@ -93,7 +93,7 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
         onMouseLeave={() => setHoveredCard(false)}
       >
         {/* Image Container */}
-        <div className="relative h-64 overflow-hidden bg-gray-200">
+        <div className="relative h-64 overflow-hidden bg-gray-200" style={{ aspectRatio: '4/3' }}>
         <NextImage
           src={getImageUrl()}
           alt={`${vehicle.make} ${vehicle.model}`}
