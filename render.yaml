@@ -21,7 +21,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_SITE_URL
-        value: https://auto-ani-website.onrender.com
+        value: https://auto-ani-website-shzs.onrender.com
 
       # Shared Sanity CMS Configuration
       - key: NEXT_PUBLIC_SANITY_PROJECT_ID
