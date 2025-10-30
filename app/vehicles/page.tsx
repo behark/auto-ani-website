@@ -5,11 +5,9 @@ import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import { logger } from '@/lib/logger';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Static Generation: Pre-render at build time for instant loading
-// Page will be regenerated on next build when vehicles are updated
-// This provides the best performance - no server-side delays
-export const dynamic = 'force-static'; // Force static generation
-export const revalidate = false; // No revalidation (fully static)
+// Enable ISR with 24-hour revalidation for vehicles listing page
+// Vehicles update periodically, daily revalidation ensures fresh inventory
+export const revalidate = 86400; // 24 hours
 
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",

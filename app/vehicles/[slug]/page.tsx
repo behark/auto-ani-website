@@ -494,8 +494,6 @@ export async function generateStaticParams() {
   }
 }
 
-// Fully Static Generation - Pre-render all vehicle pages at build time
-// Since content updates monthly, no need for ISR revalidation
-// Redeploy after adding/editing vehicles in Sanity to update pages
-export const dynamic = 'force-static';
-export const revalidate = false; // Fully static (no revalidation)
+// Enable ISR with 24-hour revalidation for vehicle detail pages
+// Vehicle data updates periodically, daily revalidation ensures accuracy
+export const revalidate = 86400; // 24 hours

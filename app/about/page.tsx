@@ -1,10 +1,8 @@
 import EnhancedAboutPage from '@/components/EnhancedAboutPage';
 
-// Fully Static Generation - Pre-render at build time for maximum performance
-// Company information updates monthly, no need for ISR revalidation
-// Redeploy after updating company info in CMS
-export const dynamic = 'force-static';
-export const revalidate = false; // Fully static (no revalidation)
+// Enable ISR with 24-hour revalidation for the About page
+// Company information rarely changes, so daily revalidation is sufficient
+export const revalidate = 86400; // 24 hours
 
 export default function AboutPage() {
   return <EnhancedAboutPage />;

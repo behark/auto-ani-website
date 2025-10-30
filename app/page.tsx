@@ -11,11 +11,9 @@ import LoadingSkeletons from '@/components/ui/LoadingSkeletons';
 import { client } from '@/lib/sanity';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Fully Static Generation - Pre-render at build time for maximum performance
-// Since content updates monthly, no need for ISR revalidation
-// Redeploy after adding new vehicles in Sanity to update the homepage
-export const dynamic = 'force-static';
-export const revalidate = false; // Fully static (no revalidation)
+// Enable ISR with 24-hour revalidation for the homepage
+// This ensures homepage updates daily without requiring manual redeployment
+export const revalidate = 86400; // 24 hours
 
 // Server Component - fetches data on the server
 async function getFeaturedVehicles() {

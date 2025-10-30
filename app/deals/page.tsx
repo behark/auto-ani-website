@@ -10,11 +10,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { client } from '@/lib/sanity';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Fully Static Generation - Pre-render at build time for maximum performance
-// Deals and promotions update monthly, no need for ISR revalidation
-// Redeploy after updating deals in CMS
-export const dynamic = 'force-static';
-export const revalidate = false; // Fully static (no revalidation)
+// Enable ISR with 24-hour revalidation for deals and promotions
+// Deals update periodically, daily revalidation ensures fresh content
+export const revalidate = 86400; // 24 hours
 
 export const metadata: Metadata = {
   title: "Ofertat dhe Promovime | AUTO ANI - Zbritje Speciale",
