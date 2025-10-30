@@ -5,9 +5,11 @@ import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import { logger } from '@/lib/logger';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Enable ISR with 3-minute revalidation for better balance between freshness and performance
-// Vehicles update regularly but not every minute, so 3 minutes provides good caching
-export const revalidate = 180; // 3 minutes
+// Static Generation: Pre-render at build time for instant loading
+// Page will be regenerated on next build when vehicles are updated
+// This provides the best performance - no server-side delays
+export const dynamic = 'force-static'; // Force static generation
+export const revalidate = false; // No revalidation (fully static)
 
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",
@@ -52,9 +54,9 @@ async function getVehicles() {
       transmission,
       color,
       engine,
-      "mainImage": mainImage.asset->url + "?w=800&h=600&fit=crop&fm=webp&q=90",
-      "thumbnail": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=85",
-      "gallery": gallery[].asset->url + "?w=800&h=600&fit=crop&fm=webp&q=90",
+      "mainImage": mainImage.asset->url + "?w=640&h=480&fit=crop&fm=webp&q=75",
+      "thumbnail": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=75",
+      "gallery": gallery[].asset->url + "?w=640&h=480&fit=crop&fm=webp&q=75",
       _createdAt
     } | order(_createdAt desc)`;
 
