@@ -1,19 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VEHICLES } from "@/lib/constants";
 import { logger } from "@/lib/logger";
 import { urlFor } from "@/lib/sanity";
 import { Vehicle } from "@/lib/types";
-
 import VehicleCardSimple from "./VehicleCardSimple";
-import VehicleFilters from "./VehicleFilters";
 import ComparisonFloatingButton from "./ComparisonFloatingButton";
 
+const VehicleFilters = dynamic(() => import("./VehicleFilters"), {
+  ssr: false,
+});
 interface SanityVehicle {
-  _id: string;
   brand?: string;
   model?: string;
   year?: number;

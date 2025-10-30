@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     url: "https://autosalonani.com",
     images: [
       {
-        url: "https://autosalonani.com/images/showroom.jpg",
+        url: "https://autosalonani.com/images/showroom.webp",
         width: 1200,
         height: 630,
         alt: "AUTO ANI Premium Showroom",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AUTO ANI | Premium Auto Salon Since 2015',
     description: 'Over 2500 satisfied customers. Premium vehicles with 0% financing available. Visit us in Kosovo.',
-    images: ['https://autosalonani.com/images/showroom.jpg'],
+    images: ['https://autosalonani.com/images/showroom.webp'],
   },
   manifest: '/manifest.json',
   applicationName: 'AUTO ANI',
