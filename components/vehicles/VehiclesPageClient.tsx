@@ -14,6 +14,7 @@ const VehicleFilters = dynamic(() => import("./VehicleFilters"), {
   ssr: false,
 });
 interface SanityVehicle {
+  _id: string; // Sanity document ID
   brand?: string;
   model?: string;
   year?: number;
