@@ -12,6 +12,11 @@ function getClient(): SanityClient {
       dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
       useCdn: true,
       apiVersion: "2024-01-01",
+      timeout: 60000, // 60 seconds (fixes ConnectTimeoutError)
+      retries: {
+        maxRetries: 3,
+        retryDelay: 1000,
+      },
     });
   }
   return cachedClient;
