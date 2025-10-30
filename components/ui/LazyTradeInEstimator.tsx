@@ -1,9 +1,10 @@
 'use client';
 
+import { Car } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+
 import { Button } from './button';
-import { Car } from 'lucide-react';
 
 // Lazy load the TradeInEstimator only when user requests it
 const TradeInEstimator = dynamic(() => import('./TradeInEstimator'), {

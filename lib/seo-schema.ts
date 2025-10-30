@@ -283,7 +283,7 @@ export function generateWebSiteSchema(businessInfo: BusinessInfo) {
   };
 }
 
-export function generateProductCollectionSchema(vehicles: Vehicle[], businessInfo: BusinessInfo) {
+export function generateProductCollectionSchema(vehicles: Vehicle[], _businessInfo: BusinessInfo) {
   const baseUrl = 'https://autosalonani.com';
 
   return {

@@ -109,8 +109,9 @@ export function ThemeProvider({
         value={{
           theme: 'system',
           effectiveTheme: 'light',
-          setTheme: () => {},
-          toggleTheme: () => {},
+          // Placeholder functions during SSR - will be replaced after hydration
+          setTheme: () => {/* No-op during SSR */},
+          toggleTheme: () => {/* No-op during SSR */},
           systemTheme: 'light',
         }}
       >

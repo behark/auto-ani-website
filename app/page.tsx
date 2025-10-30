@@ -1,14 +1,15 @@
 import { Suspense } from 'react';
+
+import FeaturedVehiclesServer from '@/components/home/FeaturedVehiclesServer';
 import HeroSection from '@/components/home/HeroSection';
 import ServicesOverview from '@/components/home/ServicesOverview';
-import WhyChooseUs from '@/components/home/WhyChooseUs';
 import Testimonials from '@/components/home/Testimonials';
-import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import WhyChooseUs from '@/components/home/WhyChooseUs';
 import StructuredData from '@/components/seo/StructuredData';
-import { generatePageSchemas } from '@/lib/seo-schema';
-import { client } from '@/lib/sanity';
-import FeaturedVehiclesServer from '@/components/home/FeaturedVehiclesServer';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import LoadingSkeletons from '@/components/ui/LoadingSkeletons';
+import { client } from '@/lib/sanity';
+import { generatePageSchemas } from '@/lib/seo-schema';
 
 // Enable ISR (Incremental Static Regeneration) with 5-minute revalidation
 // This ensures the homepage shows fresh featured vehicles while maintaining good performance

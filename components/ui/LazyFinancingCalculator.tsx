@@ -1,9 +1,10 @@
 'use client';
 
+import { Calculator } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+
 import { Button } from './button';
-import { Calculator } from 'lucide-react';
 
 // Lazy load the FinancingCalculator only when user requests it
 const FinancingCalculator = dynamic(() => import('./FinancingCalculator'), {

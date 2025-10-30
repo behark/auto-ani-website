@@ -30,14 +30,23 @@ export function useFilterPersistence(
     const urlFilters: Partial<FilterState> = {};
 
     // Parse URL parameters
-    if (searchParams.get('search')) urlFilters.search = searchParams.get('search')!;
-    if (searchParams.get('make')) urlFilters.make = searchParams.get('make')!.split(',');
-    if (searchParams.get('fuel')) urlFilters.fuelType = searchParams.get('fuel')!.split(',');
-    if (searchParams.get('transmission')) urlFilters.transmission = searchParams.get('transmission')!.split(',');
-    if (searchParams.get('body')) urlFilters.bodyType = searchParams.get('body')!.split(',');
-    if (searchParams.get('features')) urlFilters.featuresRequired = searchParams.get('features')!.split(',');
-    if (searchParams.get('featured')) urlFilters.showFeaturedOnly = searchParams.get('featured') === 'true';
-    if (searchParams.get('sort')) urlFilters.sortBy = searchParams.get('sort') as FilterState['sortBy'];
+    const searchParam = searchParams.get('search');
+    const makeParam = searchParams.get('make');
+    const fuelParam = searchParams.get('fuel');
+    const transmissionParam = searchParams.get('transmission');
+    const bodyParam = searchParams.get('body');
+    const featuresParam = searchParams.get('features');
+    const featuredParam = searchParams.get('featured');
+    const sortParam = searchParams.get('sort');
+
+    if (searchParam) urlFilters.search = searchParam;
+    if (makeParam) urlFilters.make = makeParam.split(',');
+    if (fuelParam) urlFilters.fuelType = fuelParam.split(',');
+    if (transmissionParam) urlFilters.transmission = transmissionParam.split(',');
+    if (bodyParam) urlFilters.bodyType = bodyParam.split(',');
+    if (featuresParam) urlFilters.featuresRequired = featuresParam.split(',');
+    if (featuredParam) urlFilters.showFeaturedOnly = featuredParam === 'true';
+    if (sortParam) urlFilters.sortBy = sortParam as FilterState['sortBy'];
 
     // Parse ranges
     if (searchParams.get('priceMin') || searchParams.get('priceMax')) {
@@ -52,8 +61,9 @@ export function useFilterPersistence(
       urlFilters.yearRange = [yearMin, yearMax];
     }
 
-    if (searchParams.get('mileageMax')) {
-      urlFilters.mileageMax = parseInt(searchParams.get('mileageMax')!);
+    const mileageMaxParam = searchParams.get('mileageMax');
+    if (mileageMaxParam) {
+      urlFilters.mileageMax = parseInt(mileageMaxParam);
     }
 
     // Update filters if URL has parameters

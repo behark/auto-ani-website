@@ -1,18 +1,18 @@
 'use client';
 
-import { Calendar, Eye, Fuel, Heart, Navigation, Settings, ZoomIn, Scale } from 'lucide-react';
-import Link from 'next/link';
+import { Calendar, Eye, Fuel, Navigation, Settings, Scale } from 'lucide-react';
 import NextImage from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Vehicle } from '@/lib/types';
 import WhatsAppQuickActions from '@/components/whatsapp/WhatsAppQuickActions';
-import { getVehicleCardImage } from '@/lib/image-optimization';
 import { useComparison } from '@/contexts/ComparisonContext';
+import { getVehicleCardImage } from '@/lib/image-optimization';
+import { Vehicle } from '@/lib/types';
 
 interface VehicleCardProps {
   vehicle: Vehicle;

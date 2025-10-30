@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { logger } from '@/lib/logger'
+
 // Define the schema for all environment variables
 const envSchema = z.object({
   // Node Environment
@@ -377,13 +379,13 @@ export const getIntegrationStatus = () => ({
 // Log environment status in development
 if (isDevelopment) {
   const status = getIntegrationStatus()
-  console.log('\n🔐 Environment Configuration Status')
-  console.log('=====================================')
-  console.log(`Environment: ${env.NODE_ENV}`)
-  console.log(`Database: ${env.DATABASE_PROVIDER}`)
-  console.log('\n📦 Integrations:')
+  logger.info('\n🔐 Environment Configuration Status')
+  logger.info('=====================================')
+  logger.info(`Environment: ${env.NODE_ENV}`)
+  logger.info(`Database: ${env.DATABASE_PROVIDER}`)
+  logger.info('\n📦 Integrations:')
   Object.entries(status).forEach(([name, enabled]) => {
-    console.log(`  ${enabled ? '✅' : '❌'} ${name}`)
+    logger.info(`  ${enabled ? '✅' : '❌'} ${name}`)
   })
-  console.log('=====================================\n')
+  logger.info('=====================================\n')
 }

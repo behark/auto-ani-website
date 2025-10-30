@@ -5,7 +5,7 @@ import { forwardRef, ReactNode } from 'react';
 
 
 import { Card, CardProps } from '@/components/ui/card';
-import { MOTION_VARIANTS, ANIMATION_CLASSES } from '@/lib/animations';
+import { MOTION_VARIANTS } from '@/lib/animations';
 import { cn } from '@/lib/utils';
 
 interface AnimatedCardProps extends Omit<CardProps, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'> {

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
-import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import StructuredData from '@/components/seo/StructuredData';
+import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
+import { logger } from '@/lib/logger';
 import { generatePageSchemas } from '@/lib/seo-schema';
-import type { Vehicle } from '@/lib/types';
 
 // Enable ISR with 3-minute revalidation for better balance between freshness and performance
 // Vehicles update regularly but not every minute, so 3 minutes provides good caching
@@ -59,10 +59,10 @@ async function getVehicles() {
     } | order(_createdAt desc)`;
 
     const vehicles = await client.fetch(query);
-    console.log(`Server fetched ${vehicles?.length || 0} vehicles with optimized images`);
+    logger.info(`Server fetched ${vehicles?.length || 0} vehicles with optimized images`);
     return vehicles || [];
   } catch (error) {
-    console.error('Failed to fetch vehicles on server:', error);
+    logger.error('Failed to fetch vehicles on server:', { error });
     // Return empty array to let client-side handle it
     return [];
   }

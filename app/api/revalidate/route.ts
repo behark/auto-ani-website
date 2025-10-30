@@ -1,21 +1,23 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { logger } from '@/lib/logger';
+
 export async function POST(request: NextRequest) {
   try {
     // Verify secret token
     const secret = request.nextUrl.searchParams.get('secret');
-    
+
     if (secret !== process.env.REVALIDATE_SECRET) {
       return NextResponse.json(
-        { message: 'Invalid token' }, 
+        { message: 'Invalid token' },
         { status: 401 }
       );
     }
 
     // Parse webhook payload
     const body = await request.json();
-    console.log('Revalidation triggered:', body);
+    logger.info('Revalidation triggered:', body);
 
     // Revalidate relevant paths
     revalidatePath('/');
@@ -41,8 +43,8 @@ export async function POST(request: NextRequest) {
 }
 
 // Handle GET requests to test the endpoint
-export async function GET(request: NextRequest) {
-  return NextResponse.json({ 
-    message: 'Revalidation endpoint active. Use POST with secret token.' 
+export function GET(_request: NextRequest) {
+  return NextResponse.json({
+    message: 'Revalidation endpoint active. Use POST with secret token.'
   });
 }

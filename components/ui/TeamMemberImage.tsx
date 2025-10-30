@@ -25,7 +25,7 @@ export default function TeamMemberImage({
     return names.map(n => n[0]).join('').toUpperCase();
   };
 
-  const initials = getInitials(name);
+  const _initials = getInitials(name);
 
   return (
     <div className="relative group">

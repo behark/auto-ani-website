@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, ZoomIn, Download, Share2 } from 'lucide-react';
 import { useState, useCallback } from 'react';
 
+import VehicleImage from './VehicleImage';
+
 import { cn } from '@/lib/utils';
 
-import VehicleImage from './VehicleImage';
 
 
 interface VehicleGalleryProps {
@@ -311,7 +312,7 @@ export const validateGalleryImages = async (images: string[]): Promise<string[]>
         img.src = image;
       });
       validatedImages.push(image);
-    } catch {
+    } catch (_error) {
       validatedImages.push('/images/placeholder-vehicle.svg');
     }
   }

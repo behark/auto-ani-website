@@ -245,7 +245,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
-    const { error, errorInfo, hasError } = this.state;
+    const { error, errorInfo: _errorInfo, hasError } = this.state;
 
     if (hasError && error) {
       // Add timestamp to error display to help debugging

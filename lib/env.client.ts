@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { logger } from '@/lib/logger'
+
 /**
  * Client-side Environment Variables Validation
  *
@@ -106,12 +108,12 @@ export const getClientFeatures = () => ({
 
 // Log client environment status in development
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-  console.log('\n🌐 Client Environment Configuration')
-  console.log('=====================================')
+  logger.info('\n🌐 Client Environment Configuration')
+  logger.info('=====================================')
   const features = getClientFeatures()
-  console.log('📦 Client Features:')
+  logger.info('📦 Client Features:')
   Object.entries(features).forEach(([name, enabled]) => {
-    console.log(`  ${enabled ? '✅' : '❌'} ${name}`)
+    logger.info(`  ${enabled ? '✅' : '❌'} ${name}`)
   })
-  console.log('=====================================\n')
+  logger.info('=====================================\n')
 }

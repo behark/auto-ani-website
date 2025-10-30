@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { VEHICLES } from "@/lib/constants";
 import { Vehicle, VehicleFilters } from "@/lib/types";
@@ -171,16 +171,20 @@ export function useVehicleSearch(options: UseVehicleSearchOptions = {}) {
         );
       }
       if (filters.priceMin !== undefined) {
-        results = results.filter((v) => v.price >= filters.priceMin!);
+        const minPrice = filters.priceMin;
+        results = results.filter((v) => v.price >= minPrice);
       }
       if (filters.priceMax !== undefined) {
-        results = results.filter((v) => v.price <= filters.priceMax!);
+        const maxPrice = filters.priceMax;
+        results = results.filter((v) => v.price <= maxPrice);
       }
       if (filters.yearMin !== undefined) {
-        results = results.filter((v) => v.year >= filters.yearMin!);
+        const minYear = filters.yearMin;
+        results = results.filter((v) => v.year >= minYear);
       }
       if (filters.yearMax !== undefined) {
-        results = results.filter((v) => v.year <= filters.yearMax!);
+        const maxYear = filters.yearMax;
+        results = results.filter((v) => v.year <= maxYear);
       }
 
       // Apply sorting

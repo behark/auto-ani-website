@@ -8,7 +8,7 @@ export interface ImageLoaderProps {
  * Custom image loader for handling local images consistently
  * Works in both development and production environments
  */
-export function imageLoader({ src, width, quality = 75 }: ImageLoaderProps): string {
+export function imageLoader({ src, width: _width, quality: _quality = 75 }: ImageLoaderProps): string {
   // For external images, return as-is
   if (src.startsWith('http://') || src.startsWith('https://')) {
     return src;
@@ -48,8 +48,9 @@ export class ImageCache {
   private cache = new Map<string, Promise<void>>();
 
   preload(src: string): Promise<void> {
-    if (this.cache.has(src)) {
-      return this.cache.get(src)!;
+    const cached = this.cache.get(src);
+    if (cached) {
+      return cached;
     }
 
     const promise = preloadImage(src);

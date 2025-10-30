@@ -11,7 +11,7 @@
  * - Client-side: import { clientEnv } from '@/lib/env.client'
  */
 
-declare namespace NodeJS {
+declare namespace _NodeJS {
   interface ProcessEnv {
     // Node Environment
     NODE_ENV: 'development' | 'production' | 'test';

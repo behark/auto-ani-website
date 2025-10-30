@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+import { logger } from '@/lib/logger';
+
+export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Create response
@@ -63,7 +65,7 @@ export async function middleware(request: NextRequest) {
 
   // Log request in development
   if (process.env.NODE_ENV === 'development') {
-    console.log(`[${request.method}] ${path}`);
+    logger.info(`[${request.method}] ${path}`);
   }
 
   return response;

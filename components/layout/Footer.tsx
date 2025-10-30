@@ -2,6 +2,7 @@
 
 import { Car, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Footer() {

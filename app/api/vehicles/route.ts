@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateVehicleQuery } from "@/lib/validation/vehicle-api";
+
 import { rateLimit } from "@/lib/api-utils";
+import { validateVehicleQuery } from "@/lib/validation/vehicle-api";
 
 // Force dynamic rendering for API route
 export const dynamic = "force-dynamic";
@@ -29,7 +30,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const params = validation.data!;
+    const params = validation.data;
+    if (!params) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid parameters' },
+        { status: 400 }
+      );
+    }
 
     // Dynamic import to avoid build-time issues
     const { client } = await import("@/lib/sanity");

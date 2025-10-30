@@ -1,6 +1,7 @@
+import VehicleCardSkeleton from './VehicleCardSkeleton';
+
 import { Skeleton } from '@/components/ui/skeleton';
 
-import VehicleCardSkeleton from './VehicleCardSkeleton';
 
 interface SectionSkeletonProps {
   type: 'featured-vehicles' | 'services' | 'hero' | 'testimonials' | 'generic';

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import FinancingCalculator from '@/components/financing/FinancingCalculator';
 import FinancingOptions from '@/components/financing/FinancingOptions';
 import PreQualificationForm from '@/components/financing/PreQualificationForm';

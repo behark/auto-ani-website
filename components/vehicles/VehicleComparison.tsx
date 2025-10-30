@@ -1,8 +1,12 @@
 'use client';
 
-import { X, Check, Minus } from 'lucide-react';
+import { X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sheet,
   SheetContent,
@@ -10,9 +14,6 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { useComparison } from '@/contexts/ComparisonContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -23,7 +24,7 @@ interface VehicleComparisonProps {
 
 export default function VehicleComparison({ open, onOpenChange }: VehicleComparisonProps) {
   const { comparisonList, removeFromComparison, clearComparison } = useComparison();
-  const { t } = useLanguage();
+  const { t: _t } = useLanguage();
 
   if (comparisonList.length === 0) {
     return null;
@@ -39,7 +40,7 @@ export default function VehicleComparison({ open, onOpenChange }: VehicleCompari
   };
 
   const formatMileage = (mileage: number) => {
-    return new Intl.NumberFormat('en-US').format(mileage) + ' km';
+    return `${new Intl.NumberFormat('en-US').format(mileage)  } km`;
   };
 
   const ComparisonRow = ({
@@ -47,7 +48,7 @@ export default function VehicleComparison({ open, onOpenChange }: VehicleCompari
     getValue
   }: {
     label: string;
-    getValue: (vehicle: any) => React.ReactNode;
+    getValue: (vehicle: { _id: string; make?: string; model?: string; year?: number; price?: number; mileage?: number; fuelType?: string; transmission?: string; bodyType?: string; color?: string; engineSize?: string }) => React.ReactNode;
   }) => (
     <div className="border-b">
       <div className="py-3 px-4 bg-gray-50 dark:bg-gray-800 font-medium">

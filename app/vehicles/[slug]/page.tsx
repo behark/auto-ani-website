@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation";
-import { Metadata } from "next";
 import { Phone, MessageCircle, Car, Gauge, Fuel, Settings2, Zap, Shield, Award } from "lucide-react";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-import { client, VehicleDetail } from "@/lib/sanity";
-import StructuredData from "@/components/seo/StructuredData";
-import { generatePageSchemas } from "@/lib/seo-schema";
-import WhatsAppQuickActions from "@/components/whatsapp/WhatsAppQuickActions";
 import EnhancedImageGallery from "@/components/gallery/EnhancedImageGallery";
+import StructuredData from "@/components/seo/StructuredData";
 import { Badge } from "@/components/ui/badge";
+import WhatsAppQuickActions from "@/components/whatsapp/WhatsAppQuickActions";
+import { client, VehicleDetail } from "@/lib/sanity";
+import { generatePageSchemas } from "@/lib/seo-schema";
 
 interface PageProps {
   params: { slug: string };
@@ -51,7 +51,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
   }
 
   const whatsappMessage = `Hi, I'm interested in ${vehicle.brand} ${vehicle.model} - €${vehicle.price.toLocaleString()}`;
-  const whatsappUrl = `https://wa.me/38349204242?text=${encodeURIComponent(whatsappMessage)}`;
+  const _whatsappUrl = `https://wa.me/38349204242?text=${encodeURIComponent(whatsappMessage)}`;
 
   // Generate structured data schemas
   const breadcrumbs = [

@@ -372,7 +372,7 @@ export default function EnhancedAboutPage() {
             )}
           </div>
           <div className="grid md:grid-cols-4 gap-8">
-            {teamMembers.map((member, index) => (
+            {teamMembers.map((member, _index) => (
               <Card key={member._id} className="overflow-hidden">
                 <div className="aspect-square bg-gray-200 relative">
                   <FallbackImage

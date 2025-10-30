@@ -16,11 +16,6 @@ interface SanityImageAsset {
   url?: string;
 }
 
-interface ImageDimensions {
-  width: number;
-  height: number;
-}
-
 interface OptimizedImageProps {
   src: string;
   alt: string;
@@ -91,7 +86,7 @@ export class ImageOptimizer {
   /**
    * Generate responsive image srcSet for different screen sizes
    */
-  static generateResponsiveSrcSet(imageUrl: string, baseName: string): string {
+  static generateResponsiveSrcSet(imageUrl: string, _baseName: string): string {
     const sizes = [640, 750, 828, 1080, 1200, 1920];
 
     return sizes.map(size => {
@@ -191,8 +186,8 @@ export class ImageOptimizer {
   /**
    * Check if image format is supported by browser
    */
-  static async supportsWebP(): Promise<boolean> {
-    if (typeof window === 'undefined') return false;
+  static supportsWebP(): Promise<boolean> {
+    if (typeof window === 'undefined') return Promise.resolve(false);
 
     return new Promise((resolve) => {
       const webP = new window.Image();

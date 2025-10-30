@@ -151,7 +151,7 @@ class Logger {
   }
 
   // Audit logging for security events
-  async audit(message: string, context?: Record<string, unknown>): Promise<void> {
+  audit(message: string, context?: Record<string, unknown>): void {
     this.info(`[AUDIT] ${message}`, context);
   }
 

@@ -1,11 +1,14 @@
 'use client';
 
+import { Scale } from 'lucide-react';
 import { useState } from 'react';
-import { Scale, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useComparison } from '@/contexts/ComparisonContext';
+
 import VehicleComparison from './VehicleComparison';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useComparison } from '@/contexts/ComparisonContext';
+
 
 export default function ComparisonFloatingButton() {
   const [open, setOpen] = useState(false);

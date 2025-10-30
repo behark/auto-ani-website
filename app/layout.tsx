@@ -3,6 +3,8 @@ import { Inter, Montserrat } from "next/font/google";
 
 import "./globals.css";
 
+import { Toaster } from "sonner";
+
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
@@ -10,10 +12,9 @@ import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import LazyFinancingCalculator from "@/components/ui/LazyFinancingCalculator";
 import LazyFloatingContactWidget from "@/components/ui/LazyFloatingContactWidget";
 import LazyTradeInEstimator from "@/components/ui/LazyTradeInEstimator";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { ComparisonProvider } from "@/contexts/ComparisonContext";
 import WhatsAppChatWidget from "@/components/whatsapp/WhatsAppChatWidget";
-import { Toaster } from "sonner";
+import { ComparisonProvider } from "@/contexts/ComparisonContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const inter = Inter({
   subsets: ["latin"],

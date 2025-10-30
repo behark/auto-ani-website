@@ -1,13 +1,14 @@
-import type { Metadata } from 'next';
 import { Timer, Tag, Percent, Gift, TrendingUp, Calendar } from 'lucide-react';
-import Link from 'next/link';
+import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
+
+import StructuredData from '@/components/seo/StructuredData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import StructuredData from '@/components/seo/StructuredData';
-import { generatePageSchemas } from '@/lib/seo-schema';
 import { client } from '@/lib/sanity';
+import { generatePageSchemas } from '@/lib/seo-schema';
 
 // Enable ISR with 30-minute revalidation for deals and promotions
 // Deals change frequently enough to warrant shorter cache duration
@@ -245,7 +246,7 @@ export default async function DealsPage() {
             <div className="mb-12">
               <h2 className="text-3xl font-bold mb-6">Veturat në Ofertë</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {dealVehicles.map((vehicle: any) => (
+                {dealVehicles.map((vehicle: { _id: string; slug: { current: string }; mainImage?: string; title: string; originalPrice: number; price: number }) => (
                   <Card key={vehicle._id} className="overflow-hidden group cursor-pointer">
                     <Link href={`/vehicles/${vehicle.slug.current}`}>
                       <div className="relative h-48 bg-gray-200">

@@ -1,8 +1,5 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -18,6 +15,9 @@ import {
   Play,
   Pause
 } from 'lucide-react';
+import Image from 'next/image';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 
 interface GalleryImage {
   asset: {
@@ -77,6 +77,19 @@ export default function EnhancedImageGallery({
     return () => clearInterval(intervalRef.current);
   }, [isPlaying, images.length]);
 
+  // Navigation handlers - memoized to avoid unnecessary re-renders
+  const goToNext = useCallback(() => {
+    setCurrentIndex(prev => (prev + 1) % images.length);
+    setZoomLevel(1);
+    setRotation(0);
+  }, [images.length]);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
+    setZoomLevel(1);
+    setRotation(0);
+  }, [images.length]);
+
   // Keyboard navigation
   useEffect(() => {
     if (!isFullscreen) return;
@@ -112,7 +125,7 @@ export default function EnhancedImageGallery({
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isFullscreen]);
+  }, [isFullscreen, images.length, goToNext, goToPrevious]);
 
   if (!images || images.length === 0) {
     return (
@@ -126,18 +139,6 @@ export default function EnhancedImageGallery({
   }
 
   const currentImage = images[currentIndex];
-
-  const goToNext = () => {
-    setCurrentIndex(prev => (prev + 1) % images.length);
-    setZoomLevel(1);
-    setRotation(0);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
-    setZoomLevel(1);
-    setRotation(0);
-  };
 
   const goToImage = (index: number) => {
     setCurrentIndex(index);
@@ -169,14 +170,14 @@ export default function EnhancedImageGallery({
           title: `${title} - Image ${currentIndex + 1}`,
           url: currentImage.asset.url,
         });
-      } catch (error) {
+      } catch (_error) {
         // Fallback to copying to clipboard
         navigator.clipboard.writeText(currentImage.asset.url);
-        alert('Image URL copied to clipboard!');
+        toast.success('Image URL copied to clipboard!');
       }
     } else {
       navigator.clipboard.writeText(currentImage.asset.url);
-      alert('Image URL copied to clipboard!');
+      toast.success('Image URL copied to clipboard!');
     }
   };
 

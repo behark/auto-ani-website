@@ -111,11 +111,11 @@ class RateLimiter {
     }, 60000);
   }
 
-  async checkLimit(
+  checkLimit(
     identifier: string,
     maxRequests: number,
     windowMs: number
-  ): Promise<{ allowed: boolean; remaining: number; resetAt: number }> {
+  ): { allowed: boolean; remaining: number; resetAt: number } {
     const now = Date.now();
     const entry = this.store.get(identifier);
 
@@ -211,9 +211,8 @@ export async function retryWithBackoff<T>(
         maxDelayMs
       );
 
-      console.log(
-        `Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms delay`
-      );
+      // Retry debug logging removed - use logger if needed
+      // logger.debug(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms delay`);
 
       await new Promise((resolve) => setTimeout(resolve, delay));
     }

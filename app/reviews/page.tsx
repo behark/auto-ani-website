@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
 import { Star, ThumbsUp, Quote, CheckCircle, User, Calendar } from 'lucide-react';
-import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
+import type { Metadata } from 'next';
+
+import StructuredData from '@/components/seo/StructuredData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import StructuredData from '@/components/seo/StructuredData';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
 // Enable ISR with 6-hour revalidation for customer reviews

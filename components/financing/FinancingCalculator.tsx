@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Calculator, Euro, Calendar, Percent } from 'lucide-react';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState, useEffect } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function FinancingCalculator() {
-  const { t } = useLanguage();
+  const { t: _t } = useLanguage();
 
   const [vehiclePrice, setVehiclePrice] = useState(25000);
   const [downPayment, setDownPayment] = useState(2500);

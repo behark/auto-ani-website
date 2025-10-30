@@ -128,7 +128,7 @@ export default function EnhancedServicesPage() {
                 service.businessTypes.includes("dealership") ||
                 service.businessTypes.includes("all")
             )
-            .map((service: any) => ({
+            .map((service: Service) => ({
               _id: service._id,
               name: service.name,
               description: service.description,
@@ -243,7 +243,7 @@ export default function EnhancedServicesPage() {
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {displayServices.map((service, index) => {
             const Icon = getServiceIcon(service.category);
-            const fallbackService = fallbackServicesData[index];
+            const _fallbackService = fallbackServicesData[index];
 
             return (
               <Card key={service._id} className="overflow-hidden">

@@ -131,7 +131,7 @@ export async function getOptimizedImagePath(
  * @param preferredFormat - Preferred image format
  * @returns Promise<string[]> - Array of best available image paths
  */
-export async function getBestImagePaths(
+export function getBestImagePaths(
   imagePaths: string[],
   preferredSize: string = '1280w',
   preferredFormat: string = 'webp'

@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 import { Vehicle } from "@/lib/types";
 
@@ -138,7 +139,7 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
 
   const exportFavorites = () => {
     if (favorites.length === 0) {
-      alert("No favorites to export");
+      toast.error("No favorites to export");
       return;
     }
 

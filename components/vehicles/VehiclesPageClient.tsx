@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+
+import ComparisonFloatingButton from "./ComparisonFloatingButton";
+import VehicleCardSimple from "./VehicleCardSimple";
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VEHICLES } from "@/lib/constants";
 import { logger } from "@/lib/logger";
 import { urlFor } from "@/lib/sanity";
 import { Vehicle } from "@/lib/types";
-import VehicleCardSimple from "./VehicleCardSimple";
-import ComparisonFloatingButton from "./ComparisonFloatingButton";
+
 
 const VehicleFilters = dynamic(() => import("./VehicleFilters"), {
   ssr: false,
@@ -143,10 +146,10 @@ export default function VehiclesPageClient({
   // Initialize with converted server vehicles if available, otherwise empty array
   const [allVehicles, setAllVehicles] = useState<Vehicle[]>(() => {
     if (initialVehicles && initialVehicles.length > 0) {
-      console.log(`Client initialized with ${initialVehicles.length} server vehicles`);
+      logger.info(`Client initialized with ${initialVehicles.length} server vehicles`);
       return convertSanityVehiclesToVehicles(initialVehicles);
     }
-    console.log('Client initialized with no server vehicles, will fetch client-side');
+    logger.info('Client initialized with no server vehicles, will fetch client-side');
     return [];
   });
 
@@ -178,14 +181,14 @@ export default function VehiclesPageClient({
           data.data.vehicles &&
           data.data.vehicles.length > 0
         ) {
-          console.log(`Client fetched ${data.data.vehicles.length} vehicles from API`);
+          logger.info(`Client fetched ${data.data.vehicles.length} vehicles from API`);
           const convertedVehicles = convertSanityVehiclesToVehicles(
             data.data.vehicles
           );
-          console.log(`Client converted to ${convertedVehicles.length} display vehicles`);
+          logger.info(`Client converted to ${convertedVehicles.length} display vehicles`);
           setAllVehicles(convertedVehicles);
         } else {
-          console.log('Client API returned no vehicles, using fallback');
+          logger.info('Client API returned no vehicles, using fallback');
           // Fallback to static vehicles
           setAllVehicles(VEHICLES);
         }

@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+
 import { client } from '@/lib/sanity';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -61,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     );
 
-    vehiclePages = vehicles.map((vehicle: any) => ({
+    vehiclePages = vehicles.map((vehicle: { slug: string; _updatedAt: string }) => ({
       url: `${baseUrl}/vehicles/${vehicle.slug}`,
       lastModified: new Date(vehicle._updatedAt),
       changeFrequency: 'weekly' as const,
