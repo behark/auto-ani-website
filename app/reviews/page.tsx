@@ -8,9 +8,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Enable ISR with 6-hour revalidation for customer reviews
-// Reviews are added periodically but not frequently enough to need shorter caching
-export const revalidate = 21600; // 6 hours
+// Fully Static Generation - Pre-render at build time for maximum performance
+// Reviews update monthly, no need for ISR revalidation
+// Redeploy after adding new reviews in CMS
+export const dynamic = 'force-static';
+export const revalidate = false; // Fully static (no revalidation)
 
 export const metadata: Metadata = {
   title: "Vlerësimet e Klientëve | AUTO ANI - 2500+ Klientë të Kënaqur",

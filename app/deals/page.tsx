@@ -10,9 +10,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { client } from '@/lib/sanity';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Enable ISR with 30-minute revalidation for deals and promotions
-// Deals change frequently enough to warrant shorter cache duration
-export const revalidate = 1800; // 30 minutes
+// Fully Static Generation - Pre-render at build time for maximum performance
+// Deals and promotions update monthly, no need for ISR revalidation
+// Redeploy after updating deals in CMS
+export const dynamic = 'force-static';
+export const revalidate = false; // Fully static (no revalidation)
 
 export const metadata: Metadata = {
   title: "Ofertat dhe Promovime | AUTO ANI - Zbritje Speciale",
