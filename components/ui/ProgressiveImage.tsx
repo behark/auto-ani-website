@@ -101,7 +101,7 @@ export default function ProgressiveImage({
 
       // Try different format
       if (src.includes(".webp")) {
-        setImgSrc(src.replace(".webp", ".jpg"));
+        setImgSrc("/images/placeholder-vehicle.svg");
         return;
       }
 
