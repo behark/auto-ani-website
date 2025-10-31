@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import "./globals.css";
 
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { VercelToolbar } from "@vercel/toolbar/next";
 
@@ -133,10 +134,11 @@ export default function RootLayout({
         {/* Toast Notifications */}
         <Toaster position="top-right" richColors />
 
-        {/* Performance monitoring */}
+        {/* Analytics & Performance monitoring */}
+        <Analytics />
+        <SpeedInsights />
         <WebVitals debug={process.env.NODE_ENV === 'development'} />
         <PerformanceMonitor />
-        <SpeedInsights />
 
         {/* Vercel Toolbar - Shows feature flags, comments, and more */}
         {process.env.NODE_ENV === 'development' && <VercelToolbar />}
