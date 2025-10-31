@@ -6,6 +6,7 @@ import "./globals.css";
 
 import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { VercelToolbar } from "@vercel/toolbar/next";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -136,6 +137,9 @@ export default function RootLayout({
         <WebVitals debug={process.env.NODE_ENV === 'development'} />
         <PerformanceMonitor />
         <SpeedInsights />
+
+        {/* Vercel Toolbar - Shows feature flags, comments, and more */}
+        {process.env.NODE_ENV === 'development' && <VercelToolbar />}
 
         {/* Development-only performance panel (Ctrl+Shift+P to toggle) */}
         {process.env.NODE_ENV === 'development' && <PerformancePanel />}
