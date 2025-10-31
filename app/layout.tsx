@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import "./globals.css";
 
 import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -36,6 +37,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://autosalonani.com'),
   title: "AUTO ANI | Auto Salon Premium - 9+ Vite Përsosmërie | Mitrovicë, Kosovë",
   description: "Auto salon premium në Mitrovicë, Kosovë. Mbi 2500 vetura të shitura që nga 2015. Makina të reja dhe të përdorura, financim 0%, bonus shkëmbimi €1000. BMW, Mercedes, Audi, VW, Toyota.",
   keywords: "auto salon, autosallonani, vetura, makina, Mitrovica, Kosovo, AUTO ANI, BMW, Mercedes, Audi, Volkswagen, Toyota, financim, auto salloni, kerkoj veture",
@@ -133,6 +135,7 @@ export default function RootLayout({
         {/* Performance monitoring */}
         <WebVitals debug={process.env.NODE_ENV === 'development'} />
         <PerformanceMonitor />
+        <SpeedInsights />
 
         {/* Development-only performance panel (Ctrl+Shift+P to toggle) */}
         {process.env.NODE_ENV === 'development' && <PerformancePanel />}
