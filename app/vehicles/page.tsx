@@ -4,10 +4,11 @@ import StructuredData from '@/components/seo/StructuredData';
 import VehiclesPageClient from '@/components/vehicles/VehiclesPageClient';
 import { logger } from '@/lib/logger';
 import { generatePageSchemas } from '@/lib/seo-schema';
+import { vehicleHelpers } from '@/data/vehicles';
 
-// Enable ISR with 24-hour revalidation for vehicles listing page
-// Vehicles update periodically, daily revalidation ensures fresh inventory
-export const revalidate = 86400; // 24 hours
+// Static page - no revalidation needed with hardcoded data
+// Remove ISR since we're using static data now
+// export const revalidate = CACHE.REVALIDATION_TIME; // Removed - no longer needed
 
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",
@@ -31,39 +32,25 @@ export const metadata: Metadata = {
 
 async function getVehicles() {
   try {
-    // ✅ Direct Sanity fetch on server - no HTTP roundtrip needed
-    const { client } = await import('@/lib/sanity');
+    // Get vehicles from hardcoded data - instant, no network call
+    const vehicles = vehicleHelpers.getAvailable();
 
-    // ✅ OPTIMIZED: Fetch images with CDN transformations built into URL
-    // This creates optimized thumbnail URLs directly from Sanity CDN
-    const query = `*[_type == "vehicle"] {
-      _id,
-      title,
-      slug,
-      brand,
-      model,
-      year,
-      price,
-      mileage,
-      category,
-      featured,
-      description,
-      fuelType,
-      transmission,
-      color,
-      engine,
-      "mainImage": mainImage.asset->url + "?w=640&h=480&fit=crop&fm=webp&q=75",
-      "thumbnail": mainImage.asset->url + "?w=600&h=400&fit=crop&fm=webp&q=75",
-      "gallery": gallery[].asset->url + "?w=640&h=480&fit=crop&fm=webp&q=75",
-      _createdAt
-    } | order(_createdAt desc)`;
+    // Sort by featured first, then by date
+    const sorted = vehicles.sort((a, b) => {
+      // Featured vehicles first
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
 
-    const vehicles = await client.fetch(query);
-    logger.info(`Server fetched ${vehicles?.length || 0} vehicles with optimized images`);
-    return vehicles || [];
+      // Then sort by date
+      const dateA = new Date(a.dateAdded || a._createdAt || '');
+      const dateB = new Date(b.dateAdded || b._createdAt || '');
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    logger.info(`Loaded ${sorted.length} vehicles from hardcoded data`);
+    return sorted;
   } catch (error) {
-    logger.error('Failed to fetch vehicles on server:', { error });
-    // Return empty array to let client-side handle it
+    logger.error('Failed to load vehicles:', { error });
     return [];
   }
 }
@@ -72,7 +59,7 @@ export default async function VehiclesPage() {
   // Generate vehicles page schema
   const schemas = generatePageSchemas('vehicles');
 
-  // ✅ Fetch vehicles on server for instant render
+  // Get vehicles from hardcoded data
   const initialVehicles = await getVehicles();
 
   return (

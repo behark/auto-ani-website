@@ -6,58 +6,20 @@ import EnhancedImageGallery from "@/components/gallery/EnhancedImageGallery";
 import StructuredData from "@/components/seo/StructuredData";
 import { Badge } from "@/components/ui/badge";
 import WhatsAppQuickActions from "@/components/whatsapp/WhatsAppQuickActions";
-import { client, VehicleDetail } from "@/lib/sanity";
 import { generatePageSchemas } from "@/lib/seo-schema";
+import { vehicleHelpers, HardcodedVehicle } from "@/data/vehicles";
 
 interface PageProps {
   params: { slug: string };
 }
 
 // Shared data fetching function to avoid duplicate queries
-async function getVehicleData(slug: string) {
-  return await client.fetch<VehicleDetail>(
-    `*[_type == "vehicle" && slug.current == $slug][0]{
-      _id,
-      title,
-      brand,
-      model,
-      year,
-      price,
-      originalPrice,
-      mileage,
-      fuelType,
-      transmission,
-      category,
-      description,
-      color,
-      engine,
-      status,
-      condition,
-      featured,
-      features,
-      specifications,
-      financing,
-      seo,
-      slug,
-      dateAdded,
-      "mainImage": {
-        "url": mainImage.asset->url,
-        "optimized": mainImage.asset->url + "?w=1200&h=800&fit=crop&fm=webp&q=85",
-        "thumbnail": mainImage.asset->url + "?w=400&h=300&fit=crop&fm=webp&q=75"
-      },
-      "gallery": gallery[]{
-        "url": asset->url,
-        "optimized": asset->url + "?w=1080&h=720&fit=crop&fm=webp&q=80",
-        "thumbnail": asset->url + "?w=150&h=100&fit=crop&fm=webp&q=70",
-        "mobile": asset->url + "?w=640&h=480&fit=crop&fm=webp&q=75"
-      }
-    }`,
-    { slug }
-  );
+async function getVehicleData(slug: string): Promise<HardcodedVehicle | undefined> {
+  return vehicleHelpers.getBySlug(slug);
 }
 
 export default async function VehicleDetailPage({ params }: PageProps) {
-  // Use shared data fetching function
+  // Get vehicle from hardcoded data
   const vehicle = await getVehicleData(params.slug);
 
   if (!vehicle) {
@@ -89,19 +51,19 @@ export default async function VehicleDetailPage({ params }: PageProps) {
             <EnhancedImageGallery
               images={
                 (vehicle.gallery && vehicle.gallery.length > 0
-                  ? vehicle.gallery.map((img: any) => ({
+                  ? vehicle.gallery.map((img: string) => ({
                       asset: {
-                        url: img.optimized || img.url,
-                        thumbnail: img.thumbnail,
-                        mobile: img.mobile
+                        url: img,
+                        thumbnail: img,
+                        mobile: img
                       },
                       alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
                     }))
                   : vehicle.mainImage
                     ? [{
                         asset: {
-                          url: vehicle.mainImage.optimized || vehicle.mainImage.url,
-                          thumbnail: vehicle.mainImage.thumbnail
+                          url: vehicle.mainImage,
+                          thumbnail: vehicle.mainImage
                         },
                         alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
                       }]
@@ -356,12 +318,57 @@ export default async function VehicleDetailPage({ params }: PageProps) {
                 Karakteristikat & Pajisjet
               </h2>
               <div className="grid grid-cols-2 gap-2">
-                {vehicle.features.map((feature, index) => (
-                  <div key={index} className="flex items-center text-sm p-2 bg-green-50 rounded">
-                    <span className="text-green-500 mr-2">✓</span>
-                    <span className="font-medium">{feature}</span>
-                  </div>
-                ))}
+                {vehicle.features.map((feature, index) => {
+                  // Map feature codes to display names
+                  const featureNames: Record<string, string> = {
+                    'abs': 'ABS Brakes',
+                    'airbags': 'Airbags',
+                    'esc': 'Electronic Stability Control',
+                    'traction_control': 'Traction Control',
+                    'blind_spot': 'Blind Spot Monitoring',
+                    'lane_departure': 'Lane Departure Warning',
+                    'parking_sensors': 'Parking Sensors',
+                    'backup_camera': 'Backup Camera',
+                    'camera_360': '360° Camera',
+                    'ac': 'Air Conditioning',
+                    'climate_control': 'Climate Control',
+                    'heated_seats': 'Heated Seats',
+                    'cooled_seats': 'Cooled Seats',
+                    'electric_seats': 'Electric Seats',
+                    'memory_seats': 'Memory Seats',
+                    'leather_seats': 'Leather Seats',
+                    'sunroof': 'Sunroof',
+                    'panoramic_roof': 'Panoramic Roof',
+                    'gps': 'GPS Navigation',
+                    'bluetooth': 'Bluetooth',
+                    'usb': 'USB Ports',
+                    'wireless_charging': 'Wireless Charging',
+                    'carplay': 'Apple CarPlay',
+                    'android_auto': 'Android Auto',
+                    'premium_sound': 'Premium Sound System',
+                    'touchscreen': 'Touchscreen Display',
+                    'alloy_wheels': 'Alloy Wheels',
+                    'led_headlights': 'LED Headlights',
+                    'fog_lights': 'Fog Lights',
+                    'electric_windows': 'Electric Windows',
+                    'electric_mirrors': 'Electric Mirrors',
+                    'keyless_entry': 'Keyless Entry',
+                    'push_start': 'Push Button Start',
+                    'sport_mode': 'Sport Mode',
+                    'cruise_control': 'Cruise Control',
+                    'adaptive_cruise': 'Adaptive Cruise Control',
+                    'awd': 'All-Wheel Drive',
+                    '4wd': '4WD'
+                  };
+                  const displayName = featureNames[feature] || feature;
+
+                  return (
+                    <div key={index} className="flex items-center text-sm p-2 bg-green-50 rounded">
+                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="font-medium">{displayName}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -408,7 +415,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  // Use shared data fetching function to avoid duplicate queries
+  // Get vehicle from hardcoded data
   const vehicle = await getVehicleData(params.slug);
 
   if (!vehicle) {
@@ -447,7 +454,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `https://autosalonani.com/vehicles/${params.slug}`,
       images: vehicle.mainImage ? [
         {
-          url: vehicle.mainImage.optimized || vehicle.mainImage.url || vehicle.mainImage,
+          url: vehicle.mainImage,
           width: 1200,
           height: 630,
           alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
@@ -460,7 +467,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title,
       description,
-      images: vehicle.mainImage ? [vehicle.mainImage.optimized || vehicle.mainImage.url || vehicle.mainImage] : [],
+      images: vehicle.mainImage ? [vehicle.mainImage] : [],
     },
     alternates: {
       canonical: `https://autosalonani.com/vehicles/${params.slug}`,
@@ -482,9 +489,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // Generate static params for better performance
 export async function generateStaticParams() {
   try {
-    const vehicles = await client.fetch<Array<{ slug: { current: string } }>>(
-      `*[_type == "vehicle" && defined(slug.current)]{ slug }`
-    );
+    // Get all vehicles from hardcoded data
+    const vehicles = vehicleHelpers.getAll();
 
     return vehicles.map((vehicle) => ({
       slug: vehicle.slug.current,
@@ -495,6 +501,5 @@ export async function generateStaticParams() {
   }
 }
 
-// Enable ISR with 24-hour revalidation for vehicle detail pages
-// Vehicle data updates periodically, daily revalidation ensures accuracy
-export const revalidate = 86400; // 24 hours
+// No revalidation needed with hardcoded data
+// Remove ISR since we're using static data

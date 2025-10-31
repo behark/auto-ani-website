@@ -3,26 +3,14 @@
 import { Award, Shield, TrendingUp, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import FallbackImage from "@/components/ui/FallbackImage";
 import { useLanguage } from "@/contexts/LanguageContext";
-import {
-  BusinessInfo,
-  client,
-  queries,
-  TeamMember,
-  urlFor,
-} from "@/lib/sanity";
 
 export default function EnhancedAboutPage() {
   const { t } = useLanguage();
-  const [businessInfo, setBusinessInfo] = useState<BusinessInfo | null>(null);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   // Fallback data matching existing structure
   const fallbackMilestones = [
@@ -53,7 +41,7 @@ export default function EnhancedAboutPage() {
     },
   ];
 
-  const fallbackTeamMembers = [
+  const teamMembers = [
     {
       name: "Behar Gashi",
       position: t("about.ceoFounder"),
@@ -76,72 +64,10 @@ export default function EnhancedAboutPage() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        const [businessData, teamData] = await Promise.all([
-          client.fetch(queries.businessInfo),
-          client.fetch(queries.teamMembers),
-        ]);
-
-        if (businessData) {
-          setBusinessInfo(businessData);
-        }
-
-        if (teamData && teamData.length > 0) {
-          setTeamMembers(teamData);
-        } else {
-          // Use fallback team data if no Sanity data
-          setTeamMembers(
-            fallbackTeamMembers.map((member, index) => ({
-              _id: `fallback-${index}`,
-              name: member.name,
-              role: member.position,
-              image: { asset: { _ref: member.image } },
-              languages: [],
-              specialties: [],
-            }))
-          );
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to load data");
-        // Use fallback data
-        setTeamMembers(
-          fallbackTeamMembers.map((member, index) => ({
-            _id: `fallback-${index}`,
-            name: member.name,
-            role: member.position,
-            image: { asset: { _ref: member.image } },
-            languages: [],
-            specialties: [],
-          }))
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t]);
-
-  const displayBusinessName = businessInfo?.name || "AUTO ANI";
-  const displayDescription = businessInfo?.description || t("about.subtitle");
-  const displayYearEstablished = businessInfo?.yearEstablished || 2015;
+  const displayBusinessName = "AUTO ANI";
+  const displayDescription = t("about.subtitle");
+  const displayYearEstablished = 2015;
   const yearsInBusiness = new Date().getFullYear() - displayYearEstablished;
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary-orange)] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading business information...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -157,11 +83,6 @@ export default function EnhancedAboutPage() {
               </span>
             </h1>
             <p className="text-xl">{displayDescription}</p>
-            {error && (
-              <div className="mt-4 bg-yellow-500/20 text-yellow-100 px-4 py-2 rounded-lg text-sm">
-                ⚠️ {t('about.loadingFallback')}
-              </div>
-            )}
           </div>
         </div>
       </section>
@@ -270,54 +191,6 @@ export default function EnhancedAboutPage() {
         </div>
       </section>
 
-      {/* Business Info & Certifications */}
-      {businessInfo &&
-        businessInfo.certifications &&
-        businessInfo.certifications.length > 0 && (
-          <section className="py-16">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-4">
-                  Certifications & Languages
-                </h2>
-              </div>
-              <div className="grid md:grid-cols-2 gap-8">
-                <Card>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-4">
-                      Our Certifications
-                    </h3>
-                    <div className="space-y-2">
-                      {businessInfo.certifications.map((cert, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <Award className="h-4 w-4 text-[var(--primary-orange)]" />
-                          <span>{cert}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-4">
-                      Languages We Speak
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {businessInfo.languages.map((lang, index) => (
-                        <span
-                          key={index}
-                          className="bg-[var(--primary-orange)]/10 text-[var(--primary-orange)] px-3 py-1 rounded-full text-sm"
-                        >
-                          {lang}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-        )}
 
       {/* Timeline */}
       <section className="py-16">
@@ -373,14 +246,10 @@ export default function EnhancedAboutPage() {
           </div>
           <div className="grid md:grid-cols-4 gap-8">
             {teamMembers.map((member, _index) => (
-              <Card key={member._id} className="overflow-hidden">
+              <Card key={member.name} className="overflow-hidden">
                 <div className="aspect-square bg-gray-200 relative">
                   <FallbackImage
-                    src={
-                      member.image && member.image.asset
-                        ? urlFor(member.image).width(300).height(300).url()
-                        : "/images/placeholder-vehicle.svg"
-                    }
+                    src={member.image}
                     alt={member.name}
                     fill
                     className="object-cover"
@@ -391,7 +260,7 @@ export default function EnhancedAboutPage() {
                 <CardContent className="p-4 text-center">
                   <h3 className="font-semibold">{member.name}</h3>
                   <p className="text-sm text-[var(--primary-orange)]">
-                    {member.role}
+                    {member.position}
                   </p>
                   {member.experience && (
                     <p className="text-xs text-gray-500 mt-1">

@@ -7,12 +7,11 @@ import StructuredData from '@/components/seo/StructuredData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { client } from '@/lib/sanity';
+import { vehicleHelpers } from '@/data/vehicles';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Enable ISR with 24-hour revalidation for deals and promotions
-// Deals update periodically, daily revalidation ensures fresh content
-export const revalidate = 86400; // 24 hours
+// No revalidation needed with hardcoded data
+// Remove ISR since we're using static data
 
 export const metadata: Metadata = {
   title: "Ofertat dhe Promovime | AUTO ANI - Zbritje Speciale",
@@ -87,26 +86,16 @@ const upcomingDeals = [
 // Get featured vehicles with deals
 async function getFeaturedDealsVehicles() {
   try {
-    const query = `*[_type == "vehicle" && featured == true] | order(_createdAt desc) [0...3] {
-      _id,
-      title,
-      slug,
-      brand,
-      model,
-      year,
-      price,
-      "mainImage": mainImage.asset->url,
-      "originalPrice": price + 2000
-    }`;
+    // Get featured vehicles from hardcoded data
+    const vehicles = vehicleHelpers.getFeatured(3);
 
-    const vehicles = await client.fetch(query, {}, {
-      next: {
-        revalidate: 60,
-        tags: ['vehicles', 'deals'],
-      }
-    });
+    // Add originalPrice for deals display (simulating discounts)
+    const vehiclesWithDeals = vehicles.map(v => ({
+      ...v,
+      originalPrice: v.originalPrice || v.price + 2000
+    }));
 
-    return vehicles || [];
+    return vehiclesWithDeals || [];
   } catch (error) {
     console.error('Error fetching deal vehicles:', error);
     return [];

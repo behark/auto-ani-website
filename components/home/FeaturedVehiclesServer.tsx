@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Vehicle, urlFor } from "@/lib/sanity";
+import { HardcodedVehicle } from "@/data/vehicles";
 import { getStaticTranslation } from "@/lib/server-translations";
 
 interface FeaturedVehiclesServerProps {
-  vehicles: Vehicle[];
+  vehicles: HardcodedVehicle[];
 }
 
 export default function FeaturedVehiclesServer({
@@ -26,8 +26,8 @@ export default function FeaturedVehiclesServer({
     }).format(price);
   };
 
-  const getVehicleBadge = (vehicle: Vehicle) => {
-    if (vehicle.category === "new") {
+  const getVehicleBadge = (vehicle: HardcodedVehicle) => {
+    if (vehicle.condition === "new") {
       return { text: "New", variant: "default" as const, icon: <Zap className="h-3 w-3" /> };
     }
     if (vehicle.featured) {
@@ -68,11 +68,7 @@ export default function FeaturedVehiclesServer({
           {vehicles.map((vehicle) => {
             const badge = getVehicleBadge(vehicle);
             const vehicleSlug = vehicle.slug?.current || vehicle._id;
-            const imageUrl = vehicle.mainImage
-              ? typeof vehicle.mainImage === 'string'
-                ? vehicle.mainImage
-                : urlFor(vehicle.mainImage).url()
-              : '/images/placeholder-vehicle.jpg';
+            const imageUrl = vehicle.mainImage || '/images/placeholder-vehicle.jpg';
 
             return (
               <Card
@@ -137,7 +133,7 @@ export default function FeaturedVehiclesServer({
                         <Eye className="ml-2 h-4 w-4" />
                       </Button>
                       <span className="text-xs text-muted-foreground">
-                        {vehicle.category === "new" ? t('cta.brandNew') : t('cta.qualityAssured')}
+                        {vehicle.condition === "new" ? t('cta.brandNew') : t('cta.qualityAssured')}
                       </span>
                     </div>
                   </CardContent>

@@ -7,9 +7,26 @@ export interface ImageLoaderProps {
 /**
  * Custom image loader for handling local images consistently
  * Works in both development and production environments
+ * Enhanced with Sanity CDN optimization and fallback handling
  */
-export function imageLoader({ src, width: _width, quality: _quality = 75 }: ImageLoaderProps): string {
-  // For external images, return as-is
+export function imageLoader({ src, width, quality = 75 }: ImageLoaderProps): string {
+  // For Sanity CDN images, add optimization parameters directly
+  if (src.includes('cdn.sanity.io')) {
+    const url = new URL(src);
+    // Only add parameters if not already present
+    if (!url.searchParams.has('w')) {
+      url.searchParams.set('w', width.toString());
+    }
+    if (!url.searchParams.has('q')) {
+      url.searchParams.set('q', quality.toString());
+    }
+    if (!url.searchParams.has('auto')) {
+      url.searchParams.set('auto', 'format');
+    }
+    return url.toString();
+  }
+
+  // For other external images, return as-is
   if (src.startsWith('http://') || src.startsWith('https://')) {
     return src;
   }
@@ -19,6 +36,45 @@ export function imageLoader({ src, width: _width, quality: _quality = 75 }: Imag
 
   // Return the normalized path - works for both dev and production
   return normalizedSrc;
+}
+
+/**
+ * Sanity-specific image loader with retry logic
+ * Handles connection timeouts gracefully
+ */
+export async function loadSanityImage(src: string, retries = 3): Promise<string> {
+  if (!src.includes('cdn.sanity.io')) {
+    return src;
+  }
+
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      // Test if the image is accessible
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch(src, {
+        method: 'HEAD',
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        return src;
+      }
+    } catch (error) {
+      console.warn(`Attempt ${attempt + 1}/${retries} failed for ${src}:`, error);
+      
+      // Wait before retrying (exponential backoff)
+      if (attempt < retries - 1) {
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
+  }
+
+  // Return original URL even if checks fail - browser will handle the error
+  return src;
 }
 
 export function generateSrcSet(src: string, sizes: number[] = [640, 750, 828, 1080, 1200, 1920]): string {

@@ -8,35 +8,17 @@ import WhyChooseUs from '@/components/home/WhyChooseUs';
 import StructuredData from '@/components/seo/StructuredData';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import LoadingSkeletons from '@/components/ui/LoadingSkeletons';
-import { client } from '@/lib/sanity';
+import { vehicleHelpers } from '@/data/vehicles';
 import { generatePageSchemas } from '@/lib/seo-schema';
 
-// Enable ISR with 24-hour revalidation for the homepage
-// This ensures homepage updates daily without requiring manual redeployment
-export const revalidate = 86400; // 24 hours
+// No revalidation needed with hardcoded data - static generation
+// Remove ISR since we're using static data
 
-// Server Component - fetches data on the server
+// Server Component - fetches data from hardcoded source
 async function getFeaturedVehicles() {
   try {
-    // Optimized query - fetch only essential fields for homepage display
-    const query = `*[_type == "vehicle" && featured == true] | order(_createdAt desc) [0...6] {
-      _id,
-      slug,
-      brand,
-      model,
-      year,
-      price,
-      mileage,
-      category,
-      featured,
-      fuelType,
-      transmission,
-      engine,
-      "mainImage": mainImage.asset->url + "?w=640&h=400&auto=format&q=85"
-    }`;
-
-    const vehicles = await client.fetch(query);
-
+    // Get featured vehicles from hardcoded data
+    const vehicles = vehicleHelpers.getFeatured(6);
     return vehicles || [];
   } catch (error) {
     console.error('Error fetching featured vehicles:', error);
@@ -47,9 +29,9 @@ async function getFeaturedVehicles() {
 // Get total vehicle count for dynamic display
 async function getVehicleCount() {
   try {
-    const query = `count(*[_type == "vehicle"])`;
-    const count = await client.fetch(query);
-    return count || 0;
+    // Get count from hardcoded data
+    const stats = vehicleHelpers.getStats();
+    return stats.available || 0;
   } catch (error) {
     console.error('Error fetching vehicle count:', error);
     return 0;

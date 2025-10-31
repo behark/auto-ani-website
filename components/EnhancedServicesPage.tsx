@@ -13,13 +13,10 @@ import {
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { logger } from "@/lib/logger";
-import { client, queries, Service } from "@/lib/sanity";
 
 const iconMap: {
   [key: string]: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -34,9 +31,6 @@ const iconMap: {
 
 export default function EnhancedServicesPage() {
   const { t } = useLanguage();
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   // Fallback services data that matches existing structure
   const fallbackServicesData = [
@@ -114,109 +108,13 @@ export default function EnhancedServicesPage() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchServices() {
-      try {
-        setLoading(true);
-        const sanityServices = await client.fetch(queries.services);
-
-        if (sanityServices && sanityServices.length > 0) {
-          // Transform Sanity services to match component structure
-          const transformedServices = sanityServices
-            .filter(
-              (service: Service) =>
-                service.businessTypes.includes("dealership") ||
-                service.businessTypes.includes("all")
-            )
-            .map((service: Service) => ({
-              _id: service._id,
-              name: service.name,
-              description: service.description,
-              price: service.price,
-              duration: service.duration,
-              features: service.features || [],
-              category: service.category,
-              image: service.image,
-              businessTypes: service.businessTypes,
-              bookingRequired: service.bookingRequired,
-            }));
-
-          setServices(transformedServices);
-        } else {
-          // Fallback to static data structure
-          logger.info("No Sanity services found, using fallback data");
-          setServices(
-            fallbackServicesData.map((service, index) => ({
-              _id: `fallback-${index}`,
-              name: service.title,
-              description: service.description,
-              price: 0,
-              duration: undefined,
-              features: service.features,
-              category: service.icon,
-              businessTypes: ["dealership"],
-              bookingRequired: false,
-            }))
-          );
-        }
-      } catch (err) {
-        console.error("Error fetching services:", err);
-        setError("Failed to load services");
-        // Use fallback data
-        setServices(
-          fallbackServicesData.map((service, index) => ({
-            _id: `fallback-${index}`,
-            name: service.title,
-            description: service.description,
-            price: 0,
-            duration: undefined,
-            features: service.features,
-            category: service.icon,
-            businessTypes: ["dealership"],
-            bookingRequired: false,
-          }))
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchServices();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t]);
+  const services = fallbackServicesData;
 
   // Get icon for service based on category
-  const getServiceIcon = (category: string) => {
-    const iconName = category?.toLowerCase();
-    return iconMap[iconName] || iconMap["car"];
+  const getServiceIcon = (iconName: string) => {
+    const name = iconName?.toLowerCase();
+    return iconMap[name] || iconMap["car"];
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12 pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary-orange)] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading services...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Use fallback data if no services or error
-  const displayServices =
-    services.length > 0
-      ? services
-      : fallbackServicesData.map((service, index) => ({
-          _id: `fallback-${index}`,
-          name: service.title,
-          description: service.description,
-          price: 0,
-          duration: undefined,
-          features: service.features,
-          category: service.icon,
-          businessTypes: ["dealership"],
-          bookingRequired: false,
-        }));
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 pt-20">
@@ -227,11 +125,6 @@ export default function EnhancedServicesPage() {
           <p className="text-gray-700 max-w-2xl mx-auto font-medium">
             {t("services.subtitle")}
           </p>
-          {error && (
-            <div className="mt-4 bg-yellow-500/20 text-yellow-600 px-4 py-2 rounded-lg text-sm max-w-md mx-auto">
-              ⚠️ {t('services.loadingFallback')}
-            </div>
-          )}
           {services.length > 0 && (
             <p className="text-sm text-gray-500 mt-2">
               {services.length} services available
@@ -241,25 +134,19 @@ export default function EnhancedServicesPage() {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {displayServices.map((service, index) => {
-            const Icon = getServiceIcon(service.category);
-            const _fallbackService = fallbackServicesData[index];
+          {services.map((service, index) => {
+            const Icon = getServiceIcon(service.icon);
 
             return (
-              <Card key={service._id} className="overflow-hidden">
+              <Card key={service.id} className="overflow-hidden">
                 <CardHeader className="bg-gradient-to-r from-[var(--primary-orange)] to-[var(--accent-yellow)] text-white">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                       <Icon className="h-8 w-8" />
                     </div>
                     <div>
-                      <CardTitle className="text-2xl">{service.name}</CardTitle>
-                      {service.price > 0 && (
-                        <p className="text-white/80 text-sm">
-                          From €{service.price}
-                        </p>
-                      )}
-                      {service.duration && (
+                      <CardTitle className="text-2xl">{service.title}</CardTitle>
+                      {false && (
                         <p className="text-white/80 text-sm">
                           {service.duration} minutes
                         </p>

@@ -9,81 +9,34 @@ import VehicleCardSimple from "./VehicleCardSimple";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VEHICLES } from "@/lib/constants";
 import { logger } from "@/lib/logger";
-import { urlFor } from "@/lib/sanity";
 import { Vehicle } from "@/lib/types";
-
+import { HardcodedVehicle } from "@/data/vehicles";
 
 const VehicleFilters = dynamic(() => import("./VehicleFilters"), {
   ssr: false,
 });
-interface SanityVehicle {
-  _id: string; // Sanity document ID
-  brand?: string;
-  model?: string;
-  year?: number;
-  price?: number;
-  mileage?: number;
-  category?: string;
-  // ✅ Direct fields from optimized API
-  fuelType?: string;
-  transmission?: string;
-  color?: string;
-  engine?: string;
-  // Legacy nested specifications for backward compatibility
-  specifications?: {
-    fuelType?: string;
-    transmission?: string;
-    engineSize?: string;
-    features?: string[];
-  };
-  featured?: boolean;
-  mainImage?: any; // Can be string URL or Sanity image reference
-  thumbnail?: string; // ✅ Optimized thumbnail URL
-  images?: any[]; // Sanity image references
-  gallery?: any[]; // Sanity image references
-  slug?: { current?: string };
-  description?: string;
-}
 
 interface VehiclesPageClientProps {
-  initialVehicles: SanityVehicle[];
+  initialVehicles: HardcodedVehicle[];
 }
 
-function convertSanityVehiclesToVehicles(
-  sanityVehicles: SanityVehicle[]
+function convertHardcodedVehiclesToVehicles(
+  hardcodedVehicles: HardcodedVehicle[]
 ): Vehicle[] {
-  return sanityVehicles
-    .map((v: SanityVehicle, index: number) => {
+  return hardcodedVehicles
+    .map((v: HardcodedVehicle, index: number) => {
       try {
-        // ✅ Handle the optimized API response with gallery images
+        // Handle image URLs - they are now simple strings
         const imageUrls: string[] = [];
 
         // Add mainImage first
-        if (typeof v.mainImage === 'string') {
+        if (v.mainImage) {
           imageUrls.push(v.mainImage);
-        } else if (v.mainImage) {
-          try {
-            imageUrls.push(urlFor(v.mainImage).url());
-          } catch (e) {
-            logger.debug('Failed to convert mainImage', { error: e });
-          }
         }
 
-        // Add all gallery images for preloading
+        // Add all gallery images
         if (v.gallery && Array.isArray(v.gallery)) {
-          v.gallery.forEach((img) => {
-            // Gallery images are already URL strings from optimized API
-            if (typeof img === 'string') {
-              imageUrls.push(img);
-            } else {
-              // Or convert Sanity reference objects
-              try {
-                imageUrls.push(urlFor(img).url());
-              } catch (e) {
-                logger.debug('Failed to convert gallery image', { error: e });
-              }
-            }
-          });
+          imageUrls.push(...v.gallery);
         }
 
         return {
@@ -147,7 +100,7 @@ export default function VehiclesPageClient({
   const [allVehicles, setAllVehicles] = useState<Vehicle[]>(() => {
     if (initialVehicles && initialVehicles.length > 0) {
       logger.info(`Client initialized with ${initialVehicles.length} server vehicles`);
-      return convertSanityVehiclesToVehicles(initialVehicles);
+      return convertHardcodedVehiclesToVehicles(initialVehicles);
     }
     logger.info('Client initialized with no server vehicles, will fetch client-side');
     return [];
@@ -182,7 +135,7 @@ export default function VehiclesPageClient({
           data.data.vehicles.length > 0
         ) {
           logger.info(`Client fetched ${data.data.vehicles.length} vehicles from API`);
-          const convertedVehicles = convertSanityVehiclesToVehicles(
+          const convertedVehicles = convertHardcodedVehiclesToVehicles(
             data.data.vehicles
           );
           logger.info(`Client converted to ${convertedVehicles.length} display vehicles`);

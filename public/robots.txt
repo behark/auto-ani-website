@@ -1,20 +1,76 @@
+# AUTO ANI Website Robots.txt
+# https://autosalonani.com
+# Last updated: 2025
+
+# Default rules for all crawlers
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /portal/
+Disallow: /_next/
+Disallow: /static/admin/
 
-# Sitemaps
-Sitemap: https://autosalonani.com/sitemap.xml
+# Allow important static resources
+Allow: /_next/static/
+Allow: /_next/image
+Allow: /images/
+Allow: /favicon.ico
 
-# Allow search engines to crawl important pages
+# Allow important pages explicitly
 Allow: /vehicles
+Allow: /vehicles/*
 Allow: /services
 Allow: /about
 Allow: /contact
 Allow: /financing
+Allow: /deals
+Allow: /reviews
+Allow: /faq
+Allow: /trade-in
 
-# Disallow admin and private areas
-Disallow: /admin
-Disallow: /portal
-Disallow: /api/
+# Specific rules for major search engines (no crawl delay)
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
 
-# Crawl-delay (optional, be respectful)
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 0
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 0
+
+# Block unwanted bots to save bandwidth
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://autosalonani.com/sitemap.xml
+Sitemap: https://autosalonani.com/sitemap-0.xml
+
+# Host directive (supported by Yandex)
+Host: https://autosalonani.com
+
+# Default crawl delay for respectful bots
 Crawl-delay: 1

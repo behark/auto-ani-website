@@ -16,7 +16,9 @@ interface LogEntry {
 
 class Logger {
   private isDevelopment = process.env.NODE_ENV === 'development';
-  private logLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) || 'info';
+  // In production, default to 'error' unless explicitly set otherwise
+  private logLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) ||
+    (process.env.NODE_ENV === 'production' ? 'error' : 'info');
 
   private shouldLog(level: LogLevel): boolean {
     const levels: Record<LogLevel, number> = {
@@ -63,8 +65,11 @@ class Logger {
           break;
       }
     } else {
-      // Structured logging for production
-      console.log(formattedLog);
+      // In production, only output errors and warnings to console
+      // Info and debug logs are suppressed unless LOG_LEVEL is explicitly set
+      if (entry.level === 'error' || entry.level === 'warn') {
+        console.log(formattedLog);
+      }
     }
 
     // Send to external logging service in production

@@ -6,40 +6,24 @@ services:
     region: frankfurt  # Closest to Kosovo for optimal latency
     branch: main
 
-    # Optimized build and start commands
-    buildCommand: |
-      npm ci --only=production &&
-      NODE_OPTIONS='--max-old-space-size=1024' npm run build &&
-      rm -rf .next/cache
+    # Build and start commands
+    buildCommand: npm ci && npm run build
     startCommand: npm start
-
-    # Health check endpoint
-    healthCheckPath: /api/health
 
     # Environment variables
     envVars:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_SITE_URL
-        value: https://auto-ani-website-shzs.onrender.com
-
-      # Shared Sanity CMS Configuration
-      - key: NEXT_PUBLIC_SANITY_PROJECT_ID
-        value: j2t31xge
-      - key: NEXT_PUBLIC_SANITY_DATASET
-        value: production
-      - key: SANITY_API_TOKEN
-        sync: false  # Add this token value in Render dashboard for security
+        value: https://auto-ani-website.onrender.com
 
       # Performance optimizations
       - key: NEXT_TELEMETRY_DISABLED
         value: "1"
       - key: NODE_OPTIONS
         value: "--max-old-space-size=512"
-      - key: UV_THREADPOOL_SIZE
-        value: "2"
 
-      # Contact form configuration (if needed)
+      # Contact form configuration (optional)
       - key: CONTACT_EMAIL
         value: contact@autosalonani.com
 

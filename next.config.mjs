@@ -27,6 +27,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "cdn.sanity.io", // Explicit CDN hostname
+      },
+      {
+        protocol: "https",
         hostname: "autosalonani.com",
       },
       {
@@ -38,6 +42,11 @@ const nextConfig = {
     minimumCacheTTL: 31536000, // 1 year cache
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Unoptimized fallback for external images (fixes timeout issues)
+    unoptimized: process.env.NEXT_PUBLIC_UNOPTIMIZED_IMAGES === 'true',
   },
 
   // Performance optimizations
@@ -90,6 +99,35 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(self), interest-cohort=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.sanity.io",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https: blob: https://cdn.sanity.io",
+              "font-src 'self' data:",
+              "connect-src 'self' https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io",
+              "media-src 'self'",
+              "object-src 'none'",
+              "child-src 'self'",
+              "frame-src 'self'",
+              "frame-ancestors 'self'",
+              "form-action 'self'",
+              "base-uri 'self'",
+              "manifest-src 'self'",
+              "worker-src 'self' blob:",
+              "upgrade-insecure-requests"
+            ].join('; '),
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
           },
         ],
       },
