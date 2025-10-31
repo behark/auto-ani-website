@@ -13,6 +13,7 @@ import WhatsAppQuickActions from '@/components/whatsapp/WhatsAppQuickActions';
 import { useComparison } from '@/contexts/ComparisonContext';
 import { getVehicleCardImage } from '@/lib/image-optimization';
 import { Vehicle } from '@/lib/types';
+import { formatPrice, formatMileage, capitalize } from '@/lib/utils';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -23,18 +24,6 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
   const [hoveredCard, setHoveredCard] = useState(false);
   const [preloaded, setPreloaded] = useState(false);
   const { addToComparison, removeFromComparison, isInComparison, canAddMore } = useComparison();
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-EU', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0
-    }).format(price);
-  };
-
-  const formatMileage = (mileage: number) => {
-    return new Intl.NumberFormat('en-US').format(mileage);
-  };
 
   const vehicleSlug = vehicle.slug || vehicle.id;
   const vehicleUrl = `/vehicles/${vehicleSlug}`;
@@ -132,14 +121,16 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
   };
 
   return (
-    <Link href={vehicleUrl} className="block">
+    <Link href={vehicleUrl} className="block" aria-label={`Shiko detajet për ${vehicle.make} ${vehicle.model} ${vehicle.year}`}>
       <Card
-        className="overflow-hidden shadow-card-hover cursor-pointer group"
+        className="overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 cursor-pointer group transition-all duration-500 border-0"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        role="article"
+        aria-label={`${vehicle.make} ${vehicle.model} - ${formatPrice(vehicle.price)}`}
       >
         {/* Image Container */}
-        <div className="relative h-64 overflow-hidden bg-gray-200" style={{ aspectRatio: '4/3' }}>
+        <div className="relative w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200" style={{ aspectRatio: '1/1' }}>
         <NextImage
           src={getImageUrl()}
           alt={`${vehicle.make} ${vehicle.model}`}
@@ -150,7 +141,10 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-          loading="lazy"
+          loading="eager"
+          priority={true}
+          fetchPriority="high"
+          quality={90}
         />
 
         {/* Hover Overlay */}
@@ -158,10 +152,11 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
           className={`absolute inset-0 bg-black/10 transition-opacity duration-300 ${
             hoveredCard ? 'opacity-100' : 'opacity-0'
           }`}
+          aria-hidden="true"
         >
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <div className="bg-white/95 rounded-full p-3 shadow-lg">
-              <Eye className="h-6 w-6 text-[var(--primary-orange)]" />
+              <Eye className="h-6 w-6 text-[var(--primary-orange)]" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -204,41 +199,55 @@ export default function VehicleCardSimple({ vehicle }: VehicleCardProps) {
                 });
               }
             }}
+            aria-label={
+              isInComparison(vehicle.id || vehicle._id || '')
+                ? `Hiq ${vehicle.make} ${vehicle.model} nga krahasimi`
+                : canAddMore
+                ? `Shto ${vehicle.make} ${vehicle.model} në krahasim`
+                : 'Kufiri i krahasimit u arrit (maksimum 3 vetura)'
+            }
+            aria-pressed={isInComparison(vehicle.id || vehicle._id || '')}
+            disabled={!canAddMore && !isInComparison(vehicle.id || vehicle._id || '')}
+            title={
+              !canAddMore && !isInComparison(vehicle.id || vehicle._id || '')
+                ? 'Mund të krahasoni maksimum 3 vetura. Hiq një veturë për të shtuar këtë.'
+                : undefined
+            }
           >
-            <Scale className={`h-4 w-4 ${isInComparison(vehicle.id || vehicle._id || '') ? 'text-[var(--primary-orange)]' : ''}`} />
+            <Scale className={`h-4 w-4 ${isInComparison(vehicle.id || vehicle._id || '') ? 'text-[var(--primary-orange)]' : ''}`} aria-hidden="true" />
           </Button>
         </div>
       </div>
 
       {/* Content */}
-      <CardContent className="p-4">
+      <CardContent className="p-6">
         {/* Title and Price */}
-        <div className="mb-3">
-          <h3 className="text-xl font-semibold mb-1">
-            {vehicle.make} {vehicle.model}
+        <div className="mb-4">
+          <h3 className="text-2xl font-bold mb-2">
+            {capitalize(vehicle.make)} {vehicle.model}
           </h3>
-          <p className="text-2xl font-bold text-[var(--primary-orange)]">
+          <p className="text-3xl font-bold text-orange-500">
             {formatPrice(vehicle.price)}
           </p>
         </div>
 
         {/* Vehicle Info Grid */}
-        <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            <span>{vehicle.year}</span>
+        <div className="grid grid-cols-2 gap-3 text-sm text-gray-600 mb-6 pb-4 border-b border-gray-100" role="list" aria-label="Specifikat e veturës">
+          <div className="flex items-center gap-1" role="listitem">
+            <Calendar className="h-3 w-3" aria-hidden="true" />
+            <span><span className="sr-only">Viti: </span>{vehicle.year}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Navigation className="h-3 w-3" />
-            <span>{formatMileage(vehicle.mileage)} km</span>
+          <div className="flex items-center gap-1" role="listitem">
+            <Navigation className="h-3 w-3" aria-hidden="true" />
+            <span><span className="sr-only">Kilometrazhi: </span>{formatMileage(vehicle.mileage)}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Fuel className="h-3 w-3" />
-            <span>{vehicle.fuelType}</span>
+          <div className="flex items-center gap-1" role="listitem">
+            <Fuel className="h-3 w-3" aria-hidden="true" />
+            <span><span className="sr-only">Karburanti: </span>{capitalize(vehicle.fuelType)}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Settings className="h-3 w-3" />
-            <span>{vehicle.transmission}</span>
+          <div className="flex items-center gap-1" role="listitem">
+            <Settings className="h-3 w-3" aria-hidden="true" />
+            <span><span className="sr-only">Transmisioni: </span>{capitalize(vehicle.transmission)}</span>
           </div>
         </div>
 

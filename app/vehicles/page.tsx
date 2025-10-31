@@ -6,10 +6,6 @@ import { logger } from '@/lib/logger';
 import { generatePageSchemas } from '@/lib/seo-schema';
 import { vehicleHelpers } from '@/data/vehicles';
 
-// Static page - no revalidation needed with hardcoded data
-// Remove ISR since we're using static data now
-// export const revalidate = CACHE.REVALIDATION_TIME; // Removed - no longer needed
-
 export const metadata: Metadata = {
   title: "Vetura në Shitje | AUTO ANI - Premium Auto Salon Kosovë",
   description: "Zbuloni koleksionin tonë të veturave premium në AUTO ANI. BMW, Mercedes, Audi, VW, Toyota. Finansim 0%, garanci, test drive. Mbi 2500 klientë të kënaqur në Mitrovicë, Kosovë.",

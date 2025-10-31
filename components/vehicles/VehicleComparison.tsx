@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/sheet';
 import { useComparison } from '@/contexts/ComparisonContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { formatPrice, formatMileage } from '@/lib/utils';
 
 interface VehicleComparisonProps {
   open: boolean;
@@ -29,19 +30,6 @@ export default function VehicleComparison({ open, onOpenChange }: VehicleCompari
   if (comparisonList.length === 0) {
     return null;
   }
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
-  const formatMileage = (mileage: number) => {
-    return `${new Intl.NumberFormat('en-US').format(mileage)  } km`;
-  };
 
   const ComparisonRow = ({
     label,

@@ -48,7 +48,7 @@ export default function TradeInPage() {
         {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
-            {t('services.tradeIn')}
+            {t('trade.title')}
           </h1>
           <p className="text-gray-700 max-w-2xl mx-auto font-medium">
             {t('trade.subtitle')}

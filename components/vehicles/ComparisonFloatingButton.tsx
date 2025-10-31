@@ -20,17 +20,21 @@ export default function ComparisonFloatingButton() {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-50" role="region" aria-label="Krahasimi i veturave">
         <Button
           size="lg"
-          className="relative shadow-lg bg-[var(--primary-orange)] hover:bg-orange-600"
+          className="relative shadow-lg bg-[var(--primary-orange)] hover:bg-orange-600 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           onClick={() => setOpen(true)}
+          aria-label={`Hap krahasimin e veturave. ${comparisonList.length} ${comparisonList.length === 1 ? 'veturë' : 'vetura'} të zgjedhura`}
+          aria-live="polite"
+          aria-atomic="true"
         >
-          <Scale className="w-5 h-5 mr-2" />
-          Compare
+          <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
+          <span>Krahasoni</span>
           <Badge
             variant="secondary"
             className="ml-2 bg-white text-black"
+            aria-label={`${comparisonList.length} vetura`}
           >
             {comparisonList.length}
           </Badge>

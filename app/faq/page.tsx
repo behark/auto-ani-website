@@ -127,7 +127,7 @@ const faqCategories = [
       },
       {
         question: 'Si mund t\'ju kontaktoj?',
-        answer: 'Na kontaktoni: Tel: +383 4x xxx xxx, WhatsApp: +383 4x xxx xxx, Email: info@autoani.com. Përgjigjemi brenda 1 ore gjatë orarit të punës.',
+        answer: 'Na kontaktoni: Tel: +383 49 204 242, WhatsApp: +383 49 204 242, Email: info@autoani.com. Përgjigjemi brenda 1 ore gjatë orarit të punës.',
       },
       {
         question: 'A mund të caktoj takim?',

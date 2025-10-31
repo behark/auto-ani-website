@@ -67,3 +67,44 @@ temp/
 # BACKUP FILES
 *.backup
 *.bak.env.production
+
+# NEXT.JS SPECIFIC - Prevent unnecessary file watching
+.next/
+*.swc
+.swc/
+**/.next/**
+**/*.tsbuildinfo
+.contentlayer/
+.env*.local
+
+# TEST FILES - Don't watch during dev
+**/__tests__/**
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage/
+.nyc_output/
+
+# DOCUMENTATION - Static, don't need watching
+*.md
+!README.md
+docs/
+documentation/
+
+# SCREENSHOTS & MEDIA - Don't watch
+screenshots/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.svg
+*.ico
+!public/**/*.jpg
+!public/**/*.jpeg
+!public/**/*.png
+!public/**/*.gif
+!public/**/*.webp
+!public/**/*.svg
+!public/**/*.ico

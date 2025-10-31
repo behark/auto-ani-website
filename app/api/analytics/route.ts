@@ -45,9 +45,6 @@ export async function POST(request: NextRequest) {
       // Would use PostHog SDK here
     }
 
-    // Store in database if needed
-    // await storeMetricInDatabase(metric);
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[Analytics] Error processing metric:', error);

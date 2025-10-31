@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { HardcodedVehicle } from "@/data/vehicles";
 import { getStaticTranslation } from "@/lib/server-translations";
+import { formatPrice, formatMileage, capitalize } from "@/lib/utils";
 
 interface FeaturedVehiclesServerProps {
   vehicles: HardcodedVehicle[];
@@ -17,24 +18,15 @@ export default function FeaturedVehiclesServer({
 }: FeaturedVehiclesServerProps) {
   const t = getStaticTranslation('sq'); // Use static translation for ISR
 
-  // Helper functions
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "EUR",
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
   const getVehicleBadge = (vehicle: HardcodedVehicle) => {
     if (vehicle.condition === "new") {
-      return { text: "New", variant: "default" as const, icon: <Zap className="h-3 w-3" /> };
+      return { text: "I Ri", className: "bg-blue-500 text-white", icon: <Zap className="h-3 w-3" /> };
     }
     if (vehicle.featured) {
-      return { text: "Featured", variant: "secondary" as const, icon: <TrendingUp className="h-3 w-3" /> };
+      return { text: "I Veçantë", className: "bg-orange-500 text-white", icon: <TrendingUp className="h-3 w-3" /> };
     }
     if (vehicle.price && vehicle.price < 15000) {
-      return { text: "Great Value", variant: "outline" as const, icon: <Tag className="h-3 w-3" /> };
+      return { text: "Vlerë e Mirë", className: "bg-green-500 text-white", icon: <Tag className="h-3 w-3" /> };
     }
     return null;
   };
@@ -50,21 +42,23 @@ export default function FeaturedVehiclesServer({
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-b from-gray-50 via-white to-gray-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Car className="h-8 w-8 text-primary mr-2" />
-            <h2 className="text-4xl font-bold tracking-tight">{t('featured.title')}</h2>
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-orange-100 p-3 rounded-full mr-3">
+              <Car className="h-8 w-8 text-orange-500" />
+            </div>
+            <h2 className="text-5xl font-bold tracking-tight text-gray-900">{t('featured.title')}</h2>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {t('featured.subtitle')}
           </p>
         </div>
 
-        {/* Vehicles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Vehicles Grid - Enhanced Premium Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {vehicles.map((vehicle) => {
             const badge = getVehicleBadge(vehicle);
             const vehicleSlug = vehicle.slug?.current || vehicle._id;
@@ -73,66 +67,68 @@ export default function FeaturedVehiclesServer({
             return (
               <Card
                 key={vehicle._id}
-                className="group overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                className="group overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer border-0 shadow-lg"
               >
                 <Link href={`/vehicles/${vehicleSlug}`} className="block">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                     <Image
                       src={imageUrl}
                       alt={`${vehicle.brand} ${vehicle.model}`}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      priority={vehicles.indexOf(vehicle) < 2} // Priority for first 2 images
-                      quality={85} // Consistent quality for better caching
+                      priority={vehicles.indexOf(vehicle) < 6} // Priority for all visible images
+                      loading="eager"
+                      fetchPriority={vehicles.indexOf(vehicle) < 3 ? "high" : "auto"}
+                      quality={90} // Higher quality for crisp images
                     />
                     {badge && (
                       <div className="absolute top-4 left-4">
-                        <Badge variant={badge.variant} className="flex items-center gap-1">
+                        <Badge className={`flex items-center gap-1 ${badge.className}`}>
                           {badge.icon}
                           <span>{badge.text}</span>
                         </Badge>
                       </div>
                     )}
-                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent p-4">
-                      <p className="text-2xl font-bold text-white">
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6">
+                      <p className="text-3xl font-bold text-orange-500 drop-shadow-lg">
                         {formatPrice(vehicle.price || 0)}
                       </p>
                     </div>
                   </div>
 
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                      {vehicle.brand} {vehicle.model}
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold mb-3 group-hover:text-orange-500 transition-colors text-gray-900">
+                      {capitalize(vehicle.brand)} {vehicle.model}
                     </h3>
 
-                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                      <span>{vehicle.year}</span>
+                    <div className="flex items-center justify-between text-sm text-gray-600 mb-6 pb-4 border-b border-gray-200">
+                      <span className="font-semibold">{vehicle.year}</span>
                       {vehicle.mileage && (
-                        <span>{vehicle.mileage.toLocaleString()} km</span>
+                        <span className="font-semibold">{formatMileage(vehicle.mileage)}</span>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <Badge variant="outline" className="text-xs">
-                        {vehicle.transmission || 'Automatic'}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      <Badge variant="outline" className="text-xs font-medium px-3 py-1 border-gray-300">
+                        {capitalize(vehicle.transmission || 'Automatic')}
                       </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {vehicle.fuelType || 'Petrol'}
+                      <Badge variant="outline" className="text-xs font-medium px-3 py-1 border-gray-300">
+                        {capitalize(vehicle.fuelType || 'Petrol')}
                       </Badge>
                       {vehicle.engine && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs font-medium px-3 py-1 border-gray-300">
                           {vehicle.engine}
                         </Badge>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <Button variant="link" className="p-0 h-auto font-semibold">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                      <Button variant="link" className="p-0 h-auto font-bold text-orange-500 hover:text-orange-600 group-hover:gap-2 transition-all">
                         {t('cta.viewDetails')}
-                        <Eye className="ml-2 h-4 w-4" />
+                        <Eye className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-gray-600 font-medium">
                         {vehicle.condition === "new" ? t('cta.brandNew') : t('cta.qualityAssured')}
                       </span>
                     </div>
@@ -144,11 +140,11 @@ export default function FeaturedVehiclesServer({
         </div>
 
         {/* CTA Section */}
-        <div className="mt-12 text-center">
+        <div className="mt-16 text-center">
           <Link href="/vehicles">
-            <Button size="lg" className="font-semibold">
+            <Button size="lg" className="font-bold text-lg px-8 py-6 bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105">
               {t('cta.viewAllVehicles')}
-              <Car className="ml-2 h-5 w-5" />
+              <Car className="ml-3 h-6 w-6" />
             </Button>
           </Link>
         </div>

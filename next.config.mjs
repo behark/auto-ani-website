@@ -73,6 +73,67 @@ const nextConfig = {
     webpackBuildWorker: true,
   },
 
+  // Development optimizations - Reduce excessive recompilation
+  onDemandEntries: {
+    // Period (in ms) where the server will keep pages in the buffer
+    maxInactiveAge: 60 * 1000, // 60 seconds
+    // Number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 5,
+  },
+
+  // Webpack optimizations
+  webpack: (config, { dev, isServer }) => {
+    if (dev) {
+      // Reduce watch/rebuild overhead in development
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          '**/node_modules/**',
+          '**/.git/**',
+          '**/.next/**',
+          '**/out/**',
+          '**/build/**',
+          '**/.contentlayer/**',
+          '**/coverage/**',
+          '**/__tests__/**',
+          '**/*.test.{ts,tsx,js,jsx}',
+          '**/*.spec.{ts,tsx,js,jsx}',
+          '**/docs/**',
+          '**/*.md',
+        ],
+        // Aggregate multiple changes in 300ms
+        aggregateTimeout: 300,
+        // Check for changes every second
+        poll: 1000,
+      };
+    }
+
+    // Optimize bundle size
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name(module) {
+                const packageName = module.context.match(
+                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+                )?.[1];
+                return `vendor.${packageName?.replace('@', '')}`;
+              },
+            },
+          },
+        },
+      };
+    }
+
+    return config;
+  },
+
   // Security and performance headers
   async headers() {
     return [

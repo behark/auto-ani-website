@@ -174,8 +174,14 @@
   "handle_links": "preferred",
   "capture_links": "new-client",
   "scope_extensions": [
-    {"origin": "https://autosalonani.com"},
-    {"origin": "https://www.autosalonani.com"}
+    {
+      "origin": "https://autosalonani.com",
+      "type": "scope_extension"
+    },
+    {
+      "origin": "https://www.autosalonani.com",
+      "type": "scope_extension"
+    }
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7"
 }

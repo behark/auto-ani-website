@@ -5,6 +5,35 @@ import crypto from 'crypto';
 
 import { NextRequest, NextResponse } from 'next/server';
 
+// Security utilities
+
+/**
+ * Constant-time string comparison to prevent timing attacks
+ * @param a First string
+ * @param b Second string
+ * @returns True if strings are equal
+ */
+export function constantTimeCompare(a: string, b: string): boolean {
+  if (typeof a !== 'string' || typeof b !== 'string') {
+    return false;
+  }
+
+  // Use crypto.timingSafeEqual for true constant-time comparison
+  try {
+    const bufA = Buffer.from(a, 'utf8');
+    const bufB = Buffer.from(b, 'utf8');
+
+    // Ensure same length (required by timingSafeEqual)
+    if (bufA.length !== bufB.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
+}
+
 // Custom error classes
 export class APIError extends Error {
   constructor(
@@ -236,20 +265,6 @@ export function validateRequest<T>(
       : undefined;
     throw new ValidationError('Invalid request data', { errors: errorDetails });
   }
-}
-
-// Constant-time string comparison to prevent timing attacks
-function constantTimeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
-
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-
-  return result === 0;
 }
 
 // API key validator with constant-time comparison

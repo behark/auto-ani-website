@@ -31,8 +31,8 @@ interface VehicleFiltersProps {
 
 const FILTER_OPTIONS = {
   makes: ['BMW', 'Mercedes-Benz', 'Audi', 'Volkswagen', 'Toyota', 'Honda', 'Ford', 'Peugeot', 'Renault', 'Fiat', 'Opel', 'Skoda', 'Seat', 'Hyundai', 'Kia', 'Mazda', 'Nissan'],
-  fuelTypes: ['Diesel', 'Petrol', 'Hybrid', 'Electric', 'LPG', 'CNG'],
-  transmissions: ['Manual', 'Automatic', 'Semi-Automatic', 'CVT'],
+  fuelTypes: ['Diesel', 'Gasoline', 'Hybrid', 'Electric'],
+  transmissions: ['Manual', 'Automatic', 'CVT', 'DSG Automatic'],
   bodyTypes: ['Sedan', 'Hatchback', 'SUV', 'Wagon', 'Coupe', 'Convertible', 'Van', 'Pickup', 'Crossover'],
   popularFeatures: ['Air Conditioning', 'ABS Brakes', 'Airbags', 'Bluetooth', 'GPS Navigation', 'Leather Seats', 'Alloy Wheels', 'Electric Windows', 'Keyless Entry', 'Cruise Control']
 };
@@ -197,6 +197,9 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
             variant="outline"
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-2"
+            aria-expanded={isExpanded}
+            aria-controls="advanced-filters-panel"
+            aria-label={`${isExpanded ? 'Mbyll' : 'Hap'} filtrat e avancuara. ${activeFilterCount} filtra aktive`}
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filtrat {activeFilterCount > 0 && `(${activeFilterCount})`}
@@ -208,6 +211,7 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
               size="sm"
               onClick={clearAllFilters}
               className="text-orange-600 hover:text-orange-800"
+              aria-label="Pastro të gjitha filtrat"
             >
               <RotateCcw className="w-4 h-4 mr-1" />
               Pastro të gjitha
@@ -216,34 +220,42 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
         </div>
 
         {/* Results count */}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Car className="w-4 h-4" />
+        <div
+          className="flex items-center gap-2 text-sm text-gray-600"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Car className="w-4 h-4" aria-hidden="true" />
           {filteredVehicles.length} nga {vehicles.length} vetura
         </div>
       </div>
 
       {/* Quick Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" aria-hidden="true" />
         <input
           type="text"
           placeholder="Kërko BMW, Mercedes, Audi..."
           value={filters.search}
           onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
           className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          aria-label="Kërko vetura sipas markës, modelit ose ngjyrës"
+          role="searchbox"
         />
         {filters.search && (
           <button
             onClick={() => setFilters(prev => ({ ...prev, search: '' }))}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            aria-label="Pastro kërkimin"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         )}
       </div>
 
       {/* Quick Filter Tags */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrat e shpejtë">
         <button
           onClick={() => setFilters(prev => ({ ...prev, showFeaturedOnly: !prev.showFeaturedOnly }))}
           className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
@@ -251,6 +263,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
               ? 'bg-orange-500 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
+          aria-pressed={filters.showFeaturedOnly}
+          aria-label="Filtro vetëm vetura të veçanta"
         >
           ⭐ Të Veçanta
         </button>
@@ -264,12 +278,14 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
+            aria-pressed={filters.make.includes(make)}
+            aria-label={`Filtro sipas markës ${make}`}
           >
             {make}
           </button>
         ))}
 
-        {['Diesel', 'Petrol', 'Hybrid', 'Electric'].map(fuel => (
+        {['Diesel', 'Gasoline', 'Hybrid', 'Electric'].map(fuel => (
           <button
             key={fuel}
             onClick={() => toggleArrayFilter('fuelType', fuel)}
@@ -278,6 +294,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
+            aria-pressed={filters.fuelType.includes(fuel)}
+            aria-label={`Filtro sipas karburantit ${fuel}`}
           >
             {fuel}
           </button>
@@ -286,11 +304,12 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
       {/* Sort Options */}
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">Rendit sipas:</span>
+        <span className="text-sm font-medium text-gray-700" id="sort-label">Rendit sipas:</span>
         <select
           value={filters.sortBy}
           onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as FilterState['sortBy'] }))}
           className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          aria-labelledby="sort-label"
         >
           {SORT_OPTIONS.map(option => (
             <option key={option.value} value={option.value}>
@@ -308,19 +327,22 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
+            id="advanced-filters-panel"
+            role="region"
+            aria-label="Filtrat e avancuara"
           >
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                  <SlidersHorizontal className="w-5 h-5" />
+                  <SlidersHorizontal className="w-5 h-5" aria-hidden="true" />
                   Filtrat e Avancuara
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Price Range */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Euro className="w-4 h-4 inline mr-1" />
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="price-range-label">
+                    <Euro className="w-4 h-4 inline mr-1" aria-hidden="true" />
                     Intervali i Çmimit: €{filters.priceRange[0].toLocaleString()} - €{filters.priceRange[1].toLocaleString()}
                   </label>
                   <div className="flex gap-4">
@@ -335,6 +357,11 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                           priceRange: [parseInt(e.target.value), prev.priceRange[1]]
                         }))}
                         className="w-full"
+                        aria-label="Çmimi minimal"
+                        aria-valuemin={dataRanges.minPrice}
+                        aria-valuemax={dataRanges.maxPrice}
+                        aria-valuenow={filters.priceRange[0]}
+                        aria-valuetext={`€${filters.priceRange[0].toLocaleString()}`}
                       />
                       <span className="text-xs text-gray-500">Minimumi</span>
                     </div>
@@ -349,6 +376,11 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                           priceRange: [prev.priceRange[0], parseInt(e.target.value)]
                         }))}
                         className="w-full"
+                        aria-label="Çmimi maksimal"
+                        aria-valuemin={dataRanges.minPrice}
+                        aria-valuemax={dataRanges.maxPrice}
+                        aria-valuenow={filters.priceRange[1]}
+                        aria-valuetext={`€${filters.priceRange[1].toLocaleString()}`}
                       />
                       <span className="text-xs text-gray-500">Maksimumi</span>
                     </div>
@@ -357,7 +389,7 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
                 {/* Year Range */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="year-range-label">
                     Vitet: {filters.yearRange[0]} - {filters.yearRange[1]}
                   </label>
                   <div className="flex gap-4">
@@ -372,6 +404,11 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                           yearRange: [parseInt(e.target.value), prev.yearRange[1]]
                         }))}
                         className="w-full"
+                        aria-label="Viti minimal"
+                        aria-valuemin={dataRanges.minYear}
+                        aria-valuemax={dataRanges.maxYear}
+                        aria-valuenow={filters.yearRange[0]}
+                        aria-valuetext={`Viti ${filters.yearRange[0]}`}
                       />
                     </div>
                     <div className="flex-1">
@@ -385,6 +422,11 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                           yearRange: [prev.yearRange[0], parseInt(e.target.value)]
                         }))}
                         className="w-full"
+                        aria-label="Viti maksimal"
+                        aria-valuemin={dataRanges.minYear}
+                        aria-valuemax={dataRanges.maxYear}
+                        aria-valuenow={filters.yearRange[1]}
+                        aria-valuetext={`Viti ${filters.yearRange[1]}`}
                       />
                     </div>
                   </div>
@@ -392,24 +434,30 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
                 {/* Mileage */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="mileage-max-input">
                     Kilometrazhi maksimal: {filters.mileageMax.toLocaleString()} km
                   </label>
                   <input
                     type="range"
+                    id="mileage-max-input"
                     min={0}
                     max={300000}
                     step={5000}
                     value={filters.mileageMax}
                     onChange={(e) => setFilters(prev => ({ ...prev, mileageMax: parseInt(e.target.value) }))}
                     className="w-full"
+                    aria-label="Kilometrazhi maksimal"
+                    aria-valuemin={0}
+                    aria-valuemax={300000}
+                    aria-valuenow={filters.mileageMax}
+                    aria-valuetext={`${filters.mileageMax.toLocaleString()} kilometra`}
                   />
                 </div>
 
                 {/* Make Selection */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Marka</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="make-filter-label">Marka</label>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="make-filter-label">
                     {FILTER_OPTIONS.makes.map(make => (
                       <button
                         key={make}
@@ -419,6 +467,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                             ? 'bg-blue-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
+                        aria-pressed={filters.make.includes(make)}
+                        aria-label={`Filtro sipas markës ${make}`}
                       >
                         {make}
                       </button>
@@ -428,8 +478,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
                 {/* Fuel Type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Karburanti</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="fuel-filter-label">Karburanti</label>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="fuel-filter-label">
                     {FILTER_OPTIONS.fuelTypes.map(fuel => (
                       <button
                         key={fuel}
@@ -439,6 +489,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                             ? 'bg-green-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
+                        aria-pressed={filters.fuelType.includes(fuel)}
+                        aria-label={`Filtro sipas karburantit ${fuel}`}
                       >
                         {fuel}
                       </button>
@@ -448,8 +500,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
                 {/* Transmission */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Transmisioni</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="transmission-filter-label">Transmisioni</label>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="transmission-filter-label">
                     {FILTER_OPTIONS.transmissions.map(trans => (
                       <button
                         key={trans}
@@ -459,6 +511,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                             ? 'bg-purple-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
+                        aria-pressed={filters.transmission.includes(trans)}
+                        aria-label={`Filtro sipas transmisionit ${trans}`}
                       >
                         {trans}
                       </button>
@@ -468,8 +522,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
                 {/* Body Type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Tipi i Veturës</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="body-filter-label">Tipi i Veturës</label>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="body-filter-label">
                     {FILTER_OPTIONS.bodyTypes.map(body => (
                       <button
                         key={body}
@@ -479,6 +533,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                             ? 'bg-indigo-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
+                        aria-pressed={filters.bodyType.includes(body)}
+                        aria-label={`Filtro sipas tipit ${body}`}
                       >
                         {body}
                       </button>
@@ -488,8 +544,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
                 {/* Popular Features */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Karakteristikat e Kërkuara</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" id="features-filter-label">Karakteristikat e Kërkuara</label>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="features-filter-label">
                     {FILTER_OPTIONS.popularFeatures.map(feature => (
                       <button
                         key={feature}
@@ -499,6 +555,8 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
                             ? 'bg-orange-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
+                        aria-pressed={filters.featuresRequired.includes(feature)}
+                        aria-label={`Filtro sipas karakteristikës ${feature}`}
                       >
                         {feature}
                       </button>
@@ -513,39 +571,74 @@ export default function VehicleFilters({ vehicles, onFilter, className = '' }: V
 
       {/* Active Filters Display */}
       {activeFilterCount > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div
+          className="flex flex-wrap gap-2"
+          role="region"
+          aria-label="Filtrat aktive"
+          aria-live="polite"
+        >
           {filters.search && (
             <Badge variant="secondary" className="flex items-center gap-1">
               Kërkim: "{filters.search}"
-              <X className="w-3 h-3 cursor-pointer" onClick={() => setFilters(prev => ({ ...prev, search: '' }))} />
+              <button
+                onClick={() => setFilters(prev => ({ ...prev, search: '' }))}
+                aria-label={`Hiq filtrin e kërkimit: ${filters.search}`}
+                className="inline-flex"
+              >
+                <X className="w-3 h-3 cursor-pointer" aria-hidden="true" />
+              </button>
             </Badge>
           )}
 
           {filters.make.map(make => (
             <Badge key={make} variant="secondary" className="flex items-center gap-1">
               {make}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => toggleArrayFilter('make', make)} />
+              <button
+                onClick={() => toggleArrayFilter('make', make)}
+                aria-label={`Hiq filtrin: ${make}`}
+                className="inline-flex"
+              >
+                <X className="w-3 h-3 cursor-pointer" aria-hidden="true" />
+              </button>
             </Badge>
           ))}
 
           {filters.fuelType.map(fuel => (
             <Badge key={fuel} variant="secondary" className="flex items-center gap-1">
               {fuel}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => toggleArrayFilter('fuelType', fuel)} />
+              <button
+                onClick={() => toggleArrayFilter('fuelType', fuel)}
+                aria-label={`Hiq filtrin: ${fuel}`}
+                className="inline-flex"
+              >
+                <X className="w-3 h-3 cursor-pointer" aria-hidden="true" />
+              </button>
             </Badge>
           ))}
 
           {filters.featuresRequired.map(feature => (
             <Badge key={feature} variant="secondary" className="flex items-center gap-1">
               {feature}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => toggleArrayFilter('featuresRequired', feature)} />
+              <button
+                onClick={() => toggleArrayFilter('featuresRequired', feature)}
+                aria-label={`Hiq filtrin: ${feature}`}
+                className="inline-flex"
+              >
+                <X className="w-3 h-3 cursor-pointer" aria-hidden="true" />
+              </button>
             </Badge>
           ))}
 
           {filters.showFeaturedOnly && (
             <Badge variant="secondary" className="flex items-center gap-1">
               ⭐ Të Veçanta
-              <X className="w-3 h-3 cursor-pointer" onClick={() => setFilters(prev => ({ ...prev, showFeaturedOnly: false }))} />
+              <button
+                onClick={() => setFilters(prev => ({ ...prev, showFeaturedOnly: false }))}
+                aria-label="Hiq filtrin: Të Veçanta"
+                className="inline-flex"
+              >
+                <X className="w-3 h-3 cursor-pointer" aria-hidden="true" />
+              </button>
             </Badge>
           )}
         </div>

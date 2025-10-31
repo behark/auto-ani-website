@@ -1,14 +1,18 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { constantTimeCompare } from '@/lib/api-utils';
 import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify secret token
+    // Verify secret token with timing-safe comparison
     const secret = request.nextUrl.searchParams.get('secret');
+    const expectedSecret = process.env.REVALIDATE_SECRET;
 
-    if (secret !== process.env.REVALIDATE_SECRET) {
+    // Security check: ensure both values exist and match using constant-time comparison
+    if (!secret || !expectedSecret || !constantTimeCompare(secret, expectedSecret)) {
+      logger.warn('Revalidation attempt with invalid token');
       return NextResponse.json(
         { message: 'Invalid token' },
         { status: 401 }

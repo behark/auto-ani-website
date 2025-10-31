@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
+import dynamic from "next/dynamic";
 
 import "./globals.css";
 
@@ -9,12 +10,16 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
-import LazyFinancingCalculator from "@/components/ui/LazyFinancingCalculator";
 import LazyFloatingContactWidget from "@/components/ui/LazyFloatingContactWidget";
-import LazyTradeInEstimator from "@/components/ui/LazyTradeInEstimator";
 import WhatsAppChatWidget from "@/components/whatsapp/WhatsAppChatWidget";
 import { ComparisonProvider } from "@/contexts/ComparisonContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+
+// Development-only performance panel
+const PerformancePanel = dynamic(
+  () => import("@/components/dev/PerformancePanel"),
+  { ssr: false }
+);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -92,8 +97,6 @@ export default function RootLayout({
         {/* Resource hints for critical third-party origins */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
-        <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} antialiased transition-colors duration-300`}>
         <LanguageProvider>
@@ -118,12 +121,6 @@ export default function RootLayout({
               <LazyFloatingContactWidget />
             </ErrorBoundary>
             <ErrorBoundary level="component">
-              <LazyFinancingCalculator />
-            </ErrorBoundary>
-            <ErrorBoundary level="component">
-              <LazyTradeInEstimator />
-            </ErrorBoundary>
-            <ErrorBoundary level="component">
               <WhatsAppChatWidget />
             </ErrorBoundary>
           </ErrorBoundary>
@@ -136,6 +133,9 @@ export default function RootLayout({
         {/* Performance monitoring */}
         <WebVitals debug={process.env.NODE_ENV === 'development'} />
         <PerformanceMonitor />
+
+        {/* Development-only performance panel (Ctrl+Shift+P to toggle) */}
+        {process.env.NODE_ENV === 'development' && <PerformancePanel />}
       </body>
     </html>
   );

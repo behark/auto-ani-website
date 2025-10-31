@@ -15,11 +15,10 @@ export default function HeroSection({ vehicleCount = 0 }: HeroSectionProps) {
 
   return (
     <section
-      className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white"
+      className="relative min-h-screen flex items-center justify-center text-white overflow-hidden bg-gradient-to-br from-orange-600 via-orange-800 to-gray-900"
       style={{
         // Inline critical styles for faster FCP
         minHeight: '100vh',
-        background: 'linear-gradient(to bottom right, rgb(17 24 39), rgb(31 41 55), rgb(0 0 0))',
         color: 'white',
         display: 'flex',
         alignItems: 'center',
@@ -27,8 +26,16 @@ export default function HeroSection({ vehicleCount = 0 }: HeroSectionProps) {
         position: 'relative'
       }}
     >
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50" />
+      {/* Subtle texture overlay */}
+      <div className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.15) 1px, transparent 0)',
+          backgroundSize: '32px 32px'
+        }}
+      />
+
+      {/* Gradient overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/40" />
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">

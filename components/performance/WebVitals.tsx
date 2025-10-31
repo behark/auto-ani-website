@@ -30,16 +30,18 @@ export default function WebVitals({ debug = false }: WebVitalsProps) {
     // Dynamic import to avoid loading in SSR
     import("web-vitals").then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
       const reportMetric = (metric: Metric) => {
-        if (debug) {
+        // Only log in development mode
+        if (debug && process.env.NODE_ENV === 'development') {
           console.info(`[Web Vitals] ${metric.name}:`, metric.value);
         }
 
-        // Report to analytics
+        // Report to analytics (only in production)
         reportWebVitals(metric);
 
-        // Store in localStorage for debugging
-        if (typeof window !== "undefined" && debug) {
-          const metrics = JSON.parse(localStorage.getItem("webVitals") || "[]");
+        // Store in localStorage for debugging (only in development)
+        if (typeof window !== "undefined" && debug && process.env.NODE_ENV === 'development') {
+          const STORAGE_KEY = "webVitalsMetrics";
+          const metrics = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
           metrics.push({
             ...metric,
             timestamp: Date.now(),
@@ -49,7 +51,7 @@ export default function WebVitals({ debug = false }: WebVitalsProps) {
           if (metrics.length > 10) {
             metrics.shift();
           }
-          localStorage.setItem("webVitalsMetrics", JSON.stringify(metrics));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(metrics));
         }
       };
 

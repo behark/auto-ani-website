@@ -1,7 +1,7 @@
-import { Vehicle } from "../sanity";
+import { HardcodedVehicle } from "@/data/vehicles";
 
 // Mock vehicles for demonstration when API is unavailable
-export const MOCK_FEATURED_VEHICLES: Vehicle[] = [
+export const MOCK_FEATURED_VEHICLES: HardcodedVehicle[] = [
   {
     _id: "1",
     _type: "vehicle",
