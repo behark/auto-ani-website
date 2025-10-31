@@ -267,7 +267,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:50:35.152Z",
     "_createdAt": "2025-10-17T14:26:26Z",
     "_updatedAt": "2025-10-17T15:50:35Z",
-    "mainImage": "/images/vehicles/audi-q5-business-sport-(finnish)-2020-main.jpg",
+    "mainImage": "/images/optimized/vehicles/audi-q5-2020/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/audi-q5-2020/1-original.webp",
       "/images/optimized/vehicles/audi-q5-2020/2-original.webp",
@@ -367,7 +367,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T14:53:51.086Z",
     "_createdAt": "2025-10-17T14:02:25Z",
     "_updatedAt": "2025-10-30T19:28:18Z",
-    "mainImage": "/images/vehicles/bmw-318-m-sport-(f30)-2017-main.jpg",
+    "mainImage": "/images/optimized/vehicles/bmw-318-m-sport-(f30)-2017/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/bmw-318-m-sport-(f30)-2017/1-original.webp",
       "/images/optimized/vehicles/bmw-318-m-sport-(f30)-2017/2-original.webp",
