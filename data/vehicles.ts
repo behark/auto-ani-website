@@ -152,7 +152,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T14:53:49.105Z",
     "_createdAt": "2025-10-17T13:58:54Z",
     "_updatedAt": "2025-10-30T19:31:18Z",
-    "mainImage": "/images/optimized/vehicles/bmw-x4-30d-xdrive-m-sport-2022/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/bmw-x4-30d-xdrive-m-sport-2022/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/bmw-x4-30d-xdrive-m-sport-2022/1-original.webp",
       "/images/optimized/vehicles/bmw-x4-30d-xdrive-m-sport-2022/2-original.webp",
@@ -469,7 +469,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:35:58.573Z",
     "_createdAt": "2025-10-17T14:09:54Z",
     "_updatedAt": "2025-10-17T15:35:58Z",
-    "mainImage": "/images/optimized/vehicles/mercedes-benz-c220-bluetec-2015/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/mercedes-benz-c220-bluetec-2015/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/mercedes-benz-c220-bluetec-2015/1-original.webp",
       "/images/optimized/vehicles/mercedes-benz-c220-bluetec-2015/2-original.webp",
@@ -584,7 +584,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:48:13.197Z",
     "_createdAt": "2025-10-17T14:15:57Z",
     "_updatedAt": "2025-10-17T15:48:13Z",
-    "mainImage": "/images/optimized/vehicles/skoda-superb-style-business-line-2018/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/skoda-superb-style-business-line-2018/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/skoda-superb-style-business-line-2018/1-original.webp",
       "/images/optimized/vehicles/skoda-superb-style-business-line-2018/2-original.webp",
@@ -692,7 +692,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:41:00.393Z",
     "_createdAt": "2025-10-17T14:18:21Z",
     "_updatedAt": "2025-10-17T15:54:01Z",
-    "mainImage": "/images/optimized/vehicles/audi-a4-s-line-2015/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/audi-a4-s-line-2015/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/audi-a4-s-line-2015/1-original.webp",
       "/images/optimized/vehicles/audi-a4-s-line-2015/2-original.webp",
@@ -804,7 +804,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:45:12.277Z",
     "_createdAt": "2025-10-17T14:21:08Z",
     "_updatedAt": "2025-10-17T15:46:31Z",
-    "mainImage": "/images/optimized/vehicles/skoda-superb-style-business-matrix-2020/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/skoda-superb-style-business-matrix-2020/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/skoda-superb-style-business-matrix-2020/1-original.webp",
       "/images/optimized/vehicles/skoda-superb-style-business-matrix-2020/2-original.webp",
@@ -923,7 +923,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:52:15.479Z",
     "_createdAt": "2025-10-17T14:28:54Z",
     "_updatedAt": "2025-10-17T15:52:15Z",
-    "mainImage": "/images/optimized/vehicles/skoda-octavia-style-crystal-lights-2022/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/skoda-octavia-style-crystal-lights-2022/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/skoda-octavia-style-crystal-lights-2022/1-original.webp",
       "/images/optimized/vehicles/skoda-octavia-style-crystal-lights-2022/2-original.webp",
@@ -1038,7 +1038,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:37:07.111Z",
     "_createdAt": "2025-10-17T14:12:02Z",
     "_updatedAt": "2025-10-17T15:37:07Z",
-    "mainImage": "/images/optimized/vehicles/seat-leon-fr-dsg-2018/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/seat-leon-fr-dsg-2018/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/seat-leon-fr-dsg-2018/1-original.webp",
       "/images/optimized/vehicles/seat-leon-fr-dsg-2018/2-original.webp",
@@ -1360,7 +1360,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T14:54:01.194Z",
     "_createdAt": "2025-10-17T14:23:47Z",
     "_updatedAt": "2025-10-17T15:55:34Z",
-    "mainImage": "/images/optimized/vehicles/seat-tarraco-xcellence-4drive-2019/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/seat-tarraco-xcellence-4drive-2019/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/seat-tarraco-xcellence-4drive-2019/1-original.webp",
       "/images/optimized/vehicles/seat-tarraco-xcellence-4drive-2019/2-original.webp",
@@ -1469,7 +1469,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "lastUpdated": "2025-10-17T15:55:45.919Z",
     "_createdAt": "2025-10-17T14:38:44Z",
     "_updatedAt": "2025-10-30T19:29:59Z",
-    "mainImage": "/images/optimized/vehicles/bmw-520d-xdrive-sport-line-2019/main-original.webp",
+    "mainImage": "/images/optimized/vehicles/bmw-520d-xdrive-sport-line-2019/1-original.webp",
     "gallery": [
       "/images/optimized/vehicles/bmw-520d-xdrive-sport-line-2019/1-original.webp",
       "/images/optimized/vehicles/bmw-520d-xdrive-sport-line-2019/2-original.webp",
