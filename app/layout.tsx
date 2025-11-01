@@ -39,7 +39,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://autosalonani.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aniautosallon.com'),
   title: "AUTO ANI | Auto Salon Premium - 9+ Vite Përsosmërie | Mitrovicë, Kosovë",
   description: "Auto salon premium në Mitrovicë, Kosovë. Mbi 2500 vetura të shitura që nga 2015. Makina të reja dhe të përdorura, financim 0%, bonus shkëmbimi €1000. BMW, Mercedes, Audi, VW, Toyota.",
   keywords: "auto salon, autosallonani, vetura, makina, Mitrovica, Kosovo, AUTO ANI, BMW, Mercedes, Audi, Volkswagen, Toyota, financim, auto salloni, kerkoj veture",
@@ -50,10 +50,10 @@ export const metadata: Metadata = {
     locale: "sq_XK",
     alternateLocale: ["sr_RS", "en_US"],
     siteName: "AUTO ANI",
-    url: "https://autosalonani.com",
+    url: "https://aniautosallon.com",
     images: [
       {
-        url: "https://autosalonani.com/images/showroom.webp",
+        url: "https://aniautosallon.com/images/showroom.webp",
         width: 1200,
         height: 630,
         alt: "AUTO ANI Premium Showroom",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AUTO ANI | Premium Auto Salon Since 2015',
     description: 'Over 2500 satisfied customers. Premium vehicles with 0% financing available. Visit us in Kosovo.',
-    images: ['https://autosalonani.com/images/showroom.webp'],
+    images: ['https://aniautosallon.com/images/showroom.webp'],
   },
   manifest: '/manifest.json',
   applicationName: 'AUTO ANI',
