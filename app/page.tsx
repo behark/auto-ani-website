@@ -1,10 +1,12 @@
 import { Suspense } from 'react';
 
 import FeaturedVehiclesServer from '@/components/home/FeaturedVehiclesServer';
+import FinancingFleetCTA from '@/components/home/FinancingFleetCTA';
 import HeroSection from '@/components/home/HeroSection';
 import ServicesOverview from '@/components/home/ServicesOverview';
 import Testimonials from '@/components/home/Testimonials';
 import WhyChooseUs from '@/components/home/WhyChooseUs';
+import { Suspense } from 'react';
 import StructuredData from '@/components/seo/StructuredData';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import LoadingSkeletons from '@/components/ui/LoadingSkeletons';
@@ -56,6 +58,10 @@ export default async function HomePage() {
 
         <ErrorBoundary level="section">
           <FeaturedVehiclesServer vehicles={vehicles} />
+        </ErrorBoundary>
+
+        <ErrorBoundary level="section">
+          <FinancingFleetCTA />
         </ErrorBoundary>
 
         <ErrorBoundary level="section">

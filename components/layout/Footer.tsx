@@ -55,6 +55,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/financing" className="text-gray-400 hover:text-white transition-colors">
+                  Financimi
+                </Link>
+              </li>
+              <li>
+                <Link href="/fleet-sales" className="text-gray-400 hover:text-white transition-colors">
+                  Flotë
+                </Link>
+              </li>
+              <li>
                 <Link href="/trade-in" className="text-gray-400 hover:text-white transition-colors">
                   {t('trade.title')}
                 </Link>

@@ -17,6 +17,8 @@ export default function Navbar() {
     { name: t('nav.home'), href: '/' },
     { name: t('nav.vehicles'), href: '/vehicles' },
     { name: t('nav.services'), href: '/services' },
+    { name: 'Financimi', href: '/financing' },
+    { name: 'Flotë', href: '/fleet-sales' },
     { name: t('trade.title'), href: '/trade-in' },
     { name: t('nav.contact'), href: '/contact' }
   ];
