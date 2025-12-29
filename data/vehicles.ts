@@ -621,7 +621,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "drivetrain": null,
     "status": "available",
     "condition": "used_excellent",
-    "featured": true,
+    "featured": false,
     "description": "Audi A4 S-Line Quattro 2015 me teknologji të avancuar. Pa doganë, import evropian. Motor 2.0 TDI me 190 PS, Quattro AWD. Histori shërbimi në Audi, Drive Select, ulëse Alcantara.",
     "features": [
       "abs",
@@ -725,7 +725,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "drivetrain": null,
     "status": "available",
     "condition": "used_excellent",
-    "featured": true,
+    "featured": false,
     "description": "Skoda Superb Style Business Matrix 2020 në gjendje të përsosur. Vetëm 300 km, rrip i ndërruar. Teknologji Matrix LED, kokpit digjital, Canton, LED ambient 10-ngjyra, Line Assist, Distance Control.",
     "features": [
       "abs",
@@ -845,7 +845,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "drivetrain": null,
     "status": "available",
     "condition": "used_excellent",
-    "featured": true,
+    "featured": false,
     "description": "Skoda Octavia Style 2022 me teknologji Crystal Lights në gjendje të përsosur. Shërbim në Skoda, ulëse me kujtesë dhe ngrohje, timon me ngrohje, Lane/Side Assist, 360° kamera.",
     "features": [
       "abs",
@@ -970,7 +970,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "drivetrain": null,
     "status": "available",
     "condition": "used_good",
-    "featured": true,
+    "featured": false,
     "description": "SEAT Leon FR DSG 2018 me performancë sportive. Pa doganë, import evropian. Motor 1.4 TSI me 184 PS, DSG automatik. Panoramë, LED, paketë FR sportive.",
     "features": [
       "abs",
@@ -1071,7 +1071,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "drivetrain": null,
     "status": "available",
     "condition": "used_good",
-    "featured": true,
+    "featured": false,
     "description": "Volkswagen Passat B8 Highline 2015 me paketë të plotë premium. Pa doganë, import evropian. Teknologji e avancuar me Drive Select, Distance Control, Auto Parking. Ulëse Alcantara me ngrohje, klima 3-zonale.",
     "features": [
       "abs",
@@ -1174,7 +1174,7 @@ export const VEHICLES_DATABASE: HardcodedVehicle[] = [
     "drivetrain": null,
     "status": "available",
     "condition": "used_good",
-    "featured": true,
+    "featured": false,
     "description": "Volkswagen Golf 7 GTD Facelift 2017 sportiv dhe efikas. RKS të regjistruara, gati për përdorim. Motor 2.0 TDI me 184 PS, DSG automatik. Panoramë, kokpit digjital, paketë GTD sportive.",
     "features": [
       "abs",
