@@ -1,0 +1,62 @@
+{
+  "seatTarraco2022": {
+    "_id": "seat-tarraco-xperience-7-ulse-2022",
+    "title": "Seat Tarraco Xperience 7 Ulse 2022",
+    "price": 19800,
+    "year": 2022,
+    "mileage": 180000,
+    "engine": "2.0 TDI 150PS",
+    "transmission": "Automatic DSG",
+    "fuelType": "diesel",
+    "color": "white",
+    "seats": 7,
+    "category": "suv",
+    "mainImage": "/images/listings/seat-tarraco-2022/1.jpg",
+    "gallery": [
+      "/images/listings/seat-tarraco-2022/1.jpg",
+      "/images/listings/seat-tarraco-2022/2.jpg",
+      "/images/listings/seat-tarraco-2022/3.jpg",
+      "/images/listings/seat-tarraco-2022/4.jpg",
+      "/images/listings/seat-tarraco-2022/5.jpg",
+      "/images/listings/seat-tarraco-2022/6.jpg",
+      "/images/listings/seat-tarraco-2022/7.jpg",
+      "/images/listings/seat-tarraco-2022/8.jpg",
+      "/images/listings/seat-tarraco-2022/9.jpg",
+      "/images/listings/seat-tarraco-2022/10.jpg",
+      "/images/listings/seat-tarraco-2022/11.jpg",
+      "/images/listings/seat-tarraco-2022/12.jpg"
+    ],
+    "features": [
+      "Digital Cockpit",
+      "Distance Control",
+      "LED Camera",
+      "LED Lights",
+      "Heated Seats",
+      "Keyless Entry",
+      "Webasto Heating",
+      "Powered Trunk",
+      "Electronic Hitch",
+      "LED Ambient Light",
+      "Drive Select",
+      "Lane Assist",
+      "Park Assist",
+      "Brake Assist",
+      "Dual Alloy Wheels",
+      "Air Conditioning",
+      "Climate Control",
+      "Bluetooth",
+      "GPS Navigation",
+      "ABS",
+      "ESC",
+      "Airbags"
+    ],
+    "description": "Seat Tarraco Xperience 7 Ulse 2022 - Premium Family SUV. Perfect for export. No accidents, guaranteed mileage. Packed with features including digital cockpit, LED lights, 7 seats with heating, keyless entry, auto parking.",
+    "financing": {
+      "available": true,
+      "downPayment": 1980,
+      "monthlyPayment": 330,
+      "loanTerm": 60,
+      "interestRate": 0
+    }
+  }
+}
