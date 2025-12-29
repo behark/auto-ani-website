@@ -6,7 +6,6 @@ import HeroSection from '@/components/home/HeroSection';
 import ServicesOverview from '@/components/home/ServicesOverview';
 import Testimonials from '@/components/home/Testimonials';
 import WhyChooseUs from '@/components/home/WhyChooseUs';
-import { Suspense } from 'react';
 import StructuredData from '@/components/seo/StructuredData';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import LoadingSkeletons from '@/components/ui/LoadingSkeletons';
