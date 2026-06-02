@@ -24,6 +24,8 @@ const envSchema = z.object({
   // Authentication
   NEXTAUTH_URL: z.string().url('NEXTAUTH_URL must be a valid URL'),
   NEXTAUTH_SECRET: z.string().min(32, 'NEXTAUTH_SECRET must be at least 32 characters'),
+  // Auth.js v5 preferred secret name (alias of NEXTAUTH_SECRET).
+  AUTH_SECRET: z.string().min(32).optional(),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
   SESSION_SECRET: z.string().min(32).optional(),
   ENCRYPTION_KEY: z.string().length(32, 'ENCRYPTION_KEY must be exactly 32 characters').optional(),
@@ -111,6 +113,9 @@ const envSchema = z.object({
   FACEBOOK_PAGE_ACCESS_TOKEN: z.string().optional(),
   FACEBOOK_PAGE_ID: z.string().optional(),
   FACEBOOK_API_KEY: z.string().optional(),
+  // Meta Conversions API (server-side events)
+  FACEBOOK_DATASET_ID: z.string().optional(),
+  META_TEST_EVENT_CODE: z.string().optional(),
   INSTAGRAM_ACCOUNT_ID: z.string().optional(),
   INSTAGRAM_ACCESS_TOKEN: z.string().optional(),
   INSTAGRAM_API_KEY: z.string().optional(),
@@ -331,6 +336,13 @@ export const hasTwilio = Boolean(env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN
 export const hasGoogleMaps = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || env.GOOGLE_MAPS_API_KEY)
 export const hasStripe = Boolean(env.STRIPE_SECRET_KEY && env.STRIPE_PUBLISHABLE_KEY)
 export const hasFacebook = Boolean(env.FACEBOOK_APP_ID && env.FACEBOOK_APP_SECRET)
+// Meta Conversions API is usable when we have an access token + a dataset/pixel id
+export const hasMetaConversionsApi = Boolean(
+  env.FACEBOOK_ACCESS_TOKEN && (env.FACEBOOK_DATASET_ID || env.NEXT_PUBLIC_FB_PIXEL_ID)
+)
+// Auth.js social login providers — each enabled only when its credentials exist
+export const hasGoogleAuth = Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET)
+export const hasFacebookAuth = Boolean(env.FACEBOOK_APP_ID && env.FACEBOOK_APP_SECRET)
 export const hasInstagram = Boolean(env.INSTAGRAM_ACCOUNT_ID && hasFacebook)
 export const hasPostHog = Boolean(env.NEXT_PUBLIC_POSTHOG_KEY && env.NEXT_PUBLIC_POSTHOG_HOST)
 export const hasAWS = Boolean(env.AWS_ACCESS_KEY_ID && env.AWS_SECRET_ACCESS_KEY && env.AWS_REGION)

@@ -37,6 +37,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "*.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // Google account avatars
+      },
+      {
+        protocol: "https",
+        hostname: "platform-lookaside.fbsbx.com", // Facebook account avatars
+      },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000, // 1 year cache

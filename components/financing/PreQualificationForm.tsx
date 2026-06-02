@@ -1,7 +1,8 @@
 'use client';
 
 import { User, Mail, Phone, Briefcase, Euro, FileText, Send } from 'lucide-react';
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,18 @@ export default function PreQualificationForm() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Pre-fill name/email for logged-in users (only empty fields, never overrides typing).
+  const { data: session } = useSession();
+  useEffect(() => {
+    const user = session?.user;
+    if (!user) return;
+    setFormData((prev) => ({
+      ...prev,
+      fullName: prev.fullName || user.name || '',
+      email: prev.email || user.email || '',
+    }));
+  }, [session]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

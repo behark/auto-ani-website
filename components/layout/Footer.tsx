@@ -106,9 +106,12 @@ export default function Footer() {
           <p className="text-gray-400 text-sm">
             © {new Date().getFullYear()} AUTO ANI. {t('footer.allRightsReserved')}
           </p>
-          <p className="text-gray-400 text-sm mt-2 md:mt-0">
-            {t('footer.tagline')}
-          </p>
+          <div className="flex items-center gap-4 text-sm mt-2 md:mt-0">
+            <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+            <span className="text-gray-400">{t('footer.tagline')}</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -9,6 +9,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { VercelToolbar } from "@vercel/toolbar/next";
 
+import MetaPixel from "@/components/analytics/MetaPixel";
+import SessionProviderWrapper from "@/components/auth/SessionProviderWrapper";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import WebVitals, { PerformanceMonitor } from "@/components/performance/WebVitals";
@@ -103,6 +105,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} antialiased transition-colors duration-300`}>
+        <SessionProviderWrapper>
         <LanguageProvider>
           <ComparisonProvider>
             <ErrorBoundary level="page" showDetails={process.env.NODE_ENV === 'development'}>
@@ -130,9 +133,13 @@ export default function RootLayout({
           </ErrorBoundary>
           </ComparisonProvider>
         </LanguageProvider>
+        </SessionProviderWrapper>
 
         {/* Toast Notifications */}
         <Toaster position="top-right" richColors />
+
+        {/* Meta Pixel + Conversions API (deduplicated PageView & Contact events) */}
+        <MetaPixel />
 
         {/* Analytics & Performance monitoring */}
         <Analytics />

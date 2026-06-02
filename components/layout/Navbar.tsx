@@ -4,6 +4,7 @@ import { Menu, X, Phone, Car, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import AccountMenu from '@/components/auth/AccountMenu';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { Language } from '@/lib/translations';
@@ -96,6 +97,9 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+
+            {/* Account / Login */}
+            <AccountMenu />
           </div>
 
           {/* Mobile menu button */}
@@ -155,6 +159,11 @@ export default function Navbar() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Mobile Account / Login */}
+              <div className="px-3 py-2 border-t border-gray-200" onClick={() => setIsOpen(false)}>
+                <AccountMenu variant="mobile" />
               </div>
             </div>
           </div>

@@ -1,9 +1,12 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 export default function FleetContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email ?? '';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +20,7 @@ export default function FleetContactForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input type="text" placeholder="Emri i Kompanisë" required className="w-full p-3 border rounded-lg" />
-        <input type="email" placeholder="Email" required className="w-full p-3 border rounded-lg" />
+        <input key={userEmail} type="email" name="email" placeholder="Email" defaultValue={userEmail} required className="w-full p-3 border rounded-lg" />
         <input type="tel" placeholder="Telefon" required className="w-full p-3 border rounded-lg" />
 
         <input type="number" placeholder="Numri i Makinave të Kërkuara" required className="w-full p-3 border rounded-lg" />
