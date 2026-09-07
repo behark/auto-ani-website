@@ -9,19 +9,6 @@
 
 ---
 
-## 📊 Memory Usage Analysis
-
-### Development Environment
-- **Main Next.js Process**: 152MB RAM
-- **Next.js Server**: 331MB RAM
-- **Total Development**: **~483MB RAM**
-
-### Production Environment
-- **Estimated Production Usage**: **~200-300MB RAM**
-- **Render Starter Plan**: 512MB RAM (sufficient)
-- **Recommended**: Render Standard (2GB RAM) for high traffic
-
----
 
 ## 🏢 Business Information
 
